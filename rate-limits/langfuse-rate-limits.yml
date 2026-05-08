@@ -15,22 +15,48 @@ tags:
 - Rate Limiting
 - Quotas
 - Throttling
-description: Placeholder rate-limit artifact for Langfuse. Replace with real limits once the pipeline
-  researches the provider's rate-limit documentation.
-notes: Initial scaffold — limits have not yet been reconciled against the provider's documentation.
+description: Langfuse cloud throttling is primarily quota-based on monthly units (traces,
+  observations, scores). Enterprise accounts can negotiate custom rate limits. Self-hosted
+  installations are limited only by the operator's own infrastructure.
+notes: Langfuse does not publish per-second request-rate ceilings for cloud. Watch for 429
+  responses and backoff. Self-hosted has no platform-imposed limits.
 sources:
-- https://langfuse.com/
+- https://langfuse.com/pricing
+- https://langfuse.com/docs
 responseCodes:
   throttled: 429
 limits:
-- name: Default
+- name: Hobby Cloud Monthly Units
+  scope: account
+  metric: unit
+  limit: 50000
+  timeFrame: monthly
+  notes: Hard cap for the free Hobby tier.
+- name: Core/Pro/Enterprise Monthly Units (Included)
+  scope: account
+  metric: unit
+  limit: 100000
+  timeFrame: monthly
+  notes: Included monthly allowance; overage billed at $8/100k with volume discounts.
+- name: Enterprise Custom Rate Limits
   scope: account
   metric: varies
-  limit: see provider documentation
-  notes: Pending reconciliation.
+  limit: contract
+  notes: Enterprise customers may negotiate custom per-second or per-minute API rate ceilings.
+- name: Self-Hosted
+  scope: instance
+  metric: none
+  limit: -1
+  notes: No platform-imposed limits when self-hosted; bounded by operator infrastructure.
 policies:
 - name: Backoff Strategy
-  description: Clients should implement exponential backoff with jitter and honor any Retry-After header.
+  description: Honor 429 responses with exponential backoff and jitter; SDKs handle retry
+    automatically.
+- name: Trace Batching
+  description: SDKs batch trace ingestion calls before flushing, reducing per-request overhead.
+- name: OpenTelemetry Path
+  description: Use the OTel ingestion endpoint where possible; it is the recommended,
+    higher-throughput path.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

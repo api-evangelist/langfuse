@@ -5,7 +5,7 @@ provider: Langfuse
 providerId: langfuse
 created: '2026-05-08'
 modified: '2026-05-08'
-reconciled: false
+reconciled: true
 tags:
 - AI
 - LLM
@@ -15,11 +15,12 @@ tags:
 - FinOps
 - Cost Management
 - FOCUS
-description: FOCUS-aligned FinOps placeholder for Langfuse. Pipeline will replace with the provider's
-  real billing-model details once researched.
-notes: Initial scaffold — billing model has not yet been reconciled.
+description: FOCUS-aligned FinOps profile for Langfuse Cloud. Cloud billing combines a
+  flat-rate monthly subscription per plan tier with usage-based overage on units (a unified
+  metric covering traces, observations, and scores). Self-hosted has no platform fees.
 sources:
-- https://langfuse.com/
+- https://langfuse.com/pricing
+- https://langfuse.com/docs
 - https://focus.finops.org/focus-specification/v1-3/
 alignedWith:
   framework: FinOps Foundation Framework
@@ -27,10 +28,10 @@ alignedWith:
   dataSpec: FOCUS
   dataSpecVersion: '1.3'
   dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
-publisherName: Langfuse
+publisherName: Langfuse GmbH
 serviceCategory: AI
 billingModel:
-  pricingCategory: To Be Reconciled
+  pricingCategory: Subscription + Usage
   billingFrequency: Monthly
   billingCurrency: USD
   chargeCategories:
@@ -38,30 +39,47 @@ billingModel:
   - Purchase
   - Adjustment
 focusColumns:
-  ServiceName: Langfuse
+  ServiceName: Langfuse Cloud
   ServiceCategory: AI
   ProviderName: Langfuse
-  PublisherName: Langfuse
-  InvoiceIssuerName: Langfuse
+  PublisherName: Langfuse GmbH
+  InvoiceIssuerName: Langfuse GmbH
   BillingCurrency: USD
   ChargeCategory: Usage
 meters:
-- name: api_usage
-  description: Catch-all meter pending reconciliation against the provider's published metering.
-  unit: varies
+- name: subscription_fee
+  description: Monthly plan subscription (Core $29, Pro $199, Enterprise $2,499).
+  unit: month
   aggregation: sum
   dimensions:
   - account
-  - resource
+  - plan
+- name: units
+  description: Billable units (traces, observations, scores). Each plan includes a baseline;
+    overage at $8/100k with volume discounts.
+  unit: unit
+  aggregation: sum
+  dimensions:
+  - organization
+  - project
+- name: teams_addon
+  description: Optional Pro Teams add-on ($300/month) for SSO and fine-grained RBAC.
+  unit: month
+  aggregation: sum
+  dimensions:
+  - organization
 principles:
 - name: Visibility
-  description: Pull provider invoices or usage exports until a self-serve usage feed is documented.
+  description: Use Langfuse usage dashboards and invoices to map unit consumption to
+    organizations and projects.
 - name: Allocation
-  description: Tag invoice line items to consuming business units in your FinOps store.
+  description: Tag traces by environment and product to allocate units to consuming services.
 - name: Optimization
-  description: Levers depend on the provider's billing model; review at renewal once reconciled.
+  description: Sample low-value traces, choose appropriate retention tier, and consider
+    self-hosting for high-volume workloads.
 - name: Accountability
-  description: Assign a contract owner to review billing against negotiated terms.
+  description: Assign each project to a budget owner and review monthly unit consumption
+    against forecast.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

@@ -5,7 +5,7 @@ provider: Langfuse
 providerId: langfuse
 created: '2026-05-08'
 modified: '2026-05-08'
-reconciled: false
+reconciled: true
 tags:
 - AI
 - LLM
@@ -13,30 +13,213 @@ tags:
 - Open Source
 - Evaluations
 - Plans
-description: Placeholder plans/pricing artifact for Langfuse. Replace with real published pricing once
-  the pipeline researches the provider's plans page.
-notes: Initial scaffold — plans/pricing have not yet been reconciled against the provider's documentation.
+description: Langfuse cloud pricing reconciled against the Langfuse pricing page. Langfuse
+  is also available as fully open-source self-hosted with no platform fees; cloud tiers add
+  managed hosting, retention, support, and compliance.
 sources:
-- https://langfuse.com/
+- https://langfuse.com/pricing
+- https://langfuse.com/self-hosting
 plans:
-- id: langfuse-default
-  name: To Be Reconciled
-  type: enterprise
-  description: Initial scaffold; replace with provider plan tiers (Free / Pro / Enterprise / pay-as-you-go,
-    etc.) once pricing is reconciled.
+- id: langfuse-self-hosted
+  name: Self-Hosted (Open Source)
+  type: free
+  description: Open-source MIT-licensed Langfuse you can run on your own infrastructure with
+    no platform fees. All core observability features are included.
   entries:
-  - label: API Access
-    name: api_access
+  - label: Platform Fee
+    name: platform_fee
     type: flat
-    metric: varies
+    metric: license
     limit: -1
+    timeFrame: monthly
+    geo: global
+    unit: 1
+    price: 0
+    userMultiplied: false
+  elements:
+  - name: All Core Tracing, Eval, Prompt, Dataset Features
+  - name: Self-Hosted Deployment
+  - name: Community Support
+- id: langfuse-hobby
+  name: Hobby (Cloud)
+  type: free
+  description: Free cloud tier for hobby projects and POCs. No credit card required.
+  entries:
+  - label: Units Included
+    name: units_included
+    type: usage
+    metric: unit
+    limit: 50000
+    timeFrame: monthly
+    geo: global
+    unit: 1
+    price: 0
+    userMultiplied: false
+  - label: Data Retention
+    name: data_retention
+    type: flat
+    metric: day
+    limit: 30
     timeFrame: usage
     geo: global
     unit: 1
-    price: see https://langfuse.com/
+    price: 0
+    userMultiplied: false
+  - label: Users
+    name: users
+    type: flat
+    metric: user
+    limit: 2
+    timeFrame: monthly
+    geo: global
+    unit: 1
+    price: 0
     userMultiplied: false
   elements:
-  - name: Pending Reconciliation
+  - name: Community Support
+- id: langfuse-core
+  name: Core (Cloud)
+  type: paid
+  description: Entry paid cloud tier for production workloads with extended retention.
+  entries:
+  - label: Subscription
+    name: subscription
+    type: flat
+    metric: account
+    limit: -1
+    timeFrame: monthly
+    geo: global
+    unit: 1
+    price: 29
+    userMultiplied: false
+  - label: Units Included
+    name: units_included
+    type: usage
+    metric: unit
+    limit: 100000
+    timeFrame: monthly
+    geo: global
+    unit: 1
+    price: 0
+    userMultiplied: false
+  - label: Units Overage
+    name: units_overage
+    type: usage
+    metric: unit
+    limit: -1
+    timeFrame: monthly
+    geo: global
+    unit: 100000
+    price: 8
+    userMultiplied: false
+  - label: Data Retention
+    name: data_retention
+    type: flat
+    metric: day
+    limit: 90
+    timeFrame: usage
+    geo: global
+    unit: 1
+    price: 0
+    userMultiplied: false
+  elements:
+  - name: Unlimited Users
+  - name: In-App Support
+  - name: Startup/Research/OSS Discounts
+- id: langfuse-pro
+  name: Pro (Cloud)
+  type: paid
+  description: Pro plan for scaling applications with full feature set and long-term retention.
+  entries:
+  - label: Subscription
+    name: subscription
+    type: flat
+    metric: account
+    limit: -1
+    timeFrame: monthly
+    geo: global
+    unit: 1
+    price: 199
+    userMultiplied: false
+  - label: Units Included
+    name: units_included
+    type: usage
+    metric: unit
+    limit: 100000
+    timeFrame: monthly
+    geo: global
+    unit: 1
+    price: 0
+    userMultiplied: false
+  - label: Units Overage
+    name: units_overage
+    type: usage
+    metric: unit
+    limit: -1
+    timeFrame: monthly
+    geo: global
+    unit: 100000
+    price: 8
+    userMultiplied: false
+  - label: Data Retention
+    name: data_retention
+    type: flat
+    metric: year
+    limit: 3
+    timeFrame: usage
+    geo: global
+    unit: 1
+    price: 0
+    userMultiplied: false
+  - label: Teams Add-On
+    name: teams_addon
+    type: flat
+    metric: addon
+    limit: -1
+    timeFrame: monthly
+    geo: global
+    unit: 1
+    price: 300
+    userMultiplied: false
+  elements:
+  - name: Data Retention Management
+  - name: Unlimited Annotation Queues
+  - name: SOC2/ISO27001 Compliance Reports
+  - name: Optional Teams Add-On (SSO + RBAC)
+- id: langfuse-enterprise
+  name: Enterprise (Cloud)
+  type: enterprise
+  description: For large-scale teams with dedicated support and SLAs.
+  entries:
+  - label: Subscription
+    name: subscription
+    type: flat
+    metric: account
+    limit: -1
+    timeFrame: monthly
+    geo: global
+    unit: 1
+    price: 2499
+    userMultiplied: false
+  - label: Units Included
+    name: units_included
+    type: usage
+    metric: unit
+    limit: 100000
+    timeFrame: monthly
+    geo: global
+    unit: 1
+    price: 0
+    userMultiplied: false
+  elements:
+  - name: All Pro Features
+  - name: Audit Logs and SCIM API
+  - name: Custom Rate Limits
+  - name: Uptime SLA
+  - name: Dedicated Support Engineer
+  - name: Optional Yearly Commitment with Volume Pricing
+notes: 'Volume pricing on overage units: $8/100k decreases to $7, $6.50, and $6 per 100k at
+  higher volumes.'
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

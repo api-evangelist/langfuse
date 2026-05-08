@@ -1,6 +1,6 @@
 # Langfuse (langfuse)
 
-Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, and metrics. The Langfuse API supports both self-hosted and cloud deployments and integrates with LangChain, LlamaIndex, and any LLM stack.
+Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, datasets, and metrics. The Langfuse API supports both self-hosted and multi-region cloud deployments and integrates with LangChain, LlamaIndex, OpenTelemetry, and any LLM stack.
 
 **URL:** [Visit APIs.json URL](https://raw.githubusercontent.com/api-evangelist/langfuse/refs/heads/main/apis.yml)
 
@@ -19,20 +19,38 @@ Langfuse is an open-source LLM engineering platform offering tracing, evaluation
 - **Created:** 2026-05-08
 - **Modified:** 2026-05-08
 
+## APIs
+
+| API | Description |
+|---|---|
+| Langfuse Tracing API | Ingest traces and observations via OpenTelemetry or legacy ingestion endpoint. |
+| Langfuse Observations API | Read and query spans, generations, and events attached to traces. |
+| Langfuse Metrics API | Aggregated metrics across traces, scores, and costs for dashboarding. |
+| Langfuse Prompt Management API | Versioned, label-based prompts with client-side caching. |
+| Langfuse Datasets API | Manage datasets and dataset items for offline eval runs. |
+| Langfuse Evaluations API | Define evaluators, trigger evals, read back scores. |
+| Langfuse Scores API | Attach numeric, categorical, or boolean scores to traces and sessions. |
+| Langfuse Organizations & Projects API | Organization-level provisioning of projects and users. |
+| Langfuse Instance Management API | Self-hosted instance administration. |
+
 ## Common Properties
 
 - [Website](https://langfuse.com/)
-- [Plans](plans/langfuse-plans-pricing.yml) — API Commons Plans 0.1 (placeholder; pipeline will replace with real pricing)
-- [RateLimits](rate-limits/langfuse-rate-limits.yml) — API Commons Rate Limits 0.1 (placeholder)
-- [FinOps](finops/langfuse-finops.yml) — FOCUS-aligned FinOps Framework 1.0 (placeholder)
+- [Documentation](https://langfuse.com/docs)
+- [API Reference](https://api.reference.langfuse.com/)
+- [Pricing](https://langfuse.com/pricing)
+- [GitHub](https://github.com/langfuse/langfuse)
+- [Plans](plans/langfuse-plans-pricing.yml) — API Commons Plans 0.1
+- [RateLimits](rate-limits/langfuse-rate-limits.yml) — API Commons Rate Limits 0.1
+- [FinOps](finops/langfuse-finops.yml) — FOCUS-aligned FinOps Framework 1.0
 
 ## Artifacts
 
 | Artifact | Path | Notes |
 |---|---|---|
-| Plans | `plans/langfuse-plans-pricing.yml` | Placeholder — pipeline will fetch real pricing |
-| Rate Limits | `rate-limits/langfuse-rate-limits.yml` | Placeholder — pipeline will fetch real limits |
-| FinOps | `finops/langfuse-finops.yml` | FOCUS-aligned placeholder |
+| Plans | `plans/langfuse-plans-pricing.yml` | Self-hosted (free) / Hobby / Core / Pro / Enterprise |
+| Rate Limits | `rate-limits/langfuse-rate-limits.yml` | Quota-based on monthly units; enterprise custom limits |
+| FinOps | `finops/langfuse-finops.yml` | Subscription + Usage billing model |
 
 ## Maintainers
 

@@ -3,7 +3,7 @@ url: https://raw.githubusercontent.com/api-evangelist/langfuse/refs/heads/main/a
 name: Langfuse
 x-type: company
 description: >-
-  Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, and metrics. The Langfuse API supports both self-hosted and cloud deployments and integrates with LangChain, LlamaIndex, and any LLM stack.
+  Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, datasets, and metrics. The Langfuse API supports both self-hosted and multi-region cloud deployments (US, EU, Japan, HIPAA-compliant US) and integrates with LangChain, LlamaIndex, OpenTelemetry, and any LLM stack.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
   - AI
@@ -14,10 +14,146 @@ tags:
 created: '2026-05-08'
 modified: '2026-05-08'
 specificationVersion: '0.19'
-apis: []
+apis:
+  - aid: langfuse:langfuse-tracing-api
+    name: Langfuse Tracing API
+    tags:
+      - Tracing
+      - OpenTelemetry
+      - Ingestion
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/tracing
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/tracing
+        type: Documentation
+      - url: https://api.reference.langfuse.com/
+        type: API Reference
+    description: >-
+      Ingest traces, observations (spans, generations, events), and scores into Langfuse. Recommended path is the OpenTelemetry endpoint; legacy ingestion API is also supported. Traces are the unit of usage billing.
+  - aid: langfuse:langfuse-observations-api
+    name: Langfuse Observations API
+    tags:
+      - Observations
+      - Spans
+      - Generations
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/api
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/api
+        type: Documentation
+    description: >-
+      Read and query observations (spans, generations, events) attached to traces. Supports filtering by trace, time range, name, and metadata.
+  - aid: langfuse:langfuse-metrics-api
+    name: Langfuse Metrics API
+    tags:
+      - Metrics
+      - Analytics
+      - Reporting
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/analytics
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/analytics
+        type: Documentation
+    description: >-
+      Aggregated metrics across traces, observations, scores, and costs. Supports custom dimensions, time series, and project-scoped queries for dashboarding.
+  - aid: langfuse:langfuse-prompts-api
+    name: Langfuse Prompt Management API
+    tags:
+      - Prompts
+      - Versioning
+      - Prompt Management
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/prompts
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/prompts
+        type: Documentation
+    description: >-
+      Create, version, label, and retrieve prompts with client-side caching. Supports text and chat prompt types, configuration variables, and label-based deployment (e.g. production, staging).
+  - aid: langfuse:langfuse-datasets-api
+    name: Langfuse Datasets API
+    tags:
+      - Datasets
+      - Test Data
+      - Evaluations
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/datasets
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/datasets
+        type: Documentation
+    description: >-
+      Manage datasets and dataset items (input/expected-output pairs) for offline evaluation runs and regression testing.
+  - aid: langfuse:langfuse-evaluations-api
+    name: Langfuse Evaluations API
+    tags:
+      - Evaluations
+      - Scoring
+      - LLM-as-Judge
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/evaluation
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/evaluation
+        type: Documentation
+    description: >-
+      CRUD operations for evals: define evaluators (LLM-as-judge, code, human), trigger evaluations on traces or dataset runs, and read back scores and reasoning.
+  - aid: langfuse:langfuse-scores-api
+    name: Langfuse Scores API
+    tags:
+      - Scores
+      - Feedback
+      - Quality
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/scores
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/scores
+        type: Documentation
+    description: >-
+      Attach numeric, categorical, or boolean scores to traces, observations, or sessions. Supports user feedback, model-graded scores, and custom-defined score schemas.
+  - aid: langfuse:langfuse-organizations-api
+    name: Langfuse Organizations & Projects API
+    tags:
+      - Organizations
+      - Projects
+      - Provisioning
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/api
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/api
+        type: Documentation
+    description: >-
+      Organization-level provisioning APIs to create projects, manage users, and configure project membership programmatically.
+  - aid: langfuse:langfuse-instance-api
+    name: Langfuse Instance Management API
+    tags:
+      - Self-Hosted
+      - Administration
+      - Instance
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/self-hosting
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/self-hosting
+        type: Documentation
+    description: >-
+      Instance-management endpoints for self-hosted Langfuse deployments. Used to administer organizations, license, and platform-wide configuration.
 common:
   - type: Website
     url: https://langfuse.com/
+  - type: Documentation
+    url: https://langfuse.com/docs
+  - type: API Reference
+    url: https://api.reference.langfuse.com/
+  - type: Pricing
+    url: https://langfuse.com/pricing
+  - type: GitHub
+    url: https://github.com/langfuse/langfuse
   - type: Plans
     url: plans/langfuse-plans-pricing.yml
   - type: RateLimits
