@@ -29,6 +29,8 @@ apis:
         type: Documentation
       - url: https://api.reference.langfuse.com/
         type: API Reference
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
     description: >-
       Ingest traces, observations (spans, generations, events), and scores into Langfuse. Recommended path is the OpenTelemetry endpoint; legacy ingestion API is also supported. Traces are the unit of usage billing.
   - aid: langfuse:langfuse-observations-api
@@ -43,6 +45,8 @@ apis:
     properties:
       - url: https://langfuse.com/docs/api
         type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
     description: >-
       Read and query observations (spans, generations, events) attached to traces. Supports filtering by trace, time range, name, and metadata.
   - aid: langfuse:langfuse-metrics-api
@@ -57,6 +61,8 @@ apis:
     properties:
       - url: https://langfuse.com/docs/analytics
         type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
     description: >-
       Aggregated metrics across traces, observations, scores, and costs. Supports custom dimensions, time series, and project-scoped queries for dashboarding.
   - aid: langfuse:langfuse-prompts-api
@@ -71,6 +77,8 @@ apis:
     properties:
       - url: https://langfuse.com/docs/prompts
         type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
     description: >-
       Create, version, label, and retrieve prompts with client-side caching. Supports text and chat prompt types, configuration variables, and label-based deployment (e.g. production, staging).
   - aid: langfuse:langfuse-datasets-api
@@ -85,6 +93,8 @@ apis:
     properties:
       - url: https://langfuse.com/docs/datasets
         type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
     description: >-
       Manage datasets and dataset items (input/expected-output pairs) for offline evaluation runs and regression testing.
   - aid: langfuse:langfuse-evaluations-api
@@ -99,6 +109,8 @@ apis:
     properties:
       - url: https://langfuse.com/docs/evaluation
         type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
     description: >-
       CRUD operations for evals: define evaluators (LLM-as-judge, code, human), trigger evaluations on traces or dataset runs, and read back scores and reasoning.
   - aid: langfuse:langfuse-scores-api
@@ -113,6 +125,8 @@ apis:
     properties:
       - url: https://langfuse.com/docs/scores
         type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
     description: >-
       Attach numeric, categorical, or boolean scores to traces, observations, or sessions. Supports user feedback, model-graded scores, and custom-defined score schemas.
   - aid: langfuse:langfuse-organizations-api
@@ -127,6 +141,8 @@ apis:
     properties:
       - url: https://langfuse.com/docs/api
         type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
     description: >-
       Organization-level provisioning APIs to create projects, manage users, and configure project membership programmatically.
   - aid: langfuse:langfuse-instance-api
@@ -141,6 +157,8 @@ apis:
     properties:
       - url: https://langfuse.com/self-hosting
         type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
     description: >-
       Instance-management endpoints for self-hosted Langfuse deployments. Used to administer organizations, license, and platform-wide configuration.
 common:
