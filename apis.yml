@@ -1,0 +1,29 @@
+aid: langfuse
+url: https://raw.githubusercontent.com/api-evangelist/langfuse/refs/heads/main/apis.yml
+name: Langfuse
+x-type: company
+description: >-
+  Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, and metrics. The Langfuse API supports both self-hosted and cloud deployments and integrates with LangChain, LlamaIndex, and any LLM stack.
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - AI
+  - LLM
+  - Observability
+  - Open Source
+  - Evaluations
+created: '2026-05-08'
+modified: '2026-05-08'
+specificationVersion: '0.19'
+apis: []
+common:
+  - type: Website
+    url: https://langfuse.com/
+  - type: Plans
+    url: plans/langfuse-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/langfuse-rate-limits.yml
+  - type: FinOps
+    url: finops/langfuse-finops.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
