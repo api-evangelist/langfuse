@@ -178,6 +178,10 @@ common:
     url: rate-limits/langfuse-rate-limits.yml
   - type: FinOps
     url: finops/langfuse-finops.yml
+  - type: Integrations
+    url: https://langfuse.com/integrations
+integrations:
+  - name: Agentic Data Stack
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
