@@ -1,7 +1,7 @@
 aid: langfuse
 url: https://raw.githubusercontent.com/api-evangelist/langfuse/refs/heads/main/apis.yml
 name: Langfuse
-x-type: company
+kind: company
 description: >-
   Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, datasets, and metrics. The Langfuse API supports both self-hosted and multi-region cloud deployments (US, EU, Japan, HIPAA-compliant US) and integrates with LangChain, LlamaIndex, OpenTelemetry, and any LLM stack.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
@@ -28,7 +28,7 @@ apis:
       - url: https://langfuse.com/docs/tracing
         type: Documentation
       - url: https://api.reference.langfuse.com/
-        type: API Reference
+        type: APIReference
       - url: openapi/langfuse-openapi.yml
         type: OpenAPI
     description: >-
@@ -166,7 +166,7 @@ common:
     url: https://langfuse.com/
   - type: Documentation
     url: https://langfuse.com/docs
-  - type: API Reference
+  - type: APIReference
     url: https://api.reference.langfuse.com/
   - type: Pricing
     url: https://langfuse.com/pricing
