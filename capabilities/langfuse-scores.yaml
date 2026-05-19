@@ -1,0 +1,245 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — Scores
+  description: 'langfuse — Scores. 2 operations. Lead operation: Scores. Self-contained Naftiko capability covering one Langfuse
+    business surface.'
+  tags:
+  - Langfuse
+  - Scores
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-scores
+    baseUri: ''
+    description: langfuse — Scores business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-v2-scores
+      path: /api/public/v2/scores
+      operations:
+      - name: scoresgetmany
+        method: GET
+        description: Get a list of scores (supports both trace and session scores)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number, starts at 1.
+        - name: limit
+          in: query
+          type: integer
+          description: Limit of items per page. If you encounter api issues due to too large page sizes, try to reduce the
+            limit.
+        - name: userId
+          in: query
+          type: string
+          description: Retrieve only scores with this userId associated to the trace.
+        - name: name
+          in: query
+          type: string
+          description: Retrieve only scores with this name.
+        - name: fromTimestamp
+          in: query
+          type: string
+          description: Optional filter to only include scores created on or after a certain datetime (ISO 8601)
+        - name: toTimestamp
+          in: query
+          type: string
+          description: Optional filter to only include scores created before a certain datetime (ISO 8601)
+        - name: environment
+          in: query
+          type: array
+          description: Optional filter for scores where the environment is one of the provided values.
+        - name: source
+          in: query
+          type: string
+          description: Retrieve only scores from a specific source.
+        - name: operator
+          in: query
+          type: string
+          description: Retrieve only scores with <operator> value.
+        - name: value
+          in: query
+          type: number
+          description: Retrieve only scores with <operator> value.
+        - name: scoreIds
+          in: query
+          type: string
+          description: Comma-separated list of score IDs to limit the results to.
+        - name: configId
+          in: query
+          type: string
+          description: Retrieve only scores with a specific configId.
+        - name: sessionId
+          in: query
+          type: string
+          description: Retrieve only scores with a specific sessionId.
+        - name: datasetRunId
+          in: query
+          type: string
+          description: Retrieve only scores with a specific datasetRunId.
+        - name: traceId
+          in: query
+          type: string
+          description: Retrieve only scores with a specific traceId.
+        - name: observationId
+          in: query
+          type: string
+          description: Comma-separated list of observation IDs to filter scores by.
+        - name: queueId
+          in: query
+          type: string
+          description: Retrieve only scores with a specific annotation queueId.
+        - name: dataType
+          in: query
+          type: string
+          description: Retrieve only scores with a specific dataType.
+        - name: traceTags
+          in: query
+          type: array
+          description: Only scores linked to traces that include all of these tags will be returned.
+        - name: fields
+          in: query
+          type: string
+          description: 'Comma-separated list of field groups to include in the response. Available field groups: ''score''
+            (core score fields), ''trace'' (trace properties: userId, tags, e'
+        - name: filter
+          in: query
+          type: string
+          description: 'A JSON stringified array of filter objects. Each object requires type, column, operator, and value.
+            Supports filtering by score metadata using the stringObject '
+    - name: api-public-v2-scores-scoreId
+      path: /api/public/v2/scores/{scoreId}
+      operations:
+      - name: scoresgetbyid
+        method: GET
+        description: Get a score (supports both trace and session scores)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: scoreId
+          in: path
+          type: string
+          description: The unique langfuse identifier of a score
+          required: true
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-scores-rest
+    port: 8080
+    description: REST adapter for langfuse — Scores. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/public/v2/scores
+      name: api-public-v2-scores
+      description: REST surface for api-public-v2-scores.
+      operations:
+      - method: GET
+        name: scoresgetmany
+        description: Get a list of scores (supports both trace and session scores)
+        call: langfuse-scores.scoresgetmany
+        with:
+          page: rest.page
+          limit: rest.limit
+          userId: rest.userId
+          name: rest.name
+          fromTimestamp: rest.fromTimestamp
+          toTimestamp: rest.toTimestamp
+          environment: rest.environment
+          source: rest.source
+          operator: rest.operator
+          value: rest.value
+          scoreIds: rest.scoreIds
+          configId: rest.configId
+          sessionId: rest.sessionId
+          datasetRunId: rest.datasetRunId
+          traceId: rest.traceId
+          observationId: rest.observationId
+          queueId: rest.queueId
+          dataType: rest.dataType
+          traceTags: rest.traceTags
+          fields: rest.fields
+          filter: rest.filter
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/v2/scores/{scoreid}
+      name: api-public-v2-scores-scoreid
+      description: REST surface for api-public-v2-scores-scoreId.
+      operations:
+      - method: GET
+        name: scoresgetbyid
+        description: Get a score (supports both trace and session scores)
+        call: langfuse-scores.scoresgetbyid
+        with:
+          scoreId: rest.scoreId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-scores-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — Scores. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: get-list-scores-supports-both
+      description: Get a list of scores (supports both trace and session scores)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-scores.scoresgetmany
+      with:
+        page: tools.page
+        limit: tools.limit
+        userId: tools.userId
+        name: tools.name
+        fromTimestamp: tools.fromTimestamp
+        toTimestamp: tools.toTimestamp
+        environment: tools.environment
+        source: tools.source
+        operator: tools.operator
+        value: tools.value
+        scoreIds: tools.scoreIds
+        configId: tools.configId
+        sessionId: tools.sessionId
+        datasetRunId: tools.datasetRunId
+        traceId: tools.traceId
+        observationId: tools.observationId
+        queueId: tools.queueId
+        dataType: tools.dataType
+        traceTags: tools.traceTags
+        fields: tools.fields
+        filter: tools.filter
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-score-supports-both-trace
+      description: Get a score (supports both trace and session scores)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-scores.scoresgetbyid
+      with:
+        scoreId: tools.scoreId
+      outputParameters:
+      - type: object
+        mapping: $.

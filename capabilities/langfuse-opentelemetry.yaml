@@ -1,0 +1,81 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — Opentelemetry
+  description: 'langfuse — Opentelemetry. 1 operations. Lead operation: Opentelemetry. Self-contained Naftiko capability covering
+    one Langfuse business surface.'
+  tags:
+  - Langfuse
+  - Opentelemetry
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-opentelemetry
+    baseUri: ''
+    description: langfuse — Opentelemetry business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-otel-v1-traces
+      path: /api/public/otel/v1/traces
+      operations:
+      - name: opentelemetryexporttraces
+        method: POST
+        description: '**OpenTelemetry Traces Ingestion Endpoint**'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-opentelemetry-rest
+    port: 8080
+    description: REST adapter for langfuse — Opentelemetry. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/public/otel/v1/traces
+      name: api-public-otel-v1-traces
+      description: REST surface for api-public-otel-v1-traces.
+      operations:
+      - method: POST
+        name: opentelemetryexporttraces
+        description: '**OpenTelemetry Traces Ingestion Endpoint**'
+        call: langfuse-opentelemetry.opentelemetryexporttraces
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-opentelemetry-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — Opentelemetry. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: opentelemetry-traces-ingestion-endpoint
+      description: '**OpenTelemetry Traces Ingestion Endpoint**'
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: langfuse-opentelemetry.opentelemetryexporttraces
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

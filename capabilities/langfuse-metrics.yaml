@@ -1,0 +1,81 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — Metrics
+  description: 'langfuse — Metrics. 1 operations. Lead operation: Metrics. Self-contained Naftiko capability covering one
+    Langfuse business surface.'
+  tags:
+  - Langfuse
+  - Metrics
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-metrics
+    baseUri: ''
+    description: langfuse — Metrics business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-v2-metrics
+      path: /api/public/v2/metrics
+      operations:
+      - name: metricsmetrics
+        method: GET
+        description: Get metrics from the Langfuse project using a query object. V2 endpoint with optimized performance.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: query
+          in: query
+          type: string
+          description: 'JSON string containing the query parameters with the following structure:'
+          required: true
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-metrics-rest
+    port: 8080
+    description: REST adapter for langfuse — Metrics. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/public/v2/metrics
+      name: api-public-v2-metrics
+      description: REST surface for api-public-v2-metrics.
+      operations:
+      - method: GET
+        name: metricsmetrics
+        description: Get metrics from the Langfuse project using a query object. V2 endpoint with optimized performance.
+        call: langfuse-metrics.metricsmetrics
+        with:
+          query: rest.query
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-metrics-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — Metrics. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: get-metrics-langfuse-project-using
+      description: Get metrics from the Langfuse project using a query object. V2 endpoint with optimized performance.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-metrics.metricsmetrics
+      with:
+        query: tools.query
+      outputParameters:
+      - type: object
+        mapping: $.

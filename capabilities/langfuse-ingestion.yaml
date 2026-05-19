@@ -1,0 +1,81 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — Ingestion
+  description: 'langfuse — Ingestion. 1 operations. Lead operation: Ingestion. Self-contained Naftiko capability covering
+    one Langfuse business surface.'
+  tags:
+  - Langfuse
+  - Ingestion
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-ingestion
+    baseUri: ''
+    description: langfuse — Ingestion business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-ingestion
+      path: /api/public/ingestion
+      operations:
+      - name: ingestionbatch
+        method: POST
+        description: '**Legacy endpoint for batch ingestion for Langfuse Observability.**'
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-ingestion-rest
+    port: 8080
+    description: REST adapter for langfuse — Ingestion. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/public/ingestion
+      name: api-public-ingestion
+      description: REST surface for api-public-ingestion.
+      operations:
+      - method: POST
+        name: ingestionbatch
+        description: '**Legacy endpoint for batch ingestion for Langfuse Observability.**'
+        call: langfuse-ingestion.ingestionbatch
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-ingestion-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — Ingestion. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: legacy-endpoint-batch-ingestion-langfuse
+      description: '**Legacy endpoint for batch ingestion for Langfuse Observability.**'
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: langfuse-ingestion.ingestionbatch
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.

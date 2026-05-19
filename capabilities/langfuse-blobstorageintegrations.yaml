@@ -1,0 +1,186 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — BlobStorageIntegrations
+  description: 'langfuse — BlobStorageIntegrations. 4 operations. Lead operation: BlobStorageIntegrations. Self-contained
+    Naftiko capability covering one Langfuse business surface.'
+  tags:
+  - Langfuse
+  - BlobStorageIntegrations
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-blobstorageintegrations
+    baseUri: ''
+    description: langfuse — BlobStorageIntegrations business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-integrations-blob-storage
+      path: /api/public/integrations/blob-storage
+      operations:
+      - name: blobstorageintegrationsgetblobstorageintegrations
+        method: GET
+        description: Get all blob storage integrations for the organization (requires organization-scoped API key)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+      - name: blobstorageintegrationsupsertblobstorageintegration
+        method: PUT
+        description: Create or update a blob storage integration for a specific project (requires organization-scoped API
+          key). The configuration is validated by performing a test upload to the bucket.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-public-integrations-blob-storage-id
+      path: /api/public/integrations/blob-storage/{id}
+      operations:
+      - name: blobstorageintegrationsgetblobstorageintegrationstatus
+        method: GET
+        description: Get the sync status of a blob storage integration by integration ID (requires organization-scoped API
+          key)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      - name: blobstorageintegrationsdeleteblobstorageintegration
+        method: DELETE
+        description: Delete a blob storage integration by ID (requires organization-scoped API key)
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-blobstorageintegrations-rest
+    port: 8080
+    description: REST adapter for langfuse — BlobStorageIntegrations. One Spectral-compliant resource per consumed operation,
+      prefixed with /v1.
+    resources:
+    - path: /v1/api/public/integrations/blob-storage
+      name: api-public-integrations-blob-storage
+      description: REST surface for api-public-integrations-blob-storage.
+      operations:
+      - method: GET
+        name: blobstorageintegrationsgetblobstorageintegrations
+        description: Get all blob storage integrations for the organization (requires organization-scoped API key)
+        call: langfuse-blobstorageintegrations.blobstorageintegrationsgetblobstorageintegrations
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: blobstorageintegrationsupsertblobstorageintegration
+        description: Create or update a blob storage integration for a specific project (requires organization-scoped API
+          key). The configuration is validated by performing a test upload to the bucket.
+        call: langfuse-blobstorageintegrations.blobstorageintegrationsupsertblobstorageintegration
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/integrations/blob-storage/{id}
+      name: api-public-integrations-blob-storage-id
+      description: REST surface for api-public-integrations-blob-storage-id.
+      operations:
+      - method: GET
+        name: blobstorageintegrationsgetblobstorageintegrationstatus
+        description: Get the sync status of a blob storage integration by integration ID (requires organization-scoped API
+          key)
+        call: langfuse-blobstorageintegrations.blobstorageintegrationsgetblobstorageintegrationstatus
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: blobstorageintegrationsdeleteblobstorageintegration
+        description: Delete a blob storage integration by ID (requires organization-scoped API key)
+        call: langfuse-blobstorageintegrations.blobstorageintegrationsdeleteblobstorageintegration
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-blobstorageintegrations-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — BlobStorageIntegrations. One tool per consumed operation, routed inline through
+      this capability's consumes block.
+    tools:
+    - name: get-all-blob-storage-integrations
+      description: Get all blob storage integrations for the organization (requires organization-scoped API key)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-blobstorageintegrations.blobstorageintegrationsgetblobstorageintegrations
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-update-blob-storage-integration
+      description: Create or update a blob storage integration for a specific project (requires organization-scoped API key).
+        The configuration is validated by performing a test upload to the bucket.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: langfuse-blobstorageintegrations.blobstorageintegrationsupsertblobstorageintegration
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-sync-status-blob-storage
+      description: Get the sync status of a blob storage integration by integration ID (requires organization-scoped API key)
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-blobstorageintegrations.blobstorageintegrationsgetblobstorageintegrationstatus
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-blob-storage-integration-id
+      description: Delete a blob storage integration by ID (requires organization-scoped API key)
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: langfuse-blobstorageintegrations.blobstorageintegrationsdeleteblobstorageintegration
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

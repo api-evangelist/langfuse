@@ -1,0 +1,257 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — Prompts
+  description: 'langfuse — Prompts. 4 operations. Lead operation: Prompts. Self-contained Naftiko capability covering one
+    Langfuse business surface.'
+  tags:
+  - Langfuse
+  - Prompts
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-prompts
+    baseUri: ''
+    description: langfuse — Prompts business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-v2-prompts
+      path: /api/public/v2/prompts
+      operations:
+      - name: promptslist
+        method: GET
+        description: Get a list of prompt names with versions and labels
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: name
+          in: query
+          type: string
+        - name: label
+          in: query
+          type: string
+        - name: tag
+          in: query
+          type: string
+        - name: page
+          in: query
+          type: integer
+          description: page number, starts at 1
+        - name: limit
+          in: query
+          type: integer
+          description: limit of items per page
+        - name: fromUpdatedAt
+          in: query
+          type: string
+          description: Optional filter to only include prompt versions created/updated on or after a certain datetime (ISO
+            8601)
+        - name: toUpdatedAt
+          in: query
+          type: string
+          description: Optional filter to only include prompt versions created/updated before a certain datetime (ISO 8601)
+      - name: promptscreate
+        method: POST
+        description: Create a new version for the prompt with the given `name`
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-public-v2-prompts-promptName
+      path: /api/public/v2/prompts/{promptName}
+      operations:
+      - name: promptsget
+        method: GET
+        description: Get a prompt
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: promptName
+          in: path
+          type: string
+          description: 'The name of the prompt. If the prompt is in a folder (e.g., "folder/subfolder/prompt-name"), '
+          required: true
+        - name: version
+          in: query
+          type: integer
+          description: Version of the prompt to be retrieved.
+        - name: label
+          in: query
+          type: string
+          description: Label of the prompt to be retrieved. Defaults to "production" if no label or version is set.
+        - name: resolve
+          in: query
+          type: boolean
+          description: Resolve prompt dependencies before returning the prompt. Defaults to `true`. Set to `false` to return
+            the raw stored prompt with dependency tags intact. This by
+      - name: promptsdelete
+        method: DELETE
+        description: Delete prompt versions. If neither version nor label is specified, all versions of the prompt are deleted.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: promptName
+          in: path
+          type: string
+          description: The name of the prompt
+          required: true
+        - name: label
+          in: query
+          type: string
+          description: Optional label to filter deletion. If specified, deletes all prompt versions that have this label.
+        - name: version
+          in: query
+          type: integer
+          description: Optional version to filter deletion. If specified, deletes only this specific version of the prompt.
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-prompts-rest
+    port: 8080
+    description: REST adapter for langfuse — Prompts. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/public/v2/prompts
+      name: api-public-v2-prompts
+      description: REST surface for api-public-v2-prompts.
+      operations:
+      - method: GET
+        name: promptslist
+        description: Get a list of prompt names with versions and labels
+        call: langfuse-prompts.promptslist
+        with:
+          name: rest.name
+          label: rest.label
+          tag: rest.tag
+          page: rest.page
+          limit: rest.limit
+          fromUpdatedAt: rest.fromUpdatedAt
+          toUpdatedAt: rest.toUpdatedAt
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: promptscreate
+        description: Create a new version for the prompt with the given `name`
+        call: langfuse-prompts.promptscreate
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/v2/prompts/{promptname}
+      name: api-public-v2-prompts-promptname
+      description: REST surface for api-public-v2-prompts-promptName.
+      operations:
+      - method: GET
+        name: promptsget
+        description: Get a prompt
+        call: langfuse-prompts.promptsget
+        with:
+          promptName: rest.promptName
+          version: rest.version
+          label: rest.label
+          resolve: rest.resolve
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: promptsdelete
+        description: Delete prompt versions. If neither version nor label is specified, all versions of the prompt are deleted.
+        call: langfuse-prompts.promptsdelete
+        with:
+          promptName: rest.promptName
+          label: rest.label
+          version: rest.version
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-prompts-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — Prompts. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: get-list-prompt-names-versions
+      description: Get a list of prompt names with versions and labels
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-prompts.promptslist
+      with:
+        name: tools.name
+        label: tools.label
+        tag: tools.tag
+        page: tools.page
+        limit: tools.limit
+        fromUpdatedAt: tools.fromUpdatedAt
+        toUpdatedAt: tools.toUpdatedAt
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-new-version-prompt-given
+      description: Create a new version for the prompt with the given `name`
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: langfuse-prompts.promptscreate
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-prompt
+      description: Get a prompt
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-prompts.promptsget
+      with:
+        promptName: tools.promptName
+        version: tools.version
+        label: tools.label
+        resolve: tools.resolve
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-prompt-versions-if-neither
+      description: Delete prompt versions. If neither version nor label is specified, all versions of the prompt are deleted.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: langfuse-prompts.promptsdelete
+      with:
+        promptName: tools.promptName
+        label: tools.label
+        version: tools.version
+      outputParameters:
+      - type: object
+        mapping: $.

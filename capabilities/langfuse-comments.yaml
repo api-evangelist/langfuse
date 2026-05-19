@@ -1,0 +1,182 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — Comments
+  description: 'langfuse — Comments. 3 operations. Lead operation: Comments. Self-contained Naftiko capability covering one
+    Langfuse business surface.'
+  tags:
+  - Langfuse
+  - Comments
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-comments
+    baseUri: ''
+    description: langfuse — Comments business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-comments
+      path: /api/public/comments
+      operations:
+      - name: commentscreate
+        method: POST
+        description: Create a comment. Comments may be attached to different object types (trace, observation, session, prompt).
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: commentsget
+        method: GET
+        description: Get all comments
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: page
+          in: query
+          type: integer
+          description: Page number, starts at 1.
+        - name: limit
+          in: query
+          type: integer
+          description: Limit of items per page. If you encounter api issues due to too large page sizes, try to reduce the
+            limit
+        - name: objectType
+          in: query
+          type: string
+          description: Filter comments by object type (trace, observation, session, prompt).
+        - name: objectId
+          in: query
+          type: string
+          description: Filter comments by object id. If objectType is not provided, an error will be thrown.
+        - name: authorUserId
+          in: query
+          type: string
+          description: Filter comments by author user id.
+    - name: api-public-comments-commentId
+      path: /api/public/comments/{commentId}
+      operations:
+      - name: commentsgetbyid
+        method: GET
+        description: Get a comment by id
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: commentId
+          in: path
+          type: string
+          description: The unique langfuse identifier of a comment
+          required: true
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-comments-rest
+    port: 8080
+    description: REST adapter for langfuse — Comments. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/public/comments
+      name: api-public-comments
+      description: REST surface for api-public-comments.
+      operations:
+      - method: POST
+        name: commentscreate
+        description: Create a comment. Comments may be attached to different object types (trace, observation, session, prompt).
+        call: langfuse-comments.commentscreate
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: commentsget
+        description: Get all comments
+        call: langfuse-comments.commentsget
+        with:
+          page: rest.page
+          limit: rest.limit
+          objectType: rest.objectType
+          objectId: rest.objectId
+          authorUserId: rest.authorUserId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/comments/{commentid}
+      name: api-public-comments-commentid
+      description: REST surface for api-public-comments-commentId.
+      operations:
+      - method: GET
+        name: commentsgetbyid
+        description: Get a comment by id
+        call: langfuse-comments.commentsgetbyid
+        with:
+          commentId: rest.commentId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-comments-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — Comments. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: create-comment-comments-may-be
+      description: Create a comment. Comments may be attached to different object types (trace, observation, session, prompt).
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: langfuse-comments.commentscreate
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-all-comments
+      description: Get all comments
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-comments.commentsget
+      with:
+        page: tools.page
+        limit: tools.limit
+        objectType: tools.objectType
+        objectId: tools.objectId
+        authorUserId: tools.authorUserId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-comment-id
+      description: Get a comment by id
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-comments.commentsgetbyid
+      with:
+        commentId: tools.commentId
+      outputParameters:
+      - type: object
+        mapping: $.

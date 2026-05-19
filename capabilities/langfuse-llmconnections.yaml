@@ -1,0 +1,162 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — LlmConnections
+  description: 'langfuse — LlmConnections. 3 operations. Lead operation: LlmConnections. Self-contained Naftiko capability
+    covering one Langfuse business surface.'
+  tags:
+  - Langfuse
+  - LlmConnections
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-llmconnections
+    baseUri: ''
+    description: langfuse — LlmConnections business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-llm-connections
+      path: /api/public/llm-connections
+      operations:
+      - name: llmconnectionslist
+        method: GET
+        description: Get all LLM connections in a project
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: page
+          in: query
+          type: integer
+          description: page number, starts at 1
+        - name: limit
+          in: query
+          type: integer
+          description: limit of items per page
+      - name: llmconnectionsupsert
+        method: PUT
+        description: Create or update an LLM connection. The connection is upserted on provider.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-public-llm-connections-id
+      path: /api/public/llm-connections/{id}
+      operations:
+      - name: llmconnectionsdelete
+        method: DELETE
+        description: Delete an LLM connection by id. Evaluators that depend on the deleted connection are automatically paused.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-llmconnections-rest
+    port: 8080
+    description: REST adapter for langfuse — LlmConnections. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/public/llm-connections
+      name: api-public-llm-connections
+      description: REST surface for api-public-llm-connections.
+      operations:
+      - method: GET
+        name: llmconnectionslist
+        description: Get all LLM connections in a project
+        call: langfuse-llmconnections.llmconnectionslist
+        with:
+          page: rest.page
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PUT
+        name: llmconnectionsupsert
+        description: Create or update an LLM connection. The connection is upserted on provider.
+        call: langfuse-llmconnections.llmconnectionsupsert
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/llm-connections/{id}
+      name: api-public-llm-connections-id
+      description: REST surface for api-public-llm-connections-id.
+      operations:
+      - method: DELETE
+        name: llmconnectionsdelete
+        description: Delete an LLM connection by id. Evaluators that depend on the deleted connection are automatically paused.
+        call: langfuse-llmconnections.llmconnectionsdelete
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-llmconnections-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — LlmConnections. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: get-all-llm-connections-project
+      description: Get all LLM connections in a project
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-llmconnections.llmconnectionslist
+      with:
+        page: tools.page
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-update-llm-connection-connection
+      description: Create or update an LLM connection. The connection is upserted on provider.
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: langfuse-llmconnections.llmconnectionsupsert
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-llm-connection-id-evaluators
+      description: Delete an LLM connection by id. Evaluators that depend on the deleted connection are automatically paused.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: langfuse-llmconnections.llmconnectionsdelete
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

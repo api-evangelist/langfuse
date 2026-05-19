@@ -1,0 +1,496 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — AnnotationQueues
+  description: 'langfuse — AnnotationQueues. 10 operations. Lead operation: AnnotationQueues. Self-contained Naftiko capability
+    covering one Langfuse business surface.'
+  tags:
+  - Langfuse
+  - AnnotationQueues
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-annotationqueues
+    baseUri: ''
+    description: langfuse — AnnotationQueues business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-annotation-queues
+      path: /api/public/annotation-queues
+      operations:
+      - name: annotationqueueslistqueues
+        method: GET
+        description: Get all annotation queues
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: page
+          in: query
+          type: integer
+          description: page number, starts at 1
+        - name: limit
+          in: query
+          type: integer
+          description: limit of items per page
+      - name: annotationqueuescreatequeue
+        method: POST
+        description: Create an annotation queue
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-public-annotation-queues-queueId
+      path: /api/public/annotation-queues/{queueId}
+      operations:
+      - name: annotationqueuesgetqueue
+        method: GET
+        description: Get an annotation queue by ID
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: queueId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue
+          required: true
+    - name: api-public-annotation-queues-queueId-assignments
+      path: /api/public/annotation-queues/{queueId}/assignments
+      operations:
+      - name: annotationqueuescreatequeueassignment
+        method: POST
+        description: Create an assignment for a user to an annotation queue
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: queueId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: annotationqueuesdeletequeueassignment
+        method: DELETE
+        description: Delete an assignment for a user to an annotation queue
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: queueId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-public-annotation-queues-queueId-items
+      path: /api/public/annotation-queues/{queueId}/items
+      operations:
+      - name: annotationqueueslistqueueitems
+        method: GET
+        description: Get items for a specific annotation queue
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: queueId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue
+          required: true
+        - name: status
+          in: query
+          type: string
+          description: Filter by status
+        - name: page
+          in: query
+          type: integer
+          description: page number, starts at 1
+        - name: limit
+          in: query
+          type: integer
+          description: limit of items per page
+      - name: annotationqueuescreatequeueitem
+        method: POST
+        description: Add an item to an annotation queue
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: queueId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+    - name: api-public-annotation-queues-queueId-items-itemId
+      path: /api/public/annotation-queues/{queueId}/items/{itemId}
+      operations:
+      - name: annotationqueuesgetqueueitem
+        method: GET
+        description: Get a specific item from an annotation queue
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: queueId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue
+          required: true
+        - name: itemId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue item
+          required: true
+      - name: annotationqueuesupdatequeueitem
+        method: PATCH
+        description: Update an annotation queue item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: queueId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue
+          required: true
+        - name: itemId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue item
+          required: true
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: annotationqueuesdeletequeueitem
+        method: DELETE
+        description: Remove an item from an annotation queue
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: queueId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue
+          required: true
+        - name: itemId
+          in: path
+          type: string
+          description: The unique identifier of the annotation queue item
+          required: true
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-annotationqueues-rest
+    port: 8080
+    description: REST adapter for langfuse — AnnotationQueues. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/public/annotation-queues
+      name: api-public-annotation-queues
+      description: REST surface for api-public-annotation-queues.
+      operations:
+      - method: GET
+        name: annotationqueueslistqueues
+        description: Get all annotation queues
+        call: langfuse-annotationqueues.annotationqueueslistqueues
+        with:
+          page: rest.page
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: annotationqueuescreatequeue
+        description: Create an annotation queue
+        call: langfuse-annotationqueues.annotationqueuescreatequeue
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/annotation-queues/{queueid}
+      name: api-public-annotation-queues-queueid
+      description: REST surface for api-public-annotation-queues-queueId.
+      operations:
+      - method: GET
+        name: annotationqueuesgetqueue
+        description: Get an annotation queue by ID
+        call: langfuse-annotationqueues.annotationqueuesgetqueue
+        with:
+          queueId: rest.queueId
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/annotation-queues/{queueid}/assignments
+      name: api-public-annotation-queues-queueid-assignments
+      description: REST surface for api-public-annotation-queues-queueId-assignments.
+      operations:
+      - method: POST
+        name: annotationqueuescreatequeueassignment
+        description: Create an assignment for a user to an annotation queue
+        call: langfuse-annotationqueues.annotationqueuescreatequeueassignment
+        with:
+          queueId: rest.queueId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: annotationqueuesdeletequeueassignment
+        description: Delete an assignment for a user to an annotation queue
+        call: langfuse-annotationqueues.annotationqueuesdeletequeueassignment
+        with:
+          queueId: rest.queueId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/annotation-queues/{queueid}/items
+      name: api-public-annotation-queues-queueid-items
+      description: REST surface for api-public-annotation-queues-queueId-items.
+      operations:
+      - method: GET
+        name: annotationqueueslistqueueitems
+        description: Get items for a specific annotation queue
+        call: langfuse-annotationqueues.annotationqueueslistqueueitems
+        with:
+          queueId: rest.queueId
+          status: rest.status
+          page: rest.page
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: POST
+        name: annotationqueuescreatequeueitem
+        description: Add an item to an annotation queue
+        call: langfuse-annotationqueues.annotationqueuescreatequeueitem
+        with:
+          queueId: rest.queueId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/annotation-queues/{queueid}/items/{itemid}
+      name: api-public-annotation-queues-queueid-items-itemid
+      description: REST surface for api-public-annotation-queues-queueId-items-itemId.
+      operations:
+      - method: GET
+        name: annotationqueuesgetqueueitem
+        description: Get a specific item from an annotation queue
+        call: langfuse-annotationqueues.annotationqueuesgetqueueitem
+        with:
+          queueId: rest.queueId
+          itemId: rest.itemId
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: PATCH
+        name: annotationqueuesupdatequeueitem
+        description: Update an annotation queue item
+        call: langfuse-annotationqueues.annotationqueuesupdatequeueitem
+        with:
+          queueId: rest.queueId
+          itemId: rest.itemId
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: annotationqueuesdeletequeueitem
+        description: Remove an item from an annotation queue
+        call: langfuse-annotationqueues.annotationqueuesdeletequeueitem
+        with:
+          queueId: rest.queueId
+          itemId: rest.itemId
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-annotationqueues-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — AnnotationQueues. One tool per consumed operation, routed inline through this
+      capability's consumes block.
+    tools:
+    - name: get-all-annotation-queues
+      description: Get all annotation queues
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-annotationqueues.annotationqueueslistqueues
+      with:
+        page: tools.page
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-annotation-queue
+      description: Create an annotation queue
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: langfuse-annotationqueues.annotationqueuescreatequeue
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-annotation-queue-id
+      description: Get an annotation queue by ID
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-annotationqueues.annotationqueuesgetqueue
+      with:
+        queueId: tools.queueId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: create-assignment-user-annotation-queue
+      description: Create an assignment for a user to an annotation queue
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: langfuse-annotationqueues.annotationqueuescreatequeueassignment
+      with:
+        queueId: tools.queueId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-assignment-user-annotation-queue
+      description: Delete an assignment for a user to an annotation queue
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: langfuse-annotationqueues.annotationqueuesdeletequeueassignment
+      with:
+        queueId: tools.queueId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-items-specific-annotation-queue
+      description: Get items for a specific annotation queue
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-annotationqueues.annotationqueueslistqueueitems
+      with:
+        queueId: tools.queueId
+        status: tools.status
+        page: tools.page
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: add-item-annotation-queue
+      description: Add an item to an annotation queue
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: langfuse-annotationqueues.annotationqueuescreatequeueitem
+      with:
+        queueId: tools.queueId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-specific-item-annotation-queue
+      description: Get a specific item from an annotation queue
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-annotationqueues.annotationqueuesgetqueueitem
+      with:
+        queueId: tools.queueId
+        itemId: tools.itemId
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: update-annotation-queue-item
+      description: Update an annotation queue item
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: true
+      call: langfuse-annotationqueues.annotationqueuesupdatequeueitem
+      with:
+        queueId: tools.queueId
+        itemId: tools.itemId
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: remove-item-annotation-queue
+      description: Remove an item from an annotation queue
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: langfuse-annotationqueues.annotationqueuesdeletequeueitem
+      with:
+        queueId: tools.queueId
+        itemId: tools.itemId
+      outputParameters:
+      - type: object
+        mapping: $.

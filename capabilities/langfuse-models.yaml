@@ -1,0 +1,199 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — Models
+  description: 'langfuse — Models. 4 operations. Lead operation: Models. Self-contained Naftiko capability covering one Langfuse
+    business surface.'
+  tags:
+  - Langfuse
+  - Models
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-models
+    baseUri: ''
+    description: langfuse — Models business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-models
+      path: /api/public/models
+      operations:
+      - name: modelscreate
+        method: POST
+        description: Create a model
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: modelslist
+        method: GET
+        description: Get all models
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: page
+          in: query
+          type: integer
+          description: page number, starts at 1
+        - name: limit
+          in: query
+          type: integer
+          description: limit of items per page
+    - name: api-public-models-id
+      path: /api/public/models/{id}
+      operations:
+      - name: modelsget
+        method: GET
+        description: Get a model
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      - name: modelsdelete
+        method: DELETE
+        description: Delete a model. Cannot delete models managed by Langfuse. You can create your own definition with the
+          same modelName to override the definition though.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-models-rest
+    port: 8080
+    description: REST adapter for langfuse — Models. One Spectral-compliant resource per consumed operation, prefixed with
+      /v1.
+    resources:
+    - path: /v1/api/public/models
+      name: api-public-models
+      description: REST surface for api-public-models.
+      operations:
+      - method: POST
+        name: modelscreate
+        description: Create a model
+        call: langfuse-models.modelscreate
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: modelslist
+        description: Get all models
+        call: langfuse-models.modelslist
+        with:
+          page: rest.page
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/models/{id}
+      name: api-public-models-id
+      description: REST surface for api-public-models-id.
+      operations:
+      - method: GET
+        name: modelsget
+        description: Get a model
+        call: langfuse-models.modelsget
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: modelsdelete
+        description: Delete a model. Cannot delete models managed by Langfuse. You can create your own definition with the
+          same modelName to override the definition though.
+        call: langfuse-models.modelsdelete
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-models-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — Models. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: create-model
+      description: Create a model
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: langfuse-models.modelscreate
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-all-models
+      description: Get all models
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-models.modelslist
+      with:
+        page: tools.page
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-model
+      description: Get a model
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-models.modelsget
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-model-cannot-delete-models
+      description: Delete a model. Cannot delete models managed by Langfuse. You can create your own definition with the same
+        modelName to override the definition though.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: langfuse-models.modelsdelete
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.

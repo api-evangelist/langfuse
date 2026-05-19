@@ -1,0 +1,217 @@
+naftiko: 1.0.0-alpha2
+info:
+  label: langfuse — DatasetItems
+  description: 'langfuse — DatasetItems. 4 operations. Lead operation: DatasetItems. Self-contained Naftiko capability covering
+    one Langfuse business surface.'
+  tags:
+  - Langfuse
+  - DatasetItems
+  created: '2026-05-19'
+  modified: '2026-05-19'
+binds:
+- namespace: env
+  keys:
+    LANGFUSE_API_KEY: LANGFUSE_API_KEY
+capability:
+  consumes:
+  - type: http
+    namespace: langfuse-datasetitems
+    baseUri: ''
+    description: langfuse — DatasetItems business capability. Self-contained, no shared references.
+    resources:
+    - name: api-public-dataset-items
+      path: /api/public/dataset-items
+      operations:
+      - name: datasetitemscreate
+        method: POST
+        description: Create a dataset item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: body
+          in: body
+          type: object
+          description: Request body (JSON).
+          required: true
+      - name: datasetitemslist
+        method: GET
+        description: Get dataset items. Optionally specify a version to get the items as they existed at that point in time.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: datasetName
+          in: query
+          type: string
+        - name: sourceTraceId
+          in: query
+          type: string
+        - name: sourceObservationId
+          in: query
+          type: string
+        - name: version
+          in: query
+          type: string
+          description: ISO 8601 timestamp (RFC 3339, Section 5.6) in UTC (e.g., "2026-01-21T14:35:42Z").
+        - name: page
+          in: query
+          type: integer
+          description: page number, starts at 1
+        - name: limit
+          in: query
+          type: integer
+          description: limit of items per page
+    - name: api-public-dataset-items-id
+      path: /api/public/dataset-items/{id}
+      operations:
+      - name: datasetitemsget
+        method: GET
+        description: Get a dataset item
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+      - name: datasetitemsdelete
+        method: DELETE
+        description: Delete a dataset item and all its run items. This action is irreversible.
+        outputRawFormat: json
+        outputParameters:
+        - name: result
+          type: object
+          value: $.
+        inputParameters:
+        - name: id
+          in: path
+          type: string
+          required: true
+    authentication:
+      type: basic
+      username: '{{env.LANGFUSE_USER}}'
+      password: '{{env.LANGFUSE_PASS}}'
+  exposes:
+  - type: rest
+    namespace: langfuse-datasetitems-rest
+    port: 8080
+    description: REST adapter for langfuse — DatasetItems. One Spectral-compliant resource per consumed operation, prefixed
+      with /v1.
+    resources:
+    - path: /v1/api/public/dataset-items
+      name: api-public-dataset-items
+      description: REST surface for api-public-dataset-items.
+      operations:
+      - method: POST
+        name: datasetitemscreate
+        description: Create a dataset item
+        call: langfuse-datasetitems.datasetitemscreate
+        with:
+          body: rest.body
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: GET
+        name: datasetitemslist
+        description: Get dataset items. Optionally specify a version to get the items as they existed at that point in time.
+        call: langfuse-datasetitems.datasetitemslist
+        with:
+          datasetName: rest.datasetName
+          sourceTraceId: rest.sourceTraceId
+          sourceObservationId: rest.sourceObservationId
+          version: rest.version
+          page: rest.page
+          limit: rest.limit
+        outputParameters:
+        - type: object
+          mapping: $.
+    - path: /v1/api/public/dataset-items/{id}
+      name: api-public-dataset-items-id
+      description: REST surface for api-public-dataset-items-id.
+      operations:
+      - method: GET
+        name: datasetitemsget
+        description: Get a dataset item
+        call: langfuse-datasetitems.datasetitemsget
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+      - method: DELETE
+        name: datasetitemsdelete
+        description: Delete a dataset item and all its run items. This action is irreversible.
+        call: langfuse-datasetitems.datasetitemsdelete
+        with:
+          id: rest.id
+        outputParameters:
+        - type: object
+          mapping: $.
+  - type: mcp
+    namespace: langfuse-datasetitems-mcp
+    port: 9090
+    transport: http
+    description: MCP adapter for langfuse — DatasetItems. One tool per consumed operation, routed inline through this capability's
+      consumes block.
+    tools:
+    - name: create-dataset-item
+      description: Create a dataset item
+      hints:
+        readOnly: false
+        destructive: false
+        idempotent: false
+      call: langfuse-datasetitems.datasetitemscreate
+      with:
+        body: tools.body
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-dataset-items-optionally-specify
+      description: Get dataset items. Optionally specify a version to get the items as they existed at that point in time.
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-datasetitems.datasetitemslist
+      with:
+        datasetName: tools.datasetName
+        sourceTraceId: tools.sourceTraceId
+        sourceObservationId: tools.sourceObservationId
+        version: tools.version
+        page: tools.page
+        limit: tools.limit
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: get-dataset-item
+      description: Get a dataset item
+      hints:
+        readOnly: true
+        destructive: false
+        idempotent: true
+      call: langfuse-datasetitems.datasetitemsget
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
+    - name: delete-dataset-item-and-all
+      description: Delete a dataset item and all its run items. This action is irreversible.
+      hints:
+        readOnly: false
+        destructive: true
+        idempotent: true
+      call: langfuse-datasetitems.datasetitemsdelete
+      with:
+        id: tools.id
+      outputParameters:
+      - type: object
+        mapping: $.
