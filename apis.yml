@@ -2,246 +2,201 @@ aid: langfuse
 url: https://raw.githubusercontent.com/api-evangelist/langfuse/refs/heads/main/apis.yml
 name: Langfuse
 kind: company
-description: Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, datasets,
-  and metrics. The Langfuse API supports both self-hosted and multi-region cloud deployments (US, EU, Japan, HIPAA-compliant
+description: >-
+  Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, datasets, and
+  metrics. The Langfuse API supports both self-hosted and multi-region cloud deployments (US, EU, Japan, HIPAA-compliant
   US) and integrates with LangChain, LlamaIndex, OpenTelemetry, and any LLM stack.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 tags:
-- AI
-- LLM
-- Observability
-- Open Source
-- Evaluations
+  - AI
+  - LLM
+  - Observability
+  - Open Source
+  - Evaluations
 created: '2026-05-08'
 modified: '2026-05-19'
 specificationVersion: '0.19'
 apis:
-- aid: langfuse:langfuse-tracing-api
-  name: Langfuse Tracing API
-  tags:
-  - Tracing
-  - OpenTelemetry
-  - Ingestion
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-  humanURL: https://langfuse.com/docs/tracing
-  baseURL: https://cloud.langfuse.com/api/public
-  properties:
-  - url: https://langfuse.com/docs/tracing
-    type: Documentation
-  - url: https://api.reference.langfuse.com/
-    type: APIReference
-  - url: openapi/langfuse-openapi.yml
-    type: OpenAPI
-  - type: NaftikoCapability
-    url: capabilities/langfuse-annotationqueues.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-blobstorageintegrations.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-comments.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-datasetitems.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-datasetrunitems.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-datasets.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-health.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-ingestion.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-legacymetricsv1.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-legacyobservationsv1.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-legacyscorev1.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-llmconnections.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-media.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-metrics.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-models.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-observations.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-opentelemetry.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-organizations.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-projects.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-promptversion.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-prompts.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-scim.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-scoreconfigs.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-scores.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-sessions.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-trace.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-unstableevaluationrules.yaml
-  - type: NaftikoCapability
-    url: capabilities/langfuse-unstableevaluators.yaml
-  description: Ingest traces, observations (spans, generations, events), and scores into Langfuse. Recommended path is the
-    OpenTelemetry endpoint; legacy ingestion API is also supported. Traces are the unit of usage billing.
-- aid: langfuse:langfuse-observations-api
-  name: Langfuse Observations API
-  tags:
-  - Observations
-  - Spans
-  - Generations
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-  humanURL: https://langfuse.com/docs/api
-  baseURL: https://cloud.langfuse.com/api/public
-  properties:
-  - url: https://langfuse.com/docs/api
-    type: Documentation
-  - url: openapi/langfuse-openapi.yml
-    type: OpenAPI
-  description: Read and query observations (spans, generations, events) attached to traces. Supports filtering by trace, time
-    range, name, and metadata.
-- aid: langfuse:langfuse-metrics-api
-  name: Langfuse Metrics API
-  tags:
-  - Metrics
-  - Analytics
-  - Reporting
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-  humanURL: https://langfuse.com/docs/analytics
-  baseURL: https://cloud.langfuse.com/api/public
-  properties:
-  - url: https://langfuse.com/docs/analytics
-    type: Documentation
-  - url: openapi/langfuse-openapi.yml
-    type: OpenAPI
-  description: Aggregated metrics across traces, observations, scores, and costs. Supports custom dimensions, time series,
-    and project-scoped queries for dashboarding.
-- aid: langfuse:langfuse-prompts-api
-  name: Langfuse Prompt Management API
-  tags:
-  - Prompts
-  - Versioning
-  - Prompt Management
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-  humanURL: https://langfuse.com/docs/prompts
-  baseURL: https://cloud.langfuse.com/api/public
-  properties:
-  - url: https://langfuse.com/docs/prompts
-    type: Documentation
-  - url: openapi/langfuse-openapi.yml
-    type: OpenAPI
-  description: Create, version, label, and retrieve prompts with client-side caching. Supports text and chat prompt types,
-    configuration variables, and label-based deployment (e.g. production, staging).
-- aid: langfuse:langfuse-datasets-api
-  name: Langfuse Datasets API
-  tags:
-  - Datasets
-  - Test Data
-  - Evaluations
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-  humanURL: https://langfuse.com/docs/datasets
-  baseURL: https://cloud.langfuse.com/api/public
-  properties:
-  - url: https://langfuse.com/docs/datasets
-    type: Documentation
-  - url: openapi/langfuse-openapi.yml
-    type: OpenAPI
-  description: Manage datasets and dataset items (input/expected-output pairs) for offline evaluation runs and regression
-    testing.
-- aid: langfuse:langfuse-evaluations-api
-  name: Langfuse Evaluations API
-  tags:
-  - Evaluations
-  - Scoring
-  - LLM-as-Judge
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-  humanURL: https://langfuse.com/docs/evaluation
-  baseURL: https://cloud.langfuse.com/api/public
-  properties:
-  - url: https://langfuse.com/docs/evaluation
-    type: Documentation
-  - url: openapi/langfuse-openapi.yml
-    type: OpenAPI
-  description: 'CRUD operations for evals: define evaluators (LLM-as-judge, code, human), trigger evaluations on traces or
-    dataset runs, and read back scores and reasoning.'
-- aid: langfuse:langfuse-scores-api
-  name: Langfuse Scores API
-  tags:
-  - Scores
-  - Feedback
-  - Quality
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-  humanURL: https://langfuse.com/docs/scores
-  baseURL: https://cloud.langfuse.com/api/public
-  properties:
-  - url: https://langfuse.com/docs/scores
-    type: Documentation
-  - url: openapi/langfuse-openapi.yml
-    type: OpenAPI
-  description: Attach numeric, categorical, or boolean scores to traces, observations, or sessions. Supports user feedback,
-    model-graded scores, and custom-defined score schemas.
-- aid: langfuse:langfuse-organizations-api
-  name: Langfuse Organizations & Projects API
-  tags:
-  - Organizations
-  - Projects
-  - Provisioning
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-  humanURL: https://langfuse.com/docs/api
-  baseURL: https://cloud.langfuse.com/api/public
-  properties:
-  - url: https://langfuse.com/docs/api
-    type: Documentation
-  - url: openapi/langfuse-openapi.yml
-    type: OpenAPI
-  description: Organization-level provisioning APIs to create projects, manage users, and configure project membership programmatically.
-- aid: langfuse:langfuse-instance-api
-  name: Langfuse Instance Management API
-  tags:
-  - Self-Hosted
-  - Administration
-  - Instance
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-  humanURL: https://langfuse.com/self-hosting
-  baseURL: https://cloud.langfuse.com/api/public
-  properties:
-  - url: https://langfuse.com/self-hosting
-    type: Documentation
-  - url: openapi/langfuse-openapi.yml
-    type: OpenAPI
-  description: Instance-management endpoints for self-hosted Langfuse deployments. Used to administer organizations, license,
-    and platform-wide configuration.
+  - aid: langfuse:langfuse-tracing-api
+    name: Langfuse Tracing API
+    tags:
+      - Tracing
+      - OpenTelemetry
+      - Ingestion
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/tracing
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/tracing
+        type: Documentation
+      - url: https://api.reference.langfuse.com/
+        type: APIReference
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
+    description: >-
+      Ingest traces, observations (spans, generations, events), and scores into Langfuse. Recommended path is the
+      OpenTelemetry endpoint; legacy ingestion API is also supported. Traces are the unit of usage billing.
+  - aid: langfuse:langfuse-observations-api
+    name: Langfuse Observations API
+    tags:
+      - Observations
+      - Spans
+      - Generations
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/api
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/api
+        type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
+    description: >-
+      Read and query observations (spans, generations, events) attached to traces. Supports filtering by trace, time
+      range, name, and metadata.
+  - aid: langfuse:langfuse-metrics-api
+    name: Langfuse Metrics API
+    tags:
+      - Metrics
+      - Analytics
+      - Reporting
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/analytics
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/analytics
+        type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
+    description: >-
+      Aggregated metrics across traces, observations, scores, and costs. Supports custom dimensions, time series, and
+      project-scoped queries for dashboarding.
+  - aid: langfuse:langfuse-prompts-api
+    name: Langfuse Prompt Management API
+    tags:
+      - Prompts
+      - Versioning
+      - Prompt Management
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/prompts
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/prompts
+        type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
+    description: >-
+      Create, version, label, and retrieve prompts with client-side caching. Supports text and chat prompt types,
+      configuration variables, and label-based deployment (e.g. production, staging).
+  - aid: langfuse:langfuse-datasets-api
+    name: Langfuse Datasets API
+    tags:
+      - Datasets
+      - Test Data
+      - Evaluations
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/datasets
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/datasets
+        type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
+    description: >-
+      Manage datasets and dataset items (input/expected-output pairs) for offline evaluation runs and regression
+      testing.
+  - aid: langfuse:langfuse-evaluations-api
+    name: Langfuse Evaluations API
+    tags:
+      - Evaluations
+      - Scoring
+      - LLM-as-Judge
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/evaluation
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/evaluation
+        type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
+    description: >-
+      CRUD operations for evals: define evaluators (LLM-as-judge, code, human), trigger evaluations on traces or dataset
+      runs, and read back scores and reasoning.
+  - aid: langfuse:langfuse-scores-api
+    name: Langfuse Scores API
+    tags:
+      - Scores
+      - Feedback
+      - Quality
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/scores
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/scores
+        type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
+    description: >-
+      Attach numeric, categorical, or boolean scores to traces, observations, or sessions. Supports user feedback,
+      model-graded scores, and custom-defined score schemas.
+  - aid: langfuse:langfuse-organizations-api
+    name: Langfuse Organizations & Projects API
+    tags:
+      - Organizations
+      - Projects
+      - Provisioning
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/docs/api
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/docs/api
+        type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
+    description: >-
+      Organization-level provisioning APIs to create projects, manage users, and configure project membership
+      programmatically.
+  - aid: langfuse:langfuse-instance-api
+    name: Langfuse Instance Management API
+    tags:
+      - Self-Hosted
+      - Administration
+      - Instance
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://langfuse.com/self-hosting
+    baseURL: https://cloud.langfuse.com/api/public
+    properties:
+      - url: https://langfuse.com/self-hosting
+        type: Documentation
+      - url: openapi/langfuse-openapi.yml
+        type: OpenAPI
+    description: >-
+      Instance-management endpoints for self-hosted Langfuse deployments. Used to administer organizations, license, and
+      platform-wide configuration.
 common:
-- type: LinkedIn
-  url: https://www.linkedin.com/company/langfuse
-- type: Website
-  url: https://langfuse.com/
-- type: Documentation
-  url: https://langfuse.com/docs
-- type: APIReference
-  url: https://api.reference.langfuse.com/
-- type: Pricing
-  url: https://langfuse.com/pricing
-- type: GitHub
-  url: https://github.com/langfuse/langfuse
-- type: Plans
-  url: plans/langfuse-plans-pricing.yml
-- type: RateLimits
-  url: rate-limits/langfuse-rate-limits.yml
-- type: FinOps
-  url: finops/langfuse-finops.yml
-- type: Integrations
-  url: https://langfuse.com/integrations
-- type: LLMsTxt
-  url: https://api.reference.langfuse.com/llms.txt
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/langfuse
+  - type: Website
+    url: https://langfuse.com/
+  - type: Documentation
+    url: https://langfuse.com/docs
+  - type: APIReference
+    url: https://api.reference.langfuse.com/
+  - type: Pricing
+    url: https://langfuse.com/pricing
+  - type: GitHub
+    url: https://github.com/langfuse/langfuse
+  - type: Plans
+    url: plans/langfuse-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/langfuse-rate-limits.yml
+  - type: FinOps
+    url: finops/langfuse-finops.yml
+  - type: Integrations
+    url: https://langfuse.com/integrations
+  - type: LLMsTxt
+    url: https://api.reference.langfuse.com/llms.txt
 integrations:
-- name: Agentic Data Stack
+  - name: Agentic Data Stack
 maintainers:
-- FN: Kin Lane
-  email: kin@apievangelist.com
+  - FN: Kin Lane
+    email: kin@apievangelist.com
