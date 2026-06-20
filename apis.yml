@@ -6,7 +6,7 @@ description: >-
   Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, datasets, and
   metrics. The Langfuse API supports both self-hosted and multi-region cloud deployments (US, EU, Japan, HIPAA-compliant
   US) and integrates with LangChain, LlamaIndex, OpenTelemetry, and any LLM stack.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - AI
   - LLM
@@ -23,7 +23,7 @@ apis:
       - Tracing
       - OpenTelemetry
       - Ingestion
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://langfuse.com/docs/tracing
     baseURL: https://cloud.langfuse.com/api/public
     properties:
@@ -42,7 +42,7 @@ apis:
       - Observations
       - Spans
       - Generations
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://langfuse.com/docs/api
     baseURL: https://cloud.langfuse.com/api/public
     properties:
@@ -59,7 +59,7 @@ apis:
       - Metrics
       - Analytics
       - Reporting
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://langfuse.com/docs/analytics
     baseURL: https://cloud.langfuse.com/api/public
     properties:
@@ -76,7 +76,7 @@ apis:
       - Prompts
       - Versioning
       - Prompt Management
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://langfuse.com/docs/prompts
     baseURL: https://cloud.langfuse.com/api/public
     properties:
@@ -93,7 +93,7 @@ apis:
       - Datasets
       - Test Data
       - Evaluations
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://langfuse.com/docs/datasets
     baseURL: https://cloud.langfuse.com/api/public
     properties:
@@ -110,7 +110,7 @@ apis:
       - Evaluations
       - Scoring
       - LLM-as-Judge
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://langfuse.com/docs/evaluation
     baseURL: https://cloud.langfuse.com/api/public
     properties:
@@ -127,7 +127,7 @@ apis:
       - Scores
       - Feedback
       - Quality
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://langfuse.com/docs/scores
     baseURL: https://cloud.langfuse.com/api/public
     properties:
@@ -144,7 +144,7 @@ apis:
       - Organizations
       - Projects
       - Provisioning
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://langfuse.com/docs/api
     baseURL: https://cloud.langfuse.com/api/public
     properties:
@@ -161,7 +161,7 @@ apis:
       - Self-Hosted
       - Administration
       - Instance
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://langfuse.com/self-hosting
     baseURL: https://cloud.langfuse.com/api/public
     properties:
