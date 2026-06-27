@@ -193,7 +193,7 @@ common:
     url: finops/langfuse-finops.yml
   - type: Integrations
     url: https://langfuse.com/integrations
-  - type: LLMsTxt
+  - type: LlmsText
     url: https://api.reference.langfuse.com/llms.txt
 integrations:
   - name: Agentic Data Stack
