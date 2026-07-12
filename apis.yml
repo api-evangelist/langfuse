@@ -173,6 +173,14 @@ apis:
       Instance-management endpoints for self-hosted Langfuse deployments. Used to administer organizations, license, and
       platform-wide configuration.
 common:
+  - type: TrustCenter
+    url: security/langfuse-trust-center.yml
+  - type: VulnerabilityDisclosure
+    url: security/langfuse-vulnerability-disclosure.yml
+  - type: DomainSecurity
+    url: security/langfuse-domain-security.yml
+  - type: Authentication
+    url: authentication/langfuse-authentication.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/langfuse
   - type: Website
