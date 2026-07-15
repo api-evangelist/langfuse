@@ -173,6 +173,8 @@ apis:
       Instance-management endpoints for self-hosted Langfuse deployments. Used to administer organizations, license, and
       platform-wide configuration.
 common:
+  - type: AgenticAccess
+    url: agentic-access/langfuse-agentic-access.yml
   - type: TrustCenter
     url: security/langfuse-trust-center.yml
   - type: VulnerabilityDisclosure
