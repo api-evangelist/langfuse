@@ -1,0 +1,850 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues Trace API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: Trace
+paths:
+  /api/public/traces/{traceId}:
+    get:
+      description: Get a specific trace
+      operationId: trace_get
+      tags:
+      - Trace
+      parameters:
+      - name: traceId
+        in: path
+        description: The unique langfuse identifier of a trace
+        required: true
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: 'Comma-separated list of fields to include in the response. Available field groups: ''core'' (always included), ''io'' (input, output, metadata), ''scores'', ''observations'', ''metrics''. If not specified, all fields are returned. Example: ''core,scores,metrics''. Note: Excluded ''observations'' or ''scores'' fields return empty arrays; excluded ''metrics'' returns -1 for ''totalCost'' and ''latency''.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TraceWithFullDetails'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+    delete:
+      description: Delete a specific trace
+      operationId: trace_delete
+      tags:
+      - Trace
+      parameters:
+      - name: traceId
+        in: path
+        description: The unique langfuse identifier of the trace to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTraceResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+  /api/public/traces:
+    get:
+      description: Get list of traces
+      operationId: trace_list
+      tags:
+      - Trace
+      parameters:
+      - name: page
+        in: query
+        description: Page number, starts at 1
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: limit
+        in: query
+        description: Limit of items per page. If you encounter api issues due to too large page sizes, try to reduce the limit.
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: userId
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: name
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: sessionId
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: fromTimestamp
+        in: query
+        description: Optional filter to only include traces with a trace.timestamp on or after a certain datetime (ISO 8601)
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: toTimestamp
+        in: query
+        description: Optional filter to only include traces with a trace.timestamp before a certain datetime (ISO 8601)
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: orderBy
+        in: query
+        description: 'Format of the string [field].[asc/desc]. Fields: id, timestamp, name, userId, release, version, public, bookmarked, sessionId. Example: timestamp.asc'
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: tags
+        in: query
+        description: Only traces that include all of these tags will be returned.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            nullable: true
+      - name: version
+        in: query
+        description: Optional filter to only include traces with a certain version.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: release
+        in: query
+        description: Optional filter to only include traces with a certain release.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: environment
+        in: query
+        description: Optional filter for traces where the environment is one of the provided values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            nullable: true
+      - name: fields
+        in: query
+        description: 'Comma-separated list of fields to include in the response. Available field groups: ''core'' (always included), ''io'' (input, output, metadata), ''scores'', ''observations'', ''metrics''. If not specified, all fields are returned. Example: ''core,scores,metrics''. Note: Excluded ''observations'' or ''scores'' fields return empty arrays; excluded ''metrics'' returns -1 for ''totalCost'' and ''latency''.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: filter
+        in: query
+        description: "JSON string containing an array of filter conditions. When provided, this takes precedence over query parameter filters (userId, name, sessionId, tags, version, release, environment, fromTimestamp, toTimestamp).\n\n## Filter Structure\nEach filter condition has the following structure:\n```json\n[\n  {\n    \"type\": string,           // Required. One of: \"datetime\", \"string\", \"number\", \"stringOptions\", \"categoryOptions\", \"arrayOptions\", \"stringObject\", \"numberObject\", \"boolean\", \"null\"\n    \"column\": string,         // Required. Column to filter on (see available columns below)\n    \"operator\": string,       // Required. Operator based on type:\n                              // - datetime: \">\", \"<\", \">=\", \"<=\"\n                              // - string: \"=\", \"contains\", \"does not contain\", \"starts with\", \"ends with\"\n                              // - stringOptions: \"any of\", \"none of\"\n                              // - categoryOptions: \"any of\", \"none of\"\n                              // - arrayOptions: \"any of\", \"none of\", \"all of\"\n                              // - number: \"=\", \">\", \"<\", \">=\", \"<=\"\n                              // - stringObject: \"=\", \"contains\", \"does not contain\", \"starts with\", \"ends with\"\n                              // - numberObject: \"=\", \">\", \"<\", \">=\", \"<=\"\n                              // - boolean: \"=\", \"<>\"\n                              // - null: \"is null\", \"is not null\"\n    \"value\": any,             // Required (except for null type). Value to compare against. Type depends on filter type\n    \"key\": string             // Required only for stringObject, numberObject, and categoryOptions types when filtering on nested fields like metadata\n  }\n]\n```\n\n## Available Columns\n\n### Core Trace Fields\n- `id` (string) - Trace ID\n- `name` (string) - Trace name\n- `timestamp` (datetime) - Trace timestamp\n- `userId` (string) - User ID\n- `sessionId` (string) - Session ID\n- `environment` (string) - Environment tag\n- `version` (string) - Version tag\n- `release` (string) - Release tag\n- `tags` (arrayOptions) - Array of tags\n- `bookmarked` (boolean) - Bookmark status\n\n### Structured Data\n- `metadata` (stringObject/numberObject/categoryOptions) - Metadata key-value pairs. Use `key` parameter to filter on specific metadata keys.\n\n### Aggregated Metrics (from observations)\nThese metrics are aggregated from all observations within the trace:\n- `latency` (number) - Latency in seconds (time from first observation start to last observation end)\n- `inputTokens` (number) - Total input tokens across all observations\n- `outputTokens` (number) - Total output tokens across all observations\n- `totalTokens` (number) - Total tokens (alias: `tokens`)\n- `inputCost` (number) - Total input cost in USD\n- `outputCost` (number) - Total output cost in USD\n- `totalCost` (number) - Total cost in USD\n\n### Observation Level Aggregations\nThese fields aggregate observation levels within the trace:\n- `level` (string) - Highest severity level (ERROR > WARNING > DEFAULT > DEBUG)\n- `warningCount` (number) - Count of WARNING level observations\n- `errorCount` (number) - Count of ERROR level observations\n- `defaultCount` (number) - Count of DEFAULT level observations\n- `debugCount` (number) - Count of DEBUG level observations\n\n### Scores (requires join with scores table)\n- `scores_avg` (number) - Average of numeric scores (alias: `scores`)\n- `score_categories` (categoryOptions) - Categorical score values\n\n## Filter Examples\n```json\n[\n  {\n    \"type\": \"datetime\",\n    \"column\": \"timestamp\",\n    \"operator\": \">=\",\n    \"value\": \"2024-01-01T00:00:00Z\"\n  },\n  {\n    \"type\": \"string\",\n    \"column\": \"userId\",\n    \"operator\": \"=\",\n    \"value\": \"user-123\"\n  },\n  {\n    \"type\": \"number\",\n    \"column\": \"totalCost\",\n    \"operator\": \">=\",\n    \"value\": 0.01\n  },\n  {\n    \"type\": \"arrayOptions\",\n    \"column\": \"tags\",\n    \"operator\": \"all of\",\n    \"value\": [\"production\", \"critical\"]\n  },\n  {\n    \"type\": \"stringObject\",\n    \"column\": \"metadata\",\n    \"key\": \"customer_tier\",\n    \"operator\": \"=\",\n    \"value\": \"enterprise\"\n  }\n]\n```\n\n## Performance Notes\n- Filtering on `userId`, `sessionId`, or `metadata` may enable skip indexes for better query performance\n- Score filters require a join with the scores table and may impact query performance"
+        required: false
+        schema:
+          type: string
+          nullable: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Traces'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+    delete:
+      description: Delete multiple traces
+      operationId: trace_deleteMultiple
+      tags:
+      - Trace
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTraceResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                traceIds:
+                  type: array
+                  items:
+                    type: string
+                  description: List of trace IDs to delete
+              required:
+              - traceIds
+components:
+  schemas:
+    BooleanScoreV1:
+      title: BooleanScoreV1
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: The numeric value of the score. Equals 1 for "True" and 0 for "False"
+        stringValue:
+          type: string
+          description: The string representation of the score value. Is inferred from the numeric value and equals "True" or "False"
+      required:
+      - value
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV1'
+    TraceWithDetails:
+      title: TraceWithDetails
+      type: object
+      properties:
+        htmlPath:
+          type: string
+          description: Path of trace in Langfuse UI
+        latency:
+          type: number
+          format: double
+          nullable: true
+          description: Latency of trace in seconds
+        totalCost:
+          type: number
+          format: double
+          nullable: true
+          description: Cost of trace in USD
+        observations:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: List of observation ids
+        scores:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: List of score ids
+      required:
+      - htmlPath
+      allOf:
+      - $ref: '#/components/schemas/Trace'
+    NumericScoreV1:
+      title: NumericScoreV1
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: The numeric value of the score
+      required:
+      - value
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV1'
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    Observation:
+      title: Observation
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the observation
+        traceId:
+          type: string
+          nullable: true
+          description: The trace ID associated with the observation
+        type:
+          type: string
+          description: The type of the observation
+        name:
+          type: string
+          nullable: true
+          description: The name of the observation
+        startTime:
+          type: string
+          format: date-time
+          description: The start time of the observation
+        endTime:
+          type: string
+          format: date-time
+          nullable: true
+          description: The end time of the observation.
+        completionStartTime:
+          type: string
+          format: date-time
+          nullable: true
+          description: The completion start time of the observation
+        model:
+          type: string
+          nullable: true
+          description: The model used for the observation
+        modelParameters:
+          description: The parameters of the model used for the observation
+        input:
+          description: The input data of the observation
+        version:
+          type: string
+          nullable: true
+          description: The version of the observation
+        metadata:
+          description: Additional metadata of the observation
+        output:
+          description: The output data of the observation
+        usage:
+          $ref: '#/components/schemas/Usage'
+          description: (Deprecated. Use usageDetails and costDetails instead.) The usage data of the observation
+        level:
+          $ref: '#/components/schemas/ObservationLevel'
+          description: The level of the observation
+        statusMessage:
+          type: string
+          nullable: true
+          description: The status message of the observation
+        parentObservationId:
+          type: string
+          nullable: true
+          description: The parent observation ID
+        promptId:
+          type: string
+          nullable: true
+          description: The prompt ID associated with the observation
+        usageDetails:
+          type: object
+          additionalProperties:
+            type: integer
+          description: The usage details of the observation. Key is the name of the usage metric, value is the number of units consumed. The total key is the sum of all (non-total) usage metrics or the total value ingested.
+        costDetails:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+          description: The cost details of the observation. Key is the name of the cost metric, value is the cost in USD. The total key is the sum of all (non-total) cost metrics or the total value ingested.
+        environment:
+          type: string
+          description: The environment from which this observation originated. Can be any lowercase alphanumeric string with hyphens and underscores that does not start with 'langfuse'.
+      required:
+      - id
+      - type
+      - startTime
+      - modelParameters
+      - input
+      - metadata
+      - output
+      - usage
+      - level
+      - usageDetails
+      - costDetails
+      - environment
+    BaseScoreV1:
+      title: BaseScoreV1
+      type: object
+      properties:
+        id:
+          type: string
+        traceId:
+          type: string
+        name:
+          type: string
+        source:
+          $ref: '#/components/schemas/ScoreSource'
+        observationId:
+          type: string
+          nullable: true
+          description: The observation ID associated with the score
+        timestamp:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        authorUserId:
+          type: string
+          nullable: true
+          description: The user ID of the author
+        comment:
+          type: string
+          nullable: true
+          description: Comment on the score
+        metadata:
+          description: Metadata associated with the score
+        configId:
+          type: string
+          nullable: true
+          description: Reference a score config on a score. When set, config and score name must be equal and value must comply to optionally defined numerical range
+        queueId:
+          type: string
+          nullable: true
+          description: The annotation queue referenced by the score. Indicates if score was initially created while processing annotation queue.
+        environment:
+          type: string
+          description: The environment from which this score originated. Can be any lowercase alphanumeric string with hyphens and underscores that does not start with 'langfuse'.
+      required:
+      - id
+      - traceId
+      - name
+      - source
+      - timestamp
+      - createdAt
+      - updatedAt
+      - metadata
+      - environment
+    TraceWithFullDetails:
+      title: TraceWithFullDetails
+      type: object
+      properties:
+        htmlPath:
+          type: string
+          description: Path of trace in Langfuse UI
+        latency:
+          type: number
+          format: double
+          nullable: true
+          description: Latency of trace in seconds
+        totalCost:
+          type: number
+          format: double
+          nullable: true
+          description: Cost of trace in USD
+        observations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObservationsView'
+          description: List of observations
+        scores:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoreV1'
+          description: List of scores
+      required:
+      - htmlPath
+      - observations
+      - scores
+      allOf:
+      - $ref: '#/components/schemas/Trace'
+    Traces:
+      title: Traces
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TraceWithDetails'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    CategoricalScoreV1:
+      title: CategoricalScoreV1
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: Represents the numeric category mapping of the stringValue. If no config is linked, defaults to 0.
+        stringValue:
+          type: string
+          description: The string representation of the score value. If no config is linked, can be any string. Otherwise, must map to a config category
+      required:
+      - value
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV1'
+    Trace:
+      title: Trace
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of a trace
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp when the trace was created
+        name:
+          type: string
+          nullable: true
+          description: The name of the trace
+        input:
+          nullable: true
+          description: The input data of the trace. Can be any JSON.
+        output:
+          nullable: true
+          description: The output data of the trace. Can be any JSON.
+        sessionId:
+          type: string
+          nullable: true
+          description: The session identifier associated with the trace
+        release:
+          type: string
+          nullable: true
+          description: The release version of the application when the trace was created
+        version:
+          type: string
+          nullable: true
+          description: The version of the trace
+        userId:
+          type: string
+          nullable: true
+          description: The user identifier associated with the trace
+        metadata:
+          nullable: true
+          description: The metadata associated with the trace. Can be any JSON.
+        tags:
+          type: array
+          items:
+            type: string
+          description: The tags associated with the trace.
+        public:
+          type: boolean
+          description: Public traces are accessible via url without login
+        environment:
+          type: string
+          description: The environment from which this trace originated. Can be any lowercase alphanumeric string with hyphens and underscores that does not start with 'langfuse'.
+      required:
+      - id
+      - timestamp
+      - tags
+      - public
+      - environment
+    Usage:
+      title: Usage
+      type: object
+      description: (Deprecated. Use usageDetails and costDetails instead.) Standard interface for usage and cost
+      properties:
+        input:
+          type: integer
+          description: Number of input units (e.g. tokens)
+        output:
+          type: integer
+          description: Number of output units (e.g. tokens)
+        total:
+          type: integer
+          description: Defaults to input+output if not set
+        unit:
+          type: string
+          nullable: true
+          description: Unit of measurement
+        inputCost:
+          type: number
+          format: double
+          nullable: true
+          description: USD input cost
+        outputCost:
+          type: number
+          format: double
+          nullable: true
+          description: USD output cost
+        totalCost:
+          type: number
+          format: double
+          nullable: true
+          description: USD total cost, defaults to input+output
+      required:
+      - input
+      - output
+      - total
+    ObservationLevel:
+      title: ObservationLevel
+      type: string
+      enum:
+      - DEBUG
+      - DEFAULT
+      - WARNING
+      - ERROR
+    ScoreSource:
+      title: ScoreSource
+      type: string
+      enum:
+      - ANNOTATION
+      - API
+      - EVAL
+    DeleteTraceResponse:
+      title: DeleteTraceResponse
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    ScoreV1:
+      title: ScoreV1
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/NumericScoreV1'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/CategoricalScoreV1'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/BooleanScoreV1'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - TEXT
+        - $ref: '#/components/schemas/TextScoreV1'
+        required:
+        - dataType
+    TextScoreV1:
+      title: TextScoreV1
+      type: object
+      properties:
+        stringValue:
+          type: string
+          description: The text content of the score (1-500 characters)
+      required:
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV1'
+    ObservationsView:
+      title: ObservationsView
+      type: object
+      properties:
+        promptName:
+          type: string
+          nullable: true
+          description: The name of the prompt associated with the observation
+        promptVersion:
+          type: integer
+          nullable: true
+          description: The version of the prompt associated with the observation
+        modelId:
+          type: string
+          nullable: true
+          description: The unique identifier of the model
+        inputPrice:
+          type: number
+          format: double
+          nullable: true
+          description: The price of the input in USD
+        outputPrice:
+          type: number
+          format: double
+          nullable: true
+          description: The price of the output in USD.
+        totalPrice:
+          type: number
+          format: double
+          nullable: true
+          description: The total price in USD.
+        calculatedInputCost:
+          type: number
+          format: double
+          nullable: true
+          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated cost of the input in USD
+        calculatedOutputCost:
+          type: number
+          format: double
+          nullable: true
+          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated cost of the output in USD
+        calculatedTotalCost:
+          type: number
+          format: double
+          nullable: true
+          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated total cost in USD
+        latency:
+          type: number
+          format: double
+          nullable: true
+          description: The latency in seconds.
+        timeToFirstToken:
+          type: number
+          format: double
+          nullable: true
+          description: The time to the first token in seconds
+      allOf:
+      - $ref: '#/components/schemas/Observation'
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

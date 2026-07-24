@@ -1,0 +1,451 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues BlobStorageIntegrations API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: BlobStorageIntegrations
+paths:
+  /api/public/integrations/blob-storage:
+    get:
+      description: Get all blob storage integrations for the organization (requires organization-scoped API key)
+      operationId: blobStorageIntegrations_getBlobStorageIntegrations
+      tags:
+      - BlobStorageIntegrations
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlobStorageIntegrationsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+    put:
+      description: Create or update a blob storage integration for a specific project (requires organization-scoped API key). The configuration is validated by performing a test upload to the bucket.
+      operationId: blobStorageIntegrations_upsertBlobStorageIntegration
+      tags:
+      - BlobStorageIntegrations
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlobStorageIntegrationResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBlobStorageIntegrationRequest'
+  /api/public/integrations/blob-storage/{id}:
+    get:
+      description: Get the sync status of a blob storage integration by integration ID (requires organization-scoped API key)
+      operationId: blobStorageIntegrations_getBlobStorageIntegrationStatus
+      tags:
+      - BlobStorageIntegrations
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlobStorageIntegrationStatusResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+    delete:
+      description: Delete a blob storage integration by ID (requires organization-scoped API key)
+      operationId: blobStorageIntegrations_deleteBlobStorageIntegration
+      tags:
+      - BlobStorageIntegrations
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlobStorageIntegrationDeletionResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+components:
+  schemas:
+    BlobStorageIntegrationDeletionResponse:
+      title: BlobStorageIntegrationDeletionResponse
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    BlobStorageIntegrationsResponse:
+      title: BlobStorageIntegrationsResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlobStorageIntegrationResponse'
+      required:
+      - data
+    BlobStorageExportFrequency:
+      title: BlobStorageExportFrequency
+      type: string
+      enum:
+      - hourly
+      - daily
+      - weekly
+    BlobStorageIntegrationType:
+      title: BlobStorageIntegrationType
+      type: string
+      enum:
+      - S3
+      - S3_COMPATIBLE
+      - AZURE_BLOB_STORAGE
+    BlobStorageIntegrationResponse:
+      title: BlobStorageIntegrationResponse
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        type:
+          $ref: '#/components/schemas/BlobStorageIntegrationType'
+        bucketName:
+          type: string
+        endpoint:
+          type: string
+          nullable: true
+        region:
+          type: string
+        accessKeyId:
+          type: string
+          nullable: true
+        prefix:
+          type: string
+        exportFrequency:
+          $ref: '#/components/schemas/BlobStorageExportFrequency'
+        enabled:
+          type: boolean
+        forcePathStyle:
+          type: boolean
+        fileType:
+          $ref: '#/components/schemas/BlobStorageIntegrationFileType'
+        exportMode:
+          $ref: '#/components/schemas/BlobStorageExportMode'
+        exportStartDate:
+          type: string
+          format: date-time
+          nullable: true
+        compressed:
+          type: boolean
+        nextSyncAt:
+          type: string
+          format: date-time
+          nullable: true
+        lastSyncAt:
+          type: string
+          format: date-time
+          nullable: true
+        lastError:
+          type: string
+          nullable: true
+        lastErrorAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - projectId
+      - type
+      - bucketName
+      - region
+      - prefix
+      - exportFrequency
+      - enabled
+      - forcePathStyle
+      - fileType
+      - exportMode
+      - compressed
+      - createdAt
+      - updatedAt
+    BlobStorageIntegrationStatusResponse:
+      title: BlobStorageIntegrationStatusResponse
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        syncStatus:
+          $ref: '#/components/schemas/BlobStorageSyncStatus'
+        enabled:
+          type: boolean
+        lastSyncAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: End of the last successfully exported time window. Compare against your ETL bookmark to determine if new data is available. Null if the integration has never synced.
+        nextSyncAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the next export is scheduled. Null if no sync has occurred yet.
+        lastError:
+          type: string
+          nullable: true
+          description: Raw error message from the storage provider (S3/Azure/GCS) if the last export failed. Cleared on successful export.
+        lastErrorAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the last error occurred. Cleared on successful export.
+      required:
+      - id
+      - projectId
+      - syncStatus
+      - enabled
+    BlobStorageExportMode:
+      title: BlobStorageExportMode
+      type: string
+      enum:
+      - FULL_HISTORY
+      - FROM_TODAY
+      - FROM_CUSTOM_DATE
+    BlobStorageIntegrationFileType:
+      title: BlobStorageIntegrationFileType
+      type: string
+      enum:
+      - JSON
+      - CSV
+      - JSONL
+    CreateBlobStorageIntegrationRequest:
+      title: CreateBlobStorageIntegrationRequest
+      type: object
+      properties:
+        projectId:
+          type: string
+          description: ID of the project in which to configure the blob storage integration
+        type:
+          $ref: '#/components/schemas/BlobStorageIntegrationType'
+        bucketName:
+          type: string
+          description: Name of the storage bucket. For AZURE_BLOB_STORAGE, must be a valid Azure container name (3-63 chars, lowercase letters, numbers, and hyphens only, must start and end with a letter or number, no consecutive hyphens).
+        endpoint:
+          type: string
+          nullable: true
+          description: Custom endpoint URL (required for S3_COMPATIBLE type)
+        region:
+          type: string
+          description: Storage region
+        accessKeyId:
+          type: string
+          nullable: true
+          description: Access key ID for authentication
+        secretAccessKey:
+          type: string
+          nullable: true
+          description: Secret access key for authentication (will be encrypted when stored)
+        prefix:
+          type: string
+          nullable: true
+          description: Path prefix for exported files (must end with forward slash if provided)
+        exportFrequency:
+          $ref: '#/components/schemas/BlobStorageExportFrequency'
+        enabled:
+          type: boolean
+          description: Whether the integration is active
+        forcePathStyle:
+          type: boolean
+          description: Use path-style URLs for S3 requests
+        fileType:
+          $ref: '#/components/schemas/BlobStorageIntegrationFileType'
+        exportMode:
+          $ref: '#/components/schemas/BlobStorageExportMode'
+        exportStartDate:
+          type: string
+          format: date-time
+          nullable: true
+          description: Custom start date for exports (required when exportMode is FROM_CUSTOM_DATE)
+        compressed:
+          type: boolean
+          nullable: true
+          description: Enable gzip compression for exported files (.csv.gz, .json.gz, .jsonl.gz). Defaults to true.
+      required:
+      - projectId
+      - type
+      - bucketName
+      - region
+      - exportFrequency
+      - enabled
+      - forcePathStyle
+      - fileType
+      - exportMode
+    BlobStorageSyncStatus:
+      title: BlobStorageSyncStatus
+      type: string
+      enum:
+      - idle
+      - queued
+      - up_to_date
+      - disabled
+      - error
+      description: 'Sync status of the blob storage integration:
+
+        - `disabled` — integration is not enabled
+
+        - `error` — last export failed (see `lastError` for details)
+
+        - `idle` — enabled but has never exported yet
+
+        - `queued` — next export is overdue (`nextSyncAt` is in the past) and waiting to be picked up by the worker
+
+        - `up_to_date` — all available data has been exported; next export is scheduled for the future
+
+
+        **ETL usage**: poll this endpoint and check for `up_to_date` status. Compare `lastSyncAt` against your
+
+        ETL bookmark to determine if new data is available. Note that exports run with a 30-minute lag buffer,
+
+        so `lastSyncAt` will always be at least 30 minutes behind real-time.'
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

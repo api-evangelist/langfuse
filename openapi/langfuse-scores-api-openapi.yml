@@ -1,0 +1,639 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues Scores API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: Scores
+paths:
+  /api/public/v2/scores:
+    get:
+      description: Get a list of scores (supports both trace and session scores)
+      operationId: scores_get-many
+      tags:
+      - Scores
+      parameters:
+      - name: page
+        in: query
+        description: Page number, starts at 1.
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: limit
+        in: query
+        description: Limit of items per page. If you encounter api issues due to too large page sizes, try to reduce the limit.
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: userId
+        in: query
+        description: Retrieve only scores with this userId associated to the trace.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: name
+        in: query
+        description: Retrieve only scores with this name.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: fromTimestamp
+        in: query
+        description: Optional filter to only include scores created on or after a certain datetime (ISO 8601)
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: toTimestamp
+        in: query
+        description: Optional filter to only include scores created before a certain datetime (ISO 8601)
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: environment
+        in: query
+        description: Optional filter for scores where the environment is one of the provided values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            nullable: true
+      - name: source
+        in: query
+        description: Retrieve only scores from a specific source.
+        required: false
+        schema:
+          $ref: '#/components/schemas/ScoreSource'
+          nullable: true
+      - name: operator
+        in: query
+        description: Retrieve only scores with <operator> value.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: value
+        in: query
+        description: Retrieve only scores with <operator> value.
+        required: false
+        schema:
+          type: number
+          format: double
+          nullable: true
+      - name: scoreIds
+        in: query
+        description: Comma-separated list of score IDs to limit the results to.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: configId
+        in: query
+        description: Retrieve only scores with a specific configId.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: sessionId
+        in: query
+        description: Retrieve only scores with a specific sessionId.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: datasetRunId
+        in: query
+        description: Retrieve only scores with a specific datasetRunId.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: traceId
+        in: query
+        description: Retrieve only scores with a specific traceId.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: observationId
+        in: query
+        description: Comma-separated list of observation IDs to filter scores by.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: queueId
+        in: query
+        description: Retrieve only scores with a specific annotation queueId.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: dataType
+        in: query
+        description: Retrieve only scores with a specific dataType.
+        required: false
+        schema:
+          $ref: '#/components/schemas/ScoreDataType'
+          nullable: true
+      - name: traceTags
+        in: query
+        description: Only scores linked to traces that include all of these tags will be returned.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            nullable: true
+      - name: fields
+        in: query
+        description: 'Comma-separated list of field groups to include in the response. Available field groups: ''score'' (core score fields), ''trace'' (trace properties: userId, tags, environment, sessionId). If not specified, both ''score'' and ''trace'' are returned by default. Example: ''score'' to exclude trace data, ''score,trace'' to include both. Note: When filtering by trace properties (using userId or traceTags parameters), the ''trace'' field group must be included, otherwise a 400 error will be returned.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: filter
+        in: query
+        description: 'A JSON stringified array of filter objects. Each object requires type, column, operator, and value. Supports filtering by score metadata using the stringObject type. Example: [{"type":"stringObject","column":"metadata","key":"user_id","operator":"=","value":"abc123"}]. Supported types: stringObject (metadata key-value filtering), string, number, datetime, stringOptions, arrayOptions. Supported operators for stringObject: =, contains, does not contain, starts with, ends with.'
+        required: false
+        schema:
+          type: string
+          nullable: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetScoresResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+  /api/public/v2/scores/{scoreId}:
+    get:
+      description: Get a score (supports both trace and session scores)
+      operationId: scores_get-by-id
+      tags:
+      - Scores
+      parameters:
+      - name: scoreId
+        in: path
+        description: The unique langfuse identifier of a score
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Score'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+components:
+  schemas:
+    GetScoresResponse:
+      title: GetScoresResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetScoresResponseData'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    GetScoresResponseData:
+      title: GetScoresResponseData
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/GetScoresResponseDataNumeric'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/GetScoresResponseDataCategorical'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/GetScoresResponseDataBoolean'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CORRECTION
+        - $ref: '#/components/schemas/GetScoresResponseDataCorrection'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - TEXT
+        - $ref: '#/components/schemas/GetScoresResponseDataText'
+        required:
+        - dataType
+    CategoricalScore:
+      title: CategoricalScore
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: Represents the numeric category mapping of the stringValue. If no config is linked, defaults to 0.
+        stringValue:
+          type: string
+          description: The string representation of the score value. If no config is linked, can be any string. Otherwise, must map to a config category
+      required:
+      - value
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScore'
+    GetScoresResponseTraceData:
+      title: GetScoresResponseTraceData
+      type: object
+      properties:
+        userId:
+          type: string
+          nullable: true
+          description: The user ID associated with the trace referenced by score
+        tags:
+          type: array
+          items:
+            type: string
+          nullable: true
+          description: A list of tags associated with the trace referenced by score
+        environment:
+          type: string
+          nullable: true
+          description: The environment of the trace referenced by score
+        sessionId:
+          type: string
+          nullable: true
+          description: The session ID associated with the trace referenced by score
+    TextScore:
+      title: TextScore
+      type: object
+      properties:
+        stringValue:
+          type: string
+          description: The text content of the score (1-500 characters)
+      required:
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScore'
+    BaseScore:
+      title: BaseScore
+      type: object
+      properties:
+        id:
+          type: string
+        traceId:
+          type: string
+          nullable: true
+          description: The trace ID associated with the score
+        sessionId:
+          type: string
+          nullable: true
+          description: The session ID associated with the score
+        observationId:
+          type: string
+          nullable: true
+          description: The observation ID associated with the score
+        datasetRunId:
+          type: string
+          nullable: true
+          description: The dataset run ID associated with the score
+        name:
+          type: string
+        source:
+          $ref: '#/components/schemas/ScoreSource'
+        timestamp:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        authorUserId:
+          type: string
+          nullable: true
+          description: The user ID of the author
+        comment:
+          type: string
+          nullable: true
+          description: Comment on the score
+        metadata:
+          description: Metadata associated with the score
+        configId:
+          type: string
+          nullable: true
+          description: Reference a score config on a score. When set, config and score name must be equal and value must comply to optionally defined numerical range
+        queueId:
+          type: string
+          nullable: true
+          description: The annotation queue referenced by the score. Indicates if score was initially created while processing annotation queue.
+        environment:
+          type: string
+          description: The environment from which this score originated. Can be any lowercase alphanumeric string with hyphens and underscores that does not start with 'langfuse'.
+      required:
+      - id
+      - name
+      - source
+      - timestamp
+      - createdAt
+      - updatedAt
+      - metadata
+      - environment
+    GetScoresResponseDataBoolean:
+      title: GetScoresResponseDataBoolean
+      type: object
+      properties:
+        trace:
+          $ref: '#/components/schemas/GetScoresResponseTraceData'
+          nullable: true
+      allOf:
+      - $ref: '#/components/schemas/BooleanScore'
+    NumericScore:
+      title: NumericScore
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: The numeric value of the score
+      required:
+      - value
+      allOf:
+      - $ref: '#/components/schemas/BaseScore'
+    BooleanScore:
+      title: BooleanScore
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: The numeric value of the score. Equals 1 for "True" and 0 for "False"
+        stringValue:
+          type: string
+          description: The string representation of the score value. Is inferred from the numeric value and equals "True" or "False"
+      required:
+      - value
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScore'
+    ScoreSource:
+      title: ScoreSource
+      type: string
+      enum:
+      - ANNOTATION
+      - API
+      - EVAL
+    GetScoresResponseDataCategorical:
+      title: GetScoresResponseDataCategorical
+      type: object
+      properties:
+        trace:
+          $ref: '#/components/schemas/GetScoresResponseTraceData'
+          nullable: true
+      allOf:
+      - $ref: '#/components/schemas/CategoricalScore'
+    CorrectionScore:
+      title: CorrectionScore
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: The numeric value of the score. Always 0 for correction scores.
+        stringValue:
+          type: string
+          description: The string representation of the correction content
+      required:
+      - value
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScore'
+    ScoreDataType:
+      title: ScoreDataType
+      type: string
+      enum:
+      - NUMERIC
+      - BOOLEAN
+      - CATEGORICAL
+      - CORRECTION
+      - TEXT
+    Score:
+      title: Score
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/NumericScore'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/CategoricalScore'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/BooleanScore'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CORRECTION
+        - $ref: '#/components/schemas/CorrectionScore'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - TEXT
+        - $ref: '#/components/schemas/TextScore'
+        required:
+        - dataType
+    GetScoresResponseDataNumeric:
+      title: GetScoresResponseDataNumeric
+      type: object
+      properties:
+        trace:
+          $ref: '#/components/schemas/GetScoresResponseTraceData'
+          nullable: true
+      allOf:
+      - $ref: '#/components/schemas/NumericScore'
+    GetScoresResponseDataCorrection:
+      title: GetScoresResponseDataCorrection
+      type: object
+      properties:
+        trace:
+          $ref: '#/components/schemas/GetScoresResponseTraceData'
+          nullable: true
+      allOf:
+      - $ref: '#/components/schemas/CorrectionScore'
+    GetScoresResponseDataText:
+      title: GetScoresResponseDataText
+      type: object
+      properties:
+        trace:
+          $ref: '#/components/schemas/GetScoresResponseTraceData'
+          nullable: true
+      allOf:
+      - $ref: '#/components/schemas/TextScore'
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

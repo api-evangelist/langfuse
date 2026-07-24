@@ -1,0 +1,305 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues Comments API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: Comments
+paths:
+  /api/public/comments:
+    post:
+      description: Create a comment. Comments may be attached to different object types (trace, observation, session, prompt).
+      operationId: comments_create
+      tags:
+      - Comments
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCommentResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentRequest'
+    get:
+      description: Get all comments
+      operationId: comments_get
+      tags:
+      - Comments
+      parameters:
+      - name: page
+        in: query
+        description: Page number, starts at 1.
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: limit
+        in: query
+        description: Limit of items per page. If you encounter api issues due to too large page sizes, try to reduce the limit
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: objectType
+        in: query
+        description: Filter comments by object type (trace, observation, session, prompt).
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: objectId
+        in: query
+        description: Filter comments by object id. If objectType is not provided, an error will be thrown.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: authorUserId
+        in: query
+        description: Filter comments by author user id.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCommentsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+  /api/public/comments/{commentId}:
+    get:
+      description: Get a comment by id
+      operationId: comments_get-by-id
+      tags:
+      - Comments
+      parameters:
+      - name: commentId
+        in: path
+        description: The unique langfuse identifier of a comment
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+components:
+  schemas:
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    CreateCommentResponse:
+      title: CreateCommentResponse
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the created object in Langfuse
+      required:
+      - id
+    CommentObjectType:
+      title: CommentObjectType
+      type: string
+      enum:
+      - TRACE
+      - OBSERVATION
+      - SESSION
+      - PROMPT
+    GetCommentsResponse:
+      title: GetCommentsResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    CreateCommentRequest:
+      title: CreateCommentRequest
+      type: object
+      properties:
+        projectId:
+          type: string
+          description: The id of the project to attach the comment to.
+        objectType:
+          type: string
+          description: The type of the object to attach the comment to (trace, observation, session, prompt).
+        objectId:
+          type: string
+          description: The id of the object to attach the comment to. If this does not reference a valid existing object, an error will be thrown.
+        content:
+          type: string
+          description: The content of the comment. May include markdown. Currently limited to 5000 characters.
+        authorUserId:
+          type: string
+          nullable: true
+          description: The id of the user who created the comment.
+      required:
+      - projectId
+      - objectType
+      - objectId
+      - content
+    Comment:
+      title: Comment
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        objectType:
+          $ref: '#/components/schemas/CommentObjectType'
+        objectId:
+          type: string
+        content:
+          type: string
+        authorUserId:
+          type: string
+          nullable: true
+          description: The user ID of the comment author
+      required:
+      - id
+      - projectId
+      - createdAt
+      - updatedAt
+      - objectType
+      - objectId
+      - content
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

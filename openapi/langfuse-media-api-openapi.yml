@@ -1,0 +1,320 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues Media API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: Media
+paths:
+  /api/public/media/{mediaId}:
+    get:
+      description: Get a media record
+      operationId: media_get
+      tags:
+      - Media
+      parameters:
+      - name: mediaId
+        in: path
+        description: The unique langfuse identifier of a media record
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMediaResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+    patch:
+      description: Patch a media record
+      operationId: media_patch
+      tags:
+      - Media
+      parameters:
+      - name: mediaId
+        in: path
+        description: The unique langfuse identifier of a media record
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchMediaBody'
+  /api/public/media:
+    post:
+      description: Get a presigned upload URL for a media record
+      operationId: media_getUploadUrl
+      tags:
+      - Media
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMediaUploadUrlResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetMediaUploadUrlRequest'
+components:
+  schemas:
+    GetMediaUploadUrlResponse:
+      title: GetMediaUploadUrlResponse
+      type: object
+      properties:
+        uploadUrl:
+          type: string
+          nullable: true
+          description: The presigned upload URL. If the asset is already uploaded, this will be null
+        mediaId:
+          type: string
+          description: The unique langfuse identifier of a media record
+      required:
+      - mediaId
+    GetMediaResponse:
+      title: GetMediaResponse
+      type: object
+      properties:
+        mediaId:
+          type: string
+          description: The unique langfuse identifier of a media record
+        contentType:
+          type: string
+          description: The MIME type of the media record
+        contentLength:
+          type: integer
+          description: The size of the media record in bytes
+        uploadedAt:
+          type: string
+          format: date-time
+          description: The date and time when the media record was uploaded
+        url:
+          type: string
+          description: The download URL of the media record
+        urlExpiry:
+          type: string
+          description: The expiry date and time of the media record download URL
+      required:
+      - mediaId
+      - contentType
+      - contentLength
+      - uploadedAt
+      - url
+      - urlExpiry
+    GetMediaUploadUrlRequest:
+      title: GetMediaUploadUrlRequest
+      type: object
+      properties:
+        traceId:
+          type: string
+          description: The trace ID associated with the media record
+        observationId:
+          type: string
+          nullable: true
+          description: The observation ID associated with the media record. If the media record is associated directly with a trace, this will be null.
+        contentType:
+          $ref: '#/components/schemas/MediaContentType'
+        contentLength:
+          type: integer
+          description: The size of the media record in bytes
+        sha256Hash:
+          type: string
+          description: The SHA-256 hash of the media record
+        field:
+          type: string
+          description: The trace / observation field the media record is associated with. This can be one of `input`, `output`, `metadata`
+      required:
+      - traceId
+      - contentType
+      - contentLength
+      - sha256Hash
+      - field
+    PatchMediaBody:
+      title: PatchMediaBody
+      type: object
+      properties:
+        uploadedAt:
+          type: string
+          format: date-time
+          description: The date and time when the media record was uploaded
+        uploadHttpStatus:
+          type: integer
+          description: The HTTP status code of the upload
+        uploadHttpError:
+          type: string
+          nullable: true
+          description: The HTTP error message of the upload
+        uploadTimeMs:
+          type: integer
+          nullable: true
+          description: The time in milliseconds it took to upload the media record
+      required:
+      - uploadedAt
+      - uploadHttpStatus
+    MediaContentType:
+      title: MediaContentType
+      type: string
+      enum:
+      - image/png
+      - image/jpeg
+      - image/jpg
+      - image/webp
+      - image/gif
+      - image/svg+xml
+      - image/tiff
+      - image/bmp
+      - image/avif
+      - image/heic
+      - audio/mpeg
+      - audio/mp3
+      - audio/wav
+      - audio/ogg
+      - audio/oga
+      - audio/aac
+      - audio/mp4
+      - audio/flac
+      - audio/opus
+      - audio/webm
+      - video/mp4
+      - video/webm
+      - video/ogg
+      - video/mpeg
+      - video/quicktime
+      - video/x-msvideo
+      - video/x-matroska
+      - text/plain
+      - text/html
+      - text/css
+      - text/csv
+      - text/markdown
+      - text/x-python
+      - application/javascript
+      - text/x-typescript
+      - application/x-yaml
+      - application/pdf
+      - application/msword
+      - application/vnd.ms-excel
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      - application/zip
+      - application/json
+      - application/xml
+      - application/octet-stream
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      - application/vnd.openxmlformats-officedocument.presentationml.presentation
+      - application/rtf
+      - application/x-ndjson
+      - application/vnd.apache.parquet
+      - application/gzip
+      - application/x-tar
+      - application/x-7z-compressed
+      description: The MIME type of the media record
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

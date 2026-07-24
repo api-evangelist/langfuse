@@ -1,0 +1,396 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues ScoreConfigs API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: ScoreConfigs
+paths:
+  /api/public/score-configs:
+    post:
+      description: Create a score configuration (config). Score configs are used to define the structure of scores
+      operationId: scoreConfigs_create
+      tags:
+      - ScoreConfigs
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScoreConfig'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScoreConfigRequest'
+    get:
+      description: Get all score configs
+      operationId: scoreConfigs_get
+      tags:
+      - ScoreConfigs
+      parameters:
+      - name: page
+        in: query
+        description: Page number, starts at 1.
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: limit
+        in: query
+        description: Limit of items per page. If you encounter api issues due to too large page sizes, try to reduce the limit
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScoreConfigs'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+  /api/public/score-configs/{configId}:
+    get:
+      description: Get a score config
+      operationId: scoreConfigs_get-by-id
+      tags:
+      - ScoreConfigs
+      parameters:
+      - name: configId
+        in: path
+        description: The unique langfuse identifier of a score config
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScoreConfig'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+    patch:
+      description: Update a score config
+      operationId: scoreConfigs_update
+      tags:
+      - ScoreConfigs
+      parameters:
+      - name: configId
+        in: path
+        description: The unique langfuse identifier of a score config
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScoreConfig'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateScoreConfigRequest'
+components:
+  schemas:
+    ScoreConfigs:
+      title: ScoreConfigs
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoreConfig'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    CreateScoreConfigRequest:
+      title: CreateScoreConfigRequest
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the score config. Max 35 characters. Only letters, numbers, underscores, spaces, periods, parentheses, and hyphens are allowed.
+        dataType:
+          $ref: '#/components/schemas/ScoreConfigDataType'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCategory'
+          nullable: true
+          description: Configure custom categories for categorical scores. Pass a list of objects with `label` and `value` properties. Categories are autogenerated for boolean configs and cannot be passed
+        minValue:
+          type: number
+          format: double
+          nullable: true
+          description: Configure a minimum value for numerical scores. If not set, the minimum value defaults to -∞
+        maxValue:
+          type: number
+          format: double
+          nullable: true
+          description: Configure a maximum value for numerical scores. If not set, the maximum value defaults to +∞
+        description:
+          type: string
+          nullable: true
+          description: Description is shown across the Langfuse UI and can be used to e.g. explain the config categories in detail, why a numeric range was set, or provide additional context on config name or usage
+      required:
+      - name
+      - dataType
+    UpdateScoreConfigRequest:
+      title: UpdateScoreConfigRequest
+      type: object
+      properties:
+        isArchived:
+          type: boolean
+          nullable: true
+          description: The status of the score config showing if it is archived or not
+        name:
+          type: string
+          nullable: true
+          description: Name of the score config. Max 35 characters. Only letters, numbers, underscores, spaces, periods, parentheses, and hyphens are allowed.
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCategory'
+          nullable: true
+          description: Configure custom categories for categorical scores. Pass a list of objects with `label` and `value` properties. Categories are autogenerated for boolean configs and cannot be passed
+        minValue:
+          type: number
+          format: double
+          nullable: true
+          description: Configure a minimum value for numerical scores. If not set, the minimum value defaults to -∞
+        maxValue:
+          type: number
+          format: double
+          nullable: true
+          description: Configure a maximum value for numerical scores. If not set, the maximum value defaults to +∞
+        description:
+          type: string
+          nullable: true
+          description: Description is shown across the Langfuse UI and can be used to e.g. explain the config categories in detail, why a numeric range was set, or provide additional context on config name or usage
+    ConfigCategory:
+      title: ConfigCategory
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+        label:
+          type: string
+      required:
+      - value
+      - label
+    ScoreConfig:
+      title: ScoreConfig
+      type: object
+      description: Configuration for a score
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        projectId:
+          type: string
+        dataType:
+          $ref: '#/components/schemas/ScoreConfigDataType'
+        isArchived:
+          type: boolean
+          description: Whether the score config is archived. Defaults to false
+        minValue:
+          type: number
+          format: double
+          nullable: true
+          description: Sets minimum value for numerical scores. If not set, the minimum value defaults to -∞
+        maxValue:
+          type: number
+          format: double
+          nullable: true
+          description: Sets maximum value for numerical scores. If not set, the maximum value defaults to +∞
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConfigCategory'
+          nullable: true
+          description: Configures custom categories for categorical scores
+        description:
+          type: string
+          nullable: true
+          description: Description of the score config
+      required:
+      - id
+      - name
+      - createdAt
+      - updatedAt
+      - projectId
+      - dataType
+      - isArchived
+    ScoreConfigDataType:
+      title: ScoreConfigDataType
+      type: string
+      enum:
+      - NUMERIC
+      - BOOLEAN
+      - CATEGORICAL
+      - TEXT
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

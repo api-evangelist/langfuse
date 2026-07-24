@@ -1,0 +1,209 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues LegacyScoreV1 API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: LegacyScoreV1
+paths:
+  /api/public/scores:
+    post:
+      description: Create a score (supports both trace and session scores)
+      operationId: legacy_scoreV1_create
+      tags:
+      - LegacyScoreV1
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/legacyCreateScoreResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/legacyCreateScoreRequest'
+  /api/public/scores/{scoreId}:
+    delete:
+      description: Delete a score (supports both trace and session scores)
+      operationId: legacy_scoreV1_delete
+      tags:
+      - LegacyScoreV1
+      parameters:
+      - name: scoreId
+        in: path
+        description: The unique langfuse identifier of a score
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+components:
+  schemas:
+    CreateScoreValue:
+      title: CreateScoreValue
+      oneOf:
+      - type: number
+        format: double
+      - type: string
+      description: The value of the score. Must be passed as string for categorical and text scores, and numeric for boolean and numeric scores
+    legacyCreateScoreRequest:
+      title: legacyCreateScoreRequest
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        traceId:
+          type: string
+          nullable: true
+        sessionId:
+          type: string
+          nullable: true
+        observationId:
+          type: string
+          nullable: true
+        datasetRunId:
+          type: string
+          nullable: true
+        name:
+          type: string
+          example: novelty
+        value:
+          $ref: '#/components/schemas/CreateScoreValue'
+          description: The value of the score. Must be passed as string for categorical and text scores, and numeric for boolean and numeric scores. Boolean score values must equal either 1 or 0 (true or false). Text score values must be between 1 and 500 characters.
+        comment:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          additionalProperties: true
+          nullable: true
+        environment:
+          type: string
+          nullable: true
+          description: The environment of the score. Can be any lowercase alphanumeric string with hyphens and underscores that does not start with 'langfuse'.
+        queueId:
+          type: string
+          nullable: true
+          description: The annotation queue referenced by the score. Indicates if score was initially created while processing annotation queue.
+        dataType:
+          $ref: '#/components/schemas/ScoreDataType'
+          nullable: true
+          description: The data type of the score. When passing a configId this field is inferred. Otherwise, this field must be passed or will default to numeric.
+        configId:
+          type: string
+          nullable: true
+          description: Reference a score config on a score. The unique langfuse identifier of a score config. When passing this field, the dataType and stringValue fields are automatically populated.
+        source:
+          $ref: '#/components/schemas/legacyCreateScoreSource'
+          nullable: true
+          description: The source of the score. Defaults to API. Set to ANNOTATION to prefill scores (e.g. from an LLM) for a human reviewer to verify in an annotation queue. When source is ANNOTATION, a configId is required unless dataType is CORRECTION. EVAL is reserved for internal evaluator outputs and is not accepted on this endpoint.
+      required:
+      - name
+      - value
+    legacyCreateScoreSource:
+      title: legacyCreateScoreSource
+      type: string
+      enum:
+      - API
+      - ANNOTATION
+      description: 'Source values accepted when creating a score via the public REST API.
+
+        EVAL is reserved for internal evaluator outputs and is intentionally not
+
+        exposed here — use commons.ScoreSource when reading scores.'
+    legacyCreateScoreResponse:
+      title: legacyCreateScoreResponse
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the created object in Langfuse
+      required:
+      - id
+    ScoreDataType:
+      title: ScoreDataType
+      type: string
+      enum:
+      - NUMERIC
+      - BOOLEAN
+      - CATEGORICAL
+      - CORRECTION
+      - TEXT
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

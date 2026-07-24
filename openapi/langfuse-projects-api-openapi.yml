@@ -1,0 +1,540 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues Projects API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: Projects
+paths:
+  /api/public/projects:
+    get:
+      description: Get Project associated with API key (requires project-scoped API key). You can use GET /api/public/organizations/projects to get all projects with an organization-scoped key.
+      operationId: projects_get
+      tags:
+      - Projects
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projects'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+    post:
+      description: Create a new project (requires organization-scoped API key)
+      operationId: projects_create
+      tags:
+      - Projects
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                metadata:
+                  type: object
+                  additionalProperties: true
+                  nullable: true
+                  description: Optional metadata for the project
+                retention:
+                  type: integer
+                  description: Number of days to retain data. Must be 0 or at least 3 days. Requires data-retention entitlement for non-zero values. Optional.
+              required:
+              - name
+              - retention
+  /api/public/projects/{projectId}:
+    put:
+      description: Update a project by ID (requires organization-scoped API key).
+      operationId: projects_update
+      tags:
+      - Projects
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                metadata:
+                  type: object
+                  additionalProperties: true
+                  nullable: true
+                  description: Optional metadata for the project
+                retention:
+                  type: integer
+                  nullable: true
+                  description: 'Number of days to retain data.
+
+                    Must be 0 or at least 3 days.
+
+                    Requires data-retention entitlement for non-zero values.
+
+                    Optional. Will retain existing retention setting if omitted.'
+              required:
+              - name
+    delete:
+      description: Delete a project by ID (requires organization-scoped API key). Project deletion is processed asynchronously.
+      operationId: projects_delete
+      tags:
+      - Projects
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDeletionResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+  /api/public/projects/{projectId}/apiKeys:
+    get:
+      description: Get all API keys for a project (requires organization-scoped API key)
+      operationId: projects_getApiKeys
+      tags:
+      - Projects
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyList'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+    post:
+      description: Create a new API key for a project (requires organization-scoped API key)
+      operationId: projects_createApiKey
+      tags:
+      - Projects
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note:
+                  type: string
+                  nullable: true
+                  description: Optional note for the API key
+                publicKey:
+                  type: string
+                  nullable: true
+                  description: Optional predefined public key. Must start with 'pk-lf-'. If provided, secretKey must also be provided.
+                secretKey:
+                  type: string
+                  nullable: true
+                  description: Optional predefined secret key. Must start with 'sk-lf-'. If provided, publicKey must also be provided.
+  /api/public/projects/{projectId}/apiKeys/{apiKeyId}:
+    delete:
+      description: Delete an API key for a project (requires organization-scoped API key)
+      operationId: projects_deleteApiKey
+      tags:
+      - Projects
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: apiKeyId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyDeletionResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+components:
+  schemas:
+    ApiKeyList:
+      title: ApiKeyList
+      type: object
+      description: List of API keys for a project
+      properties:
+        apiKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiKeySummary'
+      required:
+      - apiKeys
+    ApiKeyDeletionResponse:
+      title: ApiKeyDeletionResponse
+      type: object
+      description: Response for API key deletion
+      properties:
+        success:
+          type: boolean
+      required:
+      - success
+    ProjectDeletionResponse:
+      title: ProjectDeletionResponse
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+      - success
+      - message
+    ApiKeySummary:
+      title: ApiKeySummary
+      type: object
+      description: Summary of an API key
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+        lastUsedAt:
+          type: string
+          format: date-time
+          nullable: true
+        note:
+          type: string
+          nullable: true
+        publicKey:
+          type: string
+        displaySecretKey:
+          type: string
+      required:
+      - id
+      - createdAt
+      - publicKey
+      - displaySecretKey
+    Projects:
+      title: Projects
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+      required:
+      - data
+    ApiKeyResponse:
+      title: ApiKeyResponse
+      type: object
+      description: Response for API key creation
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        publicKey:
+          type: string
+        secretKey:
+          type: string
+        displaySecretKey:
+          type: string
+        note:
+          type: string
+          nullable: true
+      required:
+      - id
+      - createdAt
+      - publicKey
+      - secretKey
+      - displaySecretKey
+    Project:
+      title: Project
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        organization:
+          $ref: '#/components/schemas/Organization'
+          description: The organization this project belongs to
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Metadata for the project
+        retentionDays:
+          type: integer
+          nullable: true
+          description: Number of days to retain data. Null or 0 means no retention. Omitted if no retention is configured.
+      required:
+      - id
+      - name
+      - organization
+      - metadata
+    Organization:
+      title: Organization
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the organization
+        name:
+          type: string
+          description: The name of the organization
+      required:
+      - id
+      - name
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

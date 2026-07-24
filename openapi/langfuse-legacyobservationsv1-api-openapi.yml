@@ -1,0 +1,439 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues LegacyObservationsV1 API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: LegacyObservationsV1
+paths:
+  /api/public/observations/{observationId}:
+    get:
+      description: Get a observation
+      operationId: legacy_observationsV1_get
+      tags:
+      - LegacyObservationsV1
+      parameters:
+      - name: observationId
+        in: path
+        description: The unique langfuse identifier of an observation, can be an event, span or generation
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationsView'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+  /api/public/observations:
+    get:
+      description: 'Get a list of observations.
+
+
+        Consider using the [v2 observations endpoint](/api-reference#tag/observationsv2/GET/api/public/v2/observations) for cursor-based pagination and field selection.'
+      operationId: legacy_observationsV1_getMany
+      tags:
+      - LegacyObservationsV1
+      parameters:
+      - name: page
+        in: query
+        description: Page number, starts at 1.
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: limit
+        in: query
+        description: Limit of items per page. If you encounter api issues due to too large page sizes, try to reduce the limit.
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: name
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: userId
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: traceId
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: level
+        in: query
+        description: Optional filter for observations with a specific level (e.g. "DEBUG", "DEFAULT", "WARNING", "ERROR").
+        required: false
+        schema:
+          $ref: '#/components/schemas/ObservationLevel'
+          nullable: true
+      - name: parentObservationId
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: environment
+        in: query
+        description: Optional filter for observations where the environment is one of the provided values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            nullable: true
+      - name: fromStartTime
+        in: query
+        description: Retrieve only observations with a start_time on or after this datetime (ISO 8601).
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: toStartTime
+        in: query
+        description: Retrieve only observations with a start_time before this datetime (ISO 8601).
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: version
+        in: query
+        description: Optional filter to only include observations with a certain version.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: filter
+        in: query
+        description: "JSON string containing an array of filter conditions. When provided, this takes precedence over query parameter filters (userId, name, type, level, environment, fromStartTime, ...).\n\n## Filter Structure\nEach filter condition has the following structure:\n```json\n[\n  {\n    \"type\": string,           // Required. One of: \"datetime\", \"string\", \"number\", \"stringOptions\", \"categoryOptions\", \"arrayOptions\", \"stringObject\", \"numberObject\", \"boolean\", \"null\"\n    \"column\": string,         // Required. Column to filter on (see available columns below)\n    \"operator\": string,       // Required. Operator based on type:\n                              // - datetime: \">\", \"<\", \">=\", \"<=\"\n                              // - string: \"=\", \"contains\", \"does not contain\", \"starts with\", \"ends with\"\n                              // - stringOptions: \"any of\", \"none of\"\n                              // - categoryOptions: \"any of\", \"none of\"\n                              // - arrayOptions: \"any of\", \"none of\", \"all of\"\n                              // - number: \"=\", \">\", \"<\", \">=\", \"<=\"\n                              // - stringObject: \"=\", \"contains\", \"does not contain\", \"starts with\", \"ends with\"\n                              // - numberObject: \"=\", \">\", \"<\", \">=\", \"<=\"\n                              // - boolean: \"=\", \"<>\"\n                              // - null: \"is null\", \"is not null\"\n    \"value\": any,             // Required (except for null type). Value to compare against. Type depends on filter type\n    \"key\": string             // Required only for stringObject, numberObject, and categoryOptions types when filtering on nested fields like metadata\n  }\n]\n```\n\n## Available Columns\n\n### Core Observation Fields\n- `id` (string) - Observation ID\n- `type` (string) - Observation type (SPAN, GENERATION, EVENT)\n- `name` (string) - Observation name\n- `traceId` (string) - Associated trace ID\n- `startTime` (datetime) - Observation start time\n- `endTime` (datetime) - Observation end time\n- `environment` (string) - Environment tag\n- `level` (string) - Log level (DEBUG, DEFAULT, WARNING, ERROR)\n- `statusMessage` (string) - Status message\n- `version` (string) - Version tag\n\n### Performance Metrics\n- `latency` (number) - Latency in seconds (calculated: end_time - start_time)\n- `timeToFirstToken` (number) - Time to first token in seconds\n- `tokensPerSecond` (number) - Output tokens per second\n\n### Token Usage\n- `inputTokens` (number) - Number of input tokens\n- `outputTokens` (number) - Number of output tokens\n- `totalTokens` (number) - Total tokens (alias: `tokens`)\n\n### Cost Metrics\n- `inputCost` (number) - Input cost in USD\n- `outputCost` (number) - Output cost in USD\n- `totalCost` (number) - Total cost in USD\n\n### Model Information\n- `model` (string) - Provided model name\n- `promptName` (string) - Associated prompt name\n- `promptVersion` (number) - Associated prompt version\n\n### Structured Data\n- `metadata` (stringObject/numberObject/categoryOptions) - Metadata key-value pairs. Use `key` parameter to filter on specific metadata keys.\n\n### Associated Trace Fields (requires join with traces table)\n- `userId` (string) - User ID from associated trace\n- `traceName` (string) - Name from associated trace\n- `traceEnvironment` (string) - Environment from associated trace\n- `traceTags` (arrayOptions) - Tags from associated trace\n\n## Filter Examples\n```json\n[\n  {\n    \"type\": \"string\",\n    \"column\": \"type\",\n    \"operator\": \"=\",\n    \"value\": \"GENERATION\"\n  },\n  {\n    \"type\": \"number\",\n    \"column\": \"latency\",\n    \"operator\": \">=\",\n    \"value\": 2.5\n  },\n  {\n    \"type\": \"stringObject\",\n    \"column\": \"metadata\",\n    \"key\": \"environment\",\n    \"operator\": \"=\",\n    \"value\": \"production\"\n  }\n]\n```"
+        required: false
+        schema:
+          type: string
+          nullable: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/legacyObservationsViews'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+components:
+  schemas:
+    legacyObservationsViews:
+      title: legacyObservationsViews
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObservationsView'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    ObservationsView:
+      title: ObservationsView
+      type: object
+      properties:
+        promptName:
+          type: string
+          nullable: true
+          description: The name of the prompt associated with the observation
+        promptVersion:
+          type: integer
+          nullable: true
+          description: The version of the prompt associated with the observation
+        modelId:
+          type: string
+          nullable: true
+          description: The unique identifier of the model
+        inputPrice:
+          type: number
+          format: double
+          nullable: true
+          description: The price of the input in USD
+        outputPrice:
+          type: number
+          format: double
+          nullable: true
+          description: The price of the output in USD.
+        totalPrice:
+          type: number
+          format: double
+          nullable: true
+          description: The total price in USD.
+        calculatedInputCost:
+          type: number
+          format: double
+          nullable: true
+          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated cost of the input in USD
+        calculatedOutputCost:
+          type: number
+          format: double
+          nullable: true
+          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated cost of the output in USD
+        calculatedTotalCost:
+          type: number
+          format: double
+          nullable: true
+          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated total cost in USD
+        latency:
+          type: number
+          format: double
+          nullable: true
+          description: The latency in seconds.
+        timeToFirstToken:
+          type: number
+          format: double
+          nullable: true
+          description: The time to the first token in seconds
+      allOf:
+      - $ref: '#/components/schemas/Observation'
+    Observation:
+      title: Observation
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the observation
+        traceId:
+          type: string
+          nullable: true
+          description: The trace ID associated with the observation
+        type:
+          type: string
+          description: The type of the observation
+        name:
+          type: string
+          nullable: true
+          description: The name of the observation
+        startTime:
+          type: string
+          format: date-time
+          description: The start time of the observation
+        endTime:
+          type: string
+          format: date-time
+          nullable: true
+          description: The end time of the observation.
+        completionStartTime:
+          type: string
+          format: date-time
+          nullable: true
+          description: The completion start time of the observation
+        model:
+          type: string
+          nullable: true
+          description: The model used for the observation
+        modelParameters:
+          description: The parameters of the model used for the observation
+        input:
+          description: The input data of the observation
+        version:
+          type: string
+          nullable: true
+          description: The version of the observation
+        metadata:
+          description: Additional metadata of the observation
+        output:
+          description: The output data of the observation
+        usage:
+          $ref: '#/components/schemas/Usage'
+          description: (Deprecated. Use usageDetails and costDetails instead.) The usage data of the observation
+        level:
+          $ref: '#/components/schemas/ObservationLevel'
+          description: The level of the observation
+        statusMessage:
+          type: string
+          nullable: true
+          description: The status message of the observation
+        parentObservationId:
+          type: string
+          nullable: true
+          description: The parent observation ID
+        promptId:
+          type: string
+          nullable: true
+          description: The prompt ID associated with the observation
+        usageDetails:
+          type: object
+          additionalProperties:
+            type: integer
+          description: The usage details of the observation. Key is the name of the usage metric, value is the number of units consumed. The total key is the sum of all (non-total) usage metrics or the total value ingested.
+        costDetails:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+          description: The cost details of the observation. Key is the name of the cost metric, value is the cost in USD. The total key is the sum of all (non-total) cost metrics or the total value ingested.
+        environment:
+          type: string
+          description: The environment from which this observation originated. Can be any lowercase alphanumeric string with hyphens and underscores that does not start with 'langfuse'.
+      required:
+      - id
+      - type
+      - startTime
+      - modelParameters
+      - input
+      - metadata
+      - output
+      - usage
+      - level
+      - usageDetails
+      - costDetails
+      - environment
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    Usage:
+      title: Usage
+      type: object
+      description: (Deprecated. Use usageDetails and costDetails instead.) Standard interface for usage and cost
+      properties:
+        input:
+          type: integer
+          description: Number of input units (e.g. tokens)
+        output:
+          type: integer
+          description: Number of output units (e.g. tokens)
+        total:
+          type: integer
+          description: Defaults to input+output if not set
+        unit:
+          type: string
+          nullable: true
+          description: Unit of measurement
+        inputCost:
+          type: number
+          format: double
+          nullable: true
+          description: USD input cost
+        outputCost:
+          type: number
+          format: double
+          nullable: true
+          description: USD output cost
+        totalCost:
+          type: number
+          format: double
+          nullable: true
+          description: USD total cost, defaults to input+output
+      required:
+      - input
+      - output
+      - total
+    ObservationLevel:
+      title: ObservationLevel
+      type: string
+      enum:
+      - DEBUG
+      - DEFAULT
+      - WARNING
+      - ERROR
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

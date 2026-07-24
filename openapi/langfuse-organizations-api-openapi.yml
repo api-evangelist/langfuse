@@ -1,0 +1,528 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues Organizations API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: Organizations
+paths:
+  /api/public/organizations/memberships:
+    get:
+      description: Get all memberships for the organization associated with the API key (requires organization-scoped API key)
+      operationId: organizations_getOrganizationMemberships
+      tags:
+      - Organizations
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+    put:
+      description: Create or update a membership for the organization associated with the API key (requires organization-scoped API key)
+      operationId: organizations_updateOrganizationMembership
+      tags:
+      - Organizations
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MembershipRequest'
+    delete:
+      description: Delete a membership from the organization associated with the API key (requires organization-scoped API key)
+      operationId: organizations_deleteOrganizationMembership
+      tags:
+      - Organizations
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipDeletionResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteMembershipRequest'
+  /api/public/projects/{projectId}/memberships:
+    get:
+      description: Get all memberships for a specific project (requires organization-scoped API key)
+      operationId: organizations_getProjectMemberships
+      tags:
+      - Organizations
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+    put:
+      description: Create or update a membership for a specific project (requires organization-scoped API key). The user must already be a member of the organization.
+      operationId: organizations_updateProjectMembership
+      tags:
+      - Organizations
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MembershipRequest'
+    delete:
+      description: Delete a membership from a specific project (requires organization-scoped API key). The user must be a member of the organization.
+      operationId: organizations_deleteProjectMembership
+      tags:
+      - Organizations
+      parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembershipDeletionResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteMembershipRequest'
+  /api/public/organizations/projects:
+    get:
+      description: Get all projects for the organization associated with the API key (requires organization-scoped API key)
+      operationId: organizations_getOrganizationProjects
+      tags:
+      - Organizations
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationProjectsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+  /api/public/organizations/apiKeys:
+    get:
+      description: Get all API keys for the organization associated with the API key (requires organization-scoped API key)
+      operationId: organizations_getOrganizationApiKeys
+      tags:
+      - Organizations
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationApiKeysResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+components:
+  schemas:
+    OrganizationProjectsResponse:
+      title: OrganizationProjectsResponse
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationProject'
+      required:
+      - projects
+    MembershipRequest:
+      title: MembershipRequest
+      type: object
+      properties:
+        userId:
+          type: string
+        role:
+          $ref: '#/components/schemas/MembershipRole'
+      required:
+      - userId
+      - role
+    MembershipDeletionResponse:
+      title: MembershipDeletionResponse
+      type: object
+      properties:
+        message:
+          type: string
+        userId:
+          type: string
+      required:
+      - message
+      - userId
+    MembershipResponse:
+      title: MembershipResponse
+      type: object
+      properties:
+        userId:
+          type: string
+        role:
+          $ref: '#/components/schemas/MembershipRole'
+        email:
+          type: string
+        name:
+          type: string
+      required:
+      - userId
+      - role
+      - email
+      - name
+    MembershipsResponse:
+      title: MembershipsResponse
+      type: object
+      properties:
+        memberships:
+          type: array
+          items:
+            $ref: '#/components/schemas/MembershipResponse'
+      required:
+      - memberships
+    OrganizationProject:
+      title: OrganizationProject
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - createdAt
+      - updatedAt
+    OrganizationApiKeysResponse:
+      title: OrganizationApiKeysResponse
+      type: object
+      properties:
+        apiKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationApiKey'
+      required:
+      - apiKeys
+    MembershipRole:
+      title: MembershipRole
+      type: string
+      enum:
+      - OWNER
+      - ADMIN
+      - MEMBER
+      - VIEWER
+    OrganizationApiKey:
+      title: OrganizationApiKey
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+          nullable: true
+        lastUsedAt:
+          type: string
+          format: date-time
+          nullable: true
+        note:
+          type: string
+          nullable: true
+        publicKey:
+          type: string
+        displaySecretKey:
+          type: string
+      required:
+      - id
+      - createdAt
+      - publicKey
+      - displaySecretKey
+    DeleteMembershipRequest:
+      title: DeleteMembershipRequest
+      type: object
+      properties:
+        userId:
+          type: string
+      required:
+      - userId
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

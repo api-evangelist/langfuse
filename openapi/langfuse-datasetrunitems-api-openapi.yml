@@ -1,0 +1,240 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues DatasetRunItems API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: DatasetRunItems
+paths:
+  /api/public/dataset-run-items:
+    post:
+      description: Create a dataset run item
+      operationId: datasetRunItems_create
+      tags:
+      - DatasetRunItems
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetRunItem'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDatasetRunItemRequest'
+    get:
+      description: List dataset run items
+      operationId: datasetRunItems_list
+      tags:
+      - DatasetRunItems
+      parameters:
+      - name: datasetId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: runName
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: page number, starts at 1
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: limit
+        in: query
+        description: limit of items per page
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDatasetRunItems'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+components:
+  schemas:
+    DatasetRunItem:
+      title: DatasetRunItem
+      type: object
+      properties:
+        id:
+          type: string
+        datasetRunId:
+          type: string
+        datasetRunName:
+          type: string
+        datasetItemId:
+          type: string
+        traceId:
+          type: string
+        observationId:
+          type: string
+          nullable: true
+          description: The observation ID associated with this run item
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - datasetRunId
+      - datasetRunName
+      - datasetItemId
+      - traceId
+      - createdAt
+      - updatedAt
+    CreateDatasetRunItemRequest:
+      title: CreateDatasetRunItemRequest
+      type: object
+      properties:
+        runName:
+          type: string
+        runDescription:
+          type: string
+          nullable: true
+          description: Description of the run. If run exists, description will be updated.
+        metadata:
+          nullable: true
+          description: Metadata of the dataset run, updates run if run already exists
+        datasetItemId:
+          type: string
+        observationId:
+          type: string
+          nullable: true
+        traceId:
+          type: string
+          nullable: true
+          description: traceId should always be provided. For compatibility with older SDK versions it can also be inferred from the provided observationId.
+        datasetVersion:
+          type: string
+          format: date-time
+          nullable: true
+          description: "ISO 8601 timestamp (RFC 3339, Section 5.6) in UTC (e.g., \"2026-01-21T14:35:42Z\").\nSpecifies the dataset version to use for this experiment run. \nIf provided, the experiment will use dataset items as they existed at or before this timestamp.\nIf not provided, uses the latest version of dataset items."
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Optional timestamp to set the createdAt field of the dataset run item. If not provided or null, defaults to current timestamp.
+      required:
+      - runName
+      - datasetItemId
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    PaginatedDatasetRunItems:
+      title: PaginatedDatasetRunItems
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetRunItem'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

@@ -1,0 +1,216 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues PromptVersion API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: PromptVersion
+paths:
+  /api/public/v2/prompts/{name}/versions/{version}:
+    patch:
+      description: Update labels for a specific prompt version
+      operationId: promptVersion_update
+      tags:
+      - PromptVersion
+      parameters:
+      - name: name
+        in: path
+        description: "The name of the prompt. If the prompt is in a folder (e.g., \"folder/subfolder/prompt-name\"), \nthe folder path must be URL encoded."
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: path
+        description: Version of the prompt to update
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prompt'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newLabels:
+                  type: array
+                  items:
+                    type: string
+                  description: New labels for the prompt version. Labels are unique across versions. The "latest" label is reserved and managed by Langfuse.
+              required:
+              - newLabels
+components:
+  schemas:
+    BasePrompt:
+      title: BasePrompt
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: integer
+        config: {}
+        labels:
+          type: array
+          items:
+            type: string
+          description: List of deployment labels of this prompt version.
+        tags:
+          type: array
+          items:
+            type: string
+          description: List of tags. Used to filter via UI and API. The same across versions of a prompt.
+        commitMessage:
+          type: string
+          nullable: true
+          description: Commit message for this prompt version.
+        resolutionGraph:
+          type: object
+          additionalProperties: true
+          nullable: true
+          description: The dependency resolution graph for the current prompt. Null if the prompt has no dependencies or if `resolve=false` was used.
+      required:
+      - name
+      - version
+      - config
+      - labels
+      - tags
+    TextPrompt:
+      title: TextPrompt
+      type: object
+      properties:
+        prompt:
+          type: string
+      required:
+      - prompt
+      allOf:
+      - $ref: '#/components/schemas/BasePrompt'
+    PlaceholderMessage:
+      title: PlaceholderMessage
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/PlaceholderMessageType'
+          nullable: true
+      required:
+      - name
+    ChatPrompt:
+      title: ChatPrompt
+      type: object
+      properties:
+        prompt:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
+      required:
+      - prompt
+      allOf:
+      - $ref: '#/components/schemas/BasePrompt'
+    ChatMessageType:
+      title: ChatMessageType
+      type: string
+      enum:
+      - chatmessage
+    ChatMessageWithPlaceholders:
+      title: ChatMessageWithPlaceholders
+      oneOf:
+      - $ref: '#/components/schemas/ChatMessage'
+      - $ref: '#/components/schemas/PlaceholderMessage'
+    PlaceholderMessageType:
+      title: PlaceholderMessageType
+      type: string
+      enum:
+      - placeholder
+    ChatMessage:
+      title: ChatMessage
+      type: object
+      properties:
+        role:
+          type: string
+        content:
+          type: string
+        type:
+          $ref: '#/components/schemas/ChatMessageType'
+          nullable: true
+      required:
+      - role
+      - content
+    Prompt:
+      title: Prompt
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - chat
+        - $ref: '#/components/schemas/ChatPrompt'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - text
+        - $ref: '#/components/schemas/TextPrompt'
+        required:
+        - type
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

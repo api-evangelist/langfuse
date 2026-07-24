@@ -1,0 +1,429 @@
+openapi: 3.0.1
+info:
+  title: langfuse AnnotationQueues Observations API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: Observations
+paths:
+  /api/public/v2/observations:
+    get:
+      description: 'Get a list of observations with cursor-based pagination and flexible field selection.
+
+
+        ## Cursor-based Pagination
+
+        This endpoint uses cursor-based pagination for efficient traversal of large datasets.
+
+        The cursor is returned in the response metadata and should be passed in subsequent requests
+
+        to retrieve the next page of results.
+
+
+        ## Field Selection
+
+        Use the `fields` parameter to control which observation fields are returned:
+
+        - `core` - Always included: id, traceId, startTime, endTime, projectId, parentObservationId, type
+
+        - `basic` - name, level, statusMessage, version, environment, bookmarked, public, userId, sessionId
+
+        - `time` - completionStartTime, createdAt, updatedAt
+
+        - `io` - input, output
+
+        - `metadata` - metadata (truncated to 200 chars by default, use `expandMetadata` to get full values)
+
+        - `model` - providedModelName, internalModelId, modelParameters
+
+        - `usage` - usageDetails, costDetails, totalCost
+
+        - `prompt` - promptId, promptName, promptVersion
+
+        - `metrics` - latency, timeToFirstToken
+
+
+        If not specified, `core` and `basic` field groups are returned.
+
+
+        ## Filters
+
+        Multiple filtering options are available via query parameters or the structured `filter` parameter.
+
+        When using the `filter` parameter, it takes precedence over individual query parameter filters.'
+      operationId: observations_getMany
+      tags:
+      - Observations
+      parameters:
+      - name: fields
+        in: query
+        description: 'Comma-separated list of field groups to include in the response.
+
+          Available groups: core, basic, time, io, metadata, model, usage, prompt, metrics.
+
+          If not specified, `core` and `basic` field groups are returned.
+
+          Example: "basic,usage,model"'
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: expandMetadata
+        in: query
+        description: 'Comma-separated list of metadata keys to return non-truncated.
+
+          By default, metadata values over 200 characters are truncated.
+
+          Use this parameter to retrieve full values for specific keys.
+
+          Example: "key1,key2"'
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: limit
+        in: query
+        description: Number of items to return per page. Maximum 1000, default 50.
+        required: false
+        schema:
+          type: integer
+          nullable: true
+      - name: cursor
+        in: query
+        description: Base64-encoded cursor for pagination. Use the cursor from the previous response to get the next page.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: parseIoAsJson
+        in: query
+        description: '**Deprecated.** Setting this to `true` will return a 400 error.
+
+          Input/output fields are always returned as raw strings.
+
+          Remove this parameter or set it to `false`.'
+        required: false
+        schema:
+          type: boolean
+          nullable: true
+      - name: name
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: userId
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: type
+        in: query
+        description: Filter by observation type (e.g., "GENERATION", "SPAN", "EVENT", "AGENT", "TOOL", "CHAIN", "RETRIEVER", "EVALUATOR", "EMBEDDING", "GUARDRAIL")
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: traceId
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: level
+        in: query
+        description: Optional filter for observations with a specific level (e.g. "DEBUG", "DEFAULT", "WARNING", "ERROR").
+        required: false
+        schema:
+          $ref: '#/components/schemas/ObservationLevel'
+          nullable: true
+      - name: parentObservationId
+        in: query
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: environment
+        in: query
+        description: Optional filter for observations where the environment is one of the provided values.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            nullable: true
+      - name: fromStartTime
+        in: query
+        description: Retrieve only observations with a start_time on or after this datetime (ISO 8601).
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: toStartTime
+        in: query
+        description: Retrieve only observations with a start_time before this datetime (ISO 8601).
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: version
+        in: query
+        description: Optional filter to only include observations with a certain version.
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: filter
+        in: query
+        description: "JSON string containing an array of filter conditions. When provided, this takes precedence over query parameter filters (userId, name, type, level, environment, fromStartTime, ...).\n\n## Filter Structure\nEach filter condition has the following structure:\n```json\n[\n  {\n    \"type\": string,           // Required. One of: \"datetime\", \"string\", \"number\", \"stringOptions\", \"categoryOptions\", \"arrayOptions\", \"stringObject\", \"numberObject\", \"boolean\", \"null\"\n    \"column\": string,         // Required. Column to filter on (see available columns below)\n    \"operator\": string,       // Required. Operator based on type:\n                              // - datetime: \">\", \"<\", \">=\", \"<=\"\n                              // - string: \"=\", \"contains\", \"does not contain\", \"starts with\", \"ends with\"\n                              // - stringOptions: \"any of\", \"none of\"\n                              // - categoryOptions: \"any of\", \"none of\"\n                              // - arrayOptions: \"any of\", \"none of\", \"all of\"\n                              // - number: \"=\", \">\", \"<\", \">=\", \"<=\"\n                              // - stringObject: \"=\", \"contains\", \"does not contain\", \"starts with\", \"ends with\"\n                              // - numberObject: \"=\", \">\", \"<\", \">=\", \"<=\"\n                              // - boolean: \"=\", \"<>\"\n                              // - null: \"is null\", \"is not null\"\n    \"value\": any,             // Required (except for null type). Value to compare against. Type depends on filter type\n    \"key\": string             // Required only for stringObject, numberObject, and categoryOptions types when filtering on nested fields like metadata\n  }\n]\n```\n\n## Available Columns\n\n### Core Observation Fields\n- `id` (string) - Observation ID\n- `type` (string) - Observation type (SPAN, GENERATION, EVENT)\n- `name` (string) - Observation name\n- `traceId` (string) - Associated trace ID\n- `startTime` (datetime) - Observation start time\n- `endTime` (datetime) - Observation end time\n- `environment` (string) - Environment tag\n- `level` (string) - Log level (DEBUG, DEFAULT, WARNING, ERROR)\n- `statusMessage` (string) - Status message\n- `version` (string) - Version tag\n- `userId` (string) - User ID\n- `sessionId` (string) - Session ID\n\n### Trace-Related Fields\n- `traceName` (string) - Name of the parent trace\n- `traceTags` (arrayOptions) - Tags from the parent trace\n- `tags` (arrayOptions) - Alias for traceTags\n\n### Performance Metrics\n- `latency` (number) - Latency in seconds (calculated: end_time - start_time)\n- `timeToFirstToken` (number) - Time to first token in seconds\n- `tokensPerSecond` (number) - Output tokens per second\n\n### Token Usage\n- `inputTokens` (number) - Number of input tokens\n- `outputTokens` (number) - Number of output tokens\n- `totalTokens` (number) - Total tokens (alias: `tokens`)\n\n### Cost Metrics\n- `inputCost` (number) - Input cost in USD\n- `outputCost` (number) - Output cost in USD\n- `totalCost` (number) - Total cost in USD\n\n### Model Information\n- `model` (string) - Provided model name (alias: `providedModelName`)\n- `promptName` (string) - Associated prompt name\n- `promptVersion` (number) - Associated prompt version\n\n### Structured Data\n- `metadata` (stringObject/numberObject/categoryOptions) - Metadata key-value pairs. Use `key` parameter to filter on specific metadata keys.\n\n## Filter Examples\n```json\n[\n  {\n    \"type\": \"string\",\n    \"column\": \"type\",\n    \"operator\": \"=\",\n    \"value\": \"GENERATION\"\n  },\n  {\n    \"type\": \"number\",\n    \"column\": \"latency\",\n    \"operator\": \">=\",\n    \"value\": 2.5\n  },\n  {\n    \"type\": \"stringObject\",\n    \"column\": \"metadata\",\n    \"key\": \"environment\",\n    \"operator\": \"=\",\n    \"value\": \"production\"\n  }\n]\n```"
+        required: false
+        schema:
+          type: string
+          nullable: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ObservationsV2Response'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+components:
+  schemas:
+    ObservationsV2Response:
+      title: ObservationsV2Response
+      type: object
+      description: 'Response containing observations with field-group-based filtering and cursor-based pagination.
+
+
+        The `data` array contains observation objects with only the requested field groups included.
+
+        Use the `cursor` in `meta` to retrieve the next page of results.'
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObservationV2'
+          description: Array of observation objects. Fields included depend on the `fields` parameter in the request.
+        meta:
+          $ref: '#/components/schemas/ObservationsV2Meta'
+      required:
+      - data
+      - meta
+    ObservationV2:
+      title: ObservationV2
+      type: object
+      description: 'An observation from the v2 API with field-group-based selection.
+
+        Core fields are always present. Other fields are included only when their field group is requested.'
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the observation
+        traceId:
+          type: string
+          nullable: true
+          description: The trace ID associated with the observation
+        startTime:
+          type: string
+          format: date-time
+          description: The start time of the observation
+        endTime:
+          type: string
+          format: date-time
+          nullable: true
+          description: The end time of the observation
+        projectId:
+          type: string
+          description: The project ID this observation belongs to
+        parentObservationId:
+          type: string
+          nullable: true
+          description: The parent observation ID
+        type:
+          type: string
+          description: The type of the observation (e.g. GENERATION, SPAN, EVENT)
+        name:
+          type: string
+          nullable: true
+          description: The name of the observation
+        level:
+          $ref: '#/components/schemas/ObservationLevel'
+          nullable: true
+          description: The level of the observation
+        statusMessage:
+          type: string
+          nullable: true
+          description: The status message of the observation
+        version:
+          type: string
+          nullable: true
+          description: The version of the observation
+        environment:
+          type: string
+          nullable: true
+          description: The environment from which this observation originated
+        bookmarked:
+          type: boolean
+          nullable: true
+          description: Whether the observation is bookmarked
+        public:
+          type: boolean
+          nullable: true
+          description: Whether the observation is public
+        userId:
+          type: string
+          nullable: true
+          description: The user ID associated with the observation
+        sessionId:
+          type: string
+          nullable: true
+          description: The session ID associated with the observation
+        completionStartTime:
+          type: string
+          format: date-time
+          nullable: true
+          description: The completion start time of the observation
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: The creation timestamp of the observation
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: The last update timestamp of the observation
+        input:
+          nullable: true
+          description: The input data of the observation
+        output:
+          nullable: true
+          description: The output data of the observation
+        metadata:
+          nullable: true
+          description: Additional metadata of the observation
+        providedModelName:
+          type: string
+          nullable: true
+          description: The model name as provided by the user
+        internalModelId:
+          type: string
+          nullable: true
+          description: The internal model ID matched by Langfuse
+        modelParameters:
+          nullable: true
+          description: The parameters of the model used for the observation
+        usageDetails:
+          type: object
+          additionalProperties:
+            type: integer
+          nullable: true
+          description: The usage details of the observation. Key is the usage metric name, value is the number of units consumed.
+        costDetails:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+          nullable: true
+          description: The cost details of the observation. Key is the cost metric name, value is the cost in USD.
+        totalCost:
+          type: number
+          format: double
+          nullable: true
+          description: The total cost of the observation in USD
+        promptId:
+          type: string
+          nullable: true
+          description: The prompt ID associated with the observation
+        promptName:
+          type: string
+          nullable: true
+          description: The prompt name associated with the observation
+        promptVersion:
+          type: integer
+          nullable: true
+          description: The prompt version associated with the observation
+        latency:
+          type: number
+          format: double
+          nullable: true
+          description: The latency in seconds
+        timeToFirstToken:
+          type: number
+          format: double
+          nullable: true
+          description: The time to first token in seconds
+        modelId:
+          type: string
+          nullable: true
+          description: The matched model ID
+      required:
+      - id
+      - startTime
+      - projectId
+      - type
+    ObservationsV2Meta:
+      title: ObservationsV2Meta
+      type: object
+      description: Metadata for cursor-based pagination
+      properties:
+        cursor:
+          type: string
+          nullable: true
+          description: Base64-encoded cursor to use for retrieving the next page. If not present, there are no more results.
+    ObservationLevel:
+      title: ObservationLevel
+      type: string
+      enum:
+      - DEBUG
+      - DEFAULT
+      - WARNING
+      - ERROR
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
