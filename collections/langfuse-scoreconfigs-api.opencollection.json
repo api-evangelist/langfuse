@@ -1,0 +1,120 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "langfuse AnnotationQueues ScoreConfigs API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "ScoreConfigs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "scoreConfigs_get",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/score-configs",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number, starts at 1."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit of items per page. If you encounter api issues due to too large page sizes, try to reduce the limit"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get all score configs"
+        },
+        {
+          "info": {
+            "name": "scoreConfigs_create",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/public/score-configs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Create a score configuration (config). Score configs are used to define the structure of scores"
+        },
+        {
+          "info": {
+            "name": "scoreConfigs_get-by-id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/score-configs/:configId",
+            "params": [
+              {
+                "name": "configId",
+                "value": "",
+                "type": "path",
+                "description": "The unique langfuse identifier of a score config"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get a score config"
+        },
+        {
+          "info": {
+            "name": "scoreConfigs_update",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/public/score-configs/:configId",
+            "params": [
+              {
+                "name": "configId",
+                "value": "",
+                "type": "path",
+                "description": "The unique langfuse identifier of a score config"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Update a score config"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

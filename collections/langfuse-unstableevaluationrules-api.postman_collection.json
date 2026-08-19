@@ -1,0 +1,2732 @@
+{
+  "item": [
+    {
+      "id": "dbda76a2-bf9b-40e9-a9c2-1e6605fb31b5",
+      "name": "UnstableEvaluationRules",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3022a56d-973b-4f57-8929-b0f3a2304449",
+          "name": "unstable evaluation Rules create",
+          "request": {
+            "name": "unstable evaluation Rules create",
+            "description": {
+              "content": "Create an evaluation rule.\n\nAn evaluation rule defines **what** incoming data should be evaluated and **how prompt variables should be populated** from that data.\n\nUse this resource after choosing an evaluator from the evaluator endpoints.\n\nKey rules:\n- `name` must be unique within the project for public evaluation rules\n- `target` must be `observation` or `experiment`\n- `evaluator.name` + `evaluator.scope` must identify an existing evaluator family returned by the evaluator endpoints\n- Langfuse resolves that family to its latest version before saving the evaluation rule\n- for `target=experiment`, use dataset `id` values from `GET /api/public/v2/datasets` when filtering by `datasetId`\n- every evaluator prompt variable must be mapped exactly once\n- `expected_output` mappings are only valid for `target=experiment`\n- if `enabled=true`, Langfuse validates that the referenced evaluator can currently run\n- at most 50 evaluation rules can be effectively active in one project at the same time\n\nIf an evaluation rule with the same `name` already exists in the project, the API returns `409`.\nIn that case, update the existing resource with `PATCH /api/public/unstable/evaluation-rules/{evaluationRuleId}` instead of creating a second one.\n\nIf enabling this resource would exceed the 50-active limit, the API also returns `409`.\nIn that case, disable or pause another active evaluation rule before enabling a new one.\n\nCurrent scope:\n- evaluation rules are live-ingestion rules only\n- they do not trigger historical backfills\n\nRecovery guidance:\n- `400 invalid_filter_value`: fix the filter `column` or `value` using `details.column`, `details.invalidValues`, and `details.allowedValues`\n- `400 invalid_filter_value` with `details.column=datasetId`: call `GET /api/public/v2/datasets`, then retry with dataset `id` values from that response\n- `400 missing_variable_mapping`: fetch the evaluator again and make sure every variable in `variables` appears exactly once in `mapping`\n- `400 duplicate_variable_mapping`: remove repeated mappings for the same variable\n- `400 invalid_variable_mapping`: switch to a valid `source` for the selected `target`, or fix the variable name\n- `400 invalid_json_path`: remove or correct the `jsonPath`\n- `422 evaluator_preflight_failed`: the selected evaluator cannot run with the resolved model configuration. Fix the evaluator/default model setup, then retry the create request.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "unstable",
+                "evaluation-rules"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"mapping\": [\n    {\n      \"variable\": \"<string>\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"<string>\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ],\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    \"<object>\",\n    \"<object>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3d0bbbb6-cfe4-4451-a071-829a0ed5aa37",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"erule_123\",\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"id\": \"evaltmpl_123\",\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"status\": \"active\",\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ],\n  \"createdAt\": \"2026-03-30T09:20:00.000Z\",\n  \"updatedAt\": \"2026-03-30T09:20:00.000Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "46fa37b6-bb28-4f7b-ac13-628e5d114efe",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7a948582-fbd8-4696-bf2b-12ef32dce5b3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d79cb177-b93c-4335-8ca4-e854fbebb9b6",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9a03900c-9e80-4c06-8060-68971f614ac4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6604e7c8-8ec5-4009-886c-458e8d6e7887",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "092cf244-ea10-46a2-9994-014db3206dbf",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"resource_not_found\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 9979,\n    \"limit\": 9056,\n    \"remaining\": 1509,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4beed396-d1ab-40d0-8c81-fff66e6d3dc7",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dc7c1c4e-e12a-4b97-a289-c04113c7d812",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6b1a5bba-9f6c-4800-a8f7-633d7b24e7b1",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"name\": \"answer-correctness\",\n    \"scope\": \"project\"\n  },\n  \"target\": \"observation\",\n  \"enabled\": true,\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"type\": \"stringOptions\",\n      \"column\": \"type\",\n      \"operator\": \"any of\",\n      \"value\": [\n        \"GENERATION\"\n      ]\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"input\"\n    },\n    {\n      \"variable\": \"output\",\n      \"source\": \"output\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6b6ac2a8-58ea-4ade-b098-a1d79b3cbce6",
+          "name": "unstable evaluation Rules list",
+          "request": {
+            "name": "unstable evaluation Rules list",
+            "description": {
+              "content": "List evaluation rules in the authenticated project.\n\nEach item describes one live evaluation rule and its effective runtime status.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "unstable",
+                "evaluation-rules"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "1-based page number. Defaults to `1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Maximum number of items per page. Defaults to `50`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0be21717-f9dd-4aa9-ae6c-313791f794c0",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"erule_123\",\n      \"name\": \"answer-correctness-live\",\n      \"evaluator\": {\n        \"id\": \"string\",\n        \"name\": \"string\",\n        \"scope\": \"<string>\"\n      },\n      \"target\": \"<string>\",\n      \"enabled\": true,\n      \"status\": \"paused\",\n      \"sampling\": 1,\n      \"filter\": [\n        {\n          \"column\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"operator\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": \"<string>\",\n          \"value\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"column\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"operator\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": \"<string>\",\n          \"value\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"mapping\": [\n        {\n          \"variable\": \"input\",\n          \"source\": \"<string>\",\n          \"jsonPath\": \"<string>\"\n        },\n        {\n          \"variable\": \"input\",\n          \"source\": \"<string>\",\n          \"jsonPath\": \"<string>\"\n        }\n      ],\n      \"createdAt\": \"2026-03-30T09:20:00.000Z\",\n      \"updatedAt\": \"2026-03-30T09:20:00.000Z\",\n      \"pausedReason\": \"string\",\n      \"pausedMessage\": \"string\"\n    },\n    {\n      \"id\": \"erule_123\",\n      \"name\": \"answer-correctness-live\",\n      \"evaluator\": {\n        \"id\": \"string\",\n        \"name\": \"string\",\n        \"scope\": \"<string>\"\n      },\n      \"target\": \"<string>\",\n      \"enabled\": true,\n      \"status\": \"inactive\",\n      \"sampling\": 1,\n      \"filter\": [\n        {\n          \"column\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"operator\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": \"<string>\",\n          \"value\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"column\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"operator\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"type\": \"<string>\",\n          \"value\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"mapping\": [\n        {\n          \"variable\": \"input\",\n          \"source\": \"<string>\",\n          \"jsonPath\": \"<string>\"\n        },\n        {\n          \"variable\": \"input\",\n          \"source\": \"<string>\",\n          \"jsonPath\": \"<string>\"\n        }\n      ],\n      \"createdAt\": \"2026-03-30T09:20:00.000Z\",\n      \"updatedAt\": \"2026-03-30T09:20:00.000Z\",\n      \"pausedReason\": \"string\",\n      \"pausedMessage\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 8135,\n    \"limit\": 2829,\n    \"totalItems\": 6023,\n    \"totalPages\": 979\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "803a2935-26a1-4153-838f-2730b51fcc4b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c9b965b1-ee88-4099-851c-5feaa4b053cc",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "20ff4d17-b662-4321-9e67-4f3e8af00d46",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6911d379-1713-48dd-b41c-daa3f027b0de",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7ba89f78-c420-4f97-a2cd-28af7e2f8dcf",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "391fd279-6f89-43c7-a2cf-403334a0473c",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bb98b2e4-b656-47d9-b138-1b86a9efea85",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "aff2ae2e-e640-414e-9408-ee35b556693f",
+          "name": "unstable evaluation Rules get",
+          "request": {
+            "name": "unstable evaluation Rules get",
+            "description": {
+              "content": "Get one evaluation rule by its identifier.\n\nUse this endpoint to inspect the current evaluator, target, mapping, filters, and effective runtime status.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "unstable",
+                "evaluation-rules",
+                ":evaluationRuleId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "evaluationRuleId",
+                  "description": "(Required) Evaluation rule identifier returned by the evaluation rule endpoints."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "644b06ad-1e18-4b29-bf8d-f07e6f89b40a",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier returned by the evaluation rule endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"erule_123\",\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": true,\n  \"status\": \"paused\",\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ],\n  \"createdAt\": \"2026-03-30T09:20:00.000Z\",\n  \"updatedAt\": \"2026-03-30T09:20:00.000Z\",\n  \"pausedReason\": \"string\",\n  \"pausedMessage\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f9f9adc6-fcfe-4af0-b0fb-55dd3601aaa6",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier returned by the evaluation rule endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "94a69b6b-0533-431a-9681-601efdf8a31b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier returned by the evaluation rule endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f8d5b727-151d-4906-ab62-06ff31ec7b6f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier returned by the evaluation rule endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a1eaf93c-9106-4d1f-9dd6-8a007b5a2b79",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier returned by the evaluation rule endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "85d95406-b076-4abe-a346-c5ebfb14cb35",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier returned by the evaluation rule endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bc052855-1f52-47f8-97cf-d0972d911f8e",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier returned by the evaluation rule endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2fd0294f-52dc-4ec2-8acc-49286f588cc3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier returned by the evaluation rule endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "10f30559-052b-4d12-a870-a5da6a808ae0",
+          "name": "unstable evaluation Rules update",
+          "request": {
+            "name": "unstable evaluation Rules update",
+            "description": {
+              "content": "Update an evaluation rule.\n\nTypical uses:\n- enable or disable live execution\n- switch to another evaluator\n- adjust sampling\n- change filters\n- update variable mappings\n\nImportant behavior:\n- provide only the fields you want to change\n- if you provide `evaluator`, Langfuse resolves that evaluator family to its latest version before saving\n- changing `target`, `filter`, or `mapping` must still produce a valid target-specific configuration\n- if you change `target`, also send a compatible `filter` and `mapping` in the same request unless the existing ones are still valid for the new target\n- if the resulting config is enabled, Langfuse re-validates that the selected evaluator can run\n- if the update would move a non-active evaluation rule into the active state and the project already has 50 active evaluation rules, the API returns `409`\n\nRecovery guidance:\n- if the update fails with `missing_variable_mapping` or `invalid_variable_mapping` after changing `evaluator` or `target`, resend the request with a complete new `mapping`\n- if the update fails with `invalid_filter_value` after changing `target`, resend the request with a target-compatible `filter`",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "unstable",
+                "evaluation-rules",
+                ":evaluationRuleId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "evaluationRuleId",
+                  "description": "(Required) Evaluation rule identifier."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    \"<object>\",\n    \"<object>\"\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"<string>\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"<string>\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e302b9af-8c4a-492a-a4c8-2aca87f0ab42",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"erule_123\",\n  \"name\": \"answer-correctness-live\",\n  \"evaluator\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": true,\n  \"status\": \"paused\",\n  \"sampling\": 1,\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ],\n  \"createdAt\": \"2026-03-30T09:20:00.000Z\",\n  \"updatedAt\": \"2026-03-30T09:20:00.000Z\",\n  \"pausedReason\": \"string\",\n  \"pausedMessage\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0698e5b5-48fe-4d3b-8cd8-c22cab24af03",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aeca82fa-e88a-4d81-9249-402b0bdfa939",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "561e0779-cde1-4f65-9909-fa901e711fdf",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7d018692-1bca-4302-ace0-7e702aa44e8c",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1bbd47bd-939e-4543-a293-8263e88e138c",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "040b2120-cdb9-48fe-ba76-0b3f7e33a8ab",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "efaf60ed-75e5-437b-b83c-6dde5caaaa65",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d8859233-f7c8-45a0-872d-22199cb648d0",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"<string>\",\n  \"evaluator\": {\n    \"name\": \"<string>\",\n    \"scope\": \"<string>\"\n  },\n  \"target\": \"<string>\",\n  \"enabled\": \"<boolean>\",\n  \"sampling\": \"<double>\",\n  \"filter\": [\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    },\n    {\n      \"column\": \"<string>\",\n      \"operator\": \"<string>\",\n      \"type\": \"<string>\",\n      \"value\": \"<dateTime>\"\n    }\n  ],\n  \"mapping\": [\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    },\n    {\n      \"variable\": \"input\",\n      \"source\": \"<string>\",\n      \"jsonPath\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a7b8226c-8047-471e-8709-10a2a0cff93c",
+          "name": "unstable evaluation Rules delete",
+          "request": {
+            "name": "unstable evaluation Rules delete",
+            "description": {
+              "content": "Delete an evaluation rule.\n\nThis removes the live-ingestion rule only. It does not delete the referenced evaluator.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "unstable",
+                "evaluation-rules",
+                ":evaluationRuleId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "evaluationRuleId",
+                  "description": "(Required) Evaluation rule identifier."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "cc5f9d46-eee6-4ed0-af2e-37883360c6b5",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1eeef1d8-c491-4768-92e1-67df87b47cd4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "29c4334e-04c0-4e57-8f20-ef69de387d33",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "63c16799-8cf4-4cac-9b11-7213f399ac1b",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1c69daf7-dbeb-4d74-976c-3050b0896c72",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "10850841-acad-4e64-9321-7c7a4f770a12",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c171e490-10d6-4fc8-a0b4-5b5df9e9a92f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7256de87-a98b-49f5-a0aa-15e84f1923a3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluation-rules",
+                    ":evaluationRuleId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluationRuleId",
+                      "description": "(Required) Evaluation rule identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_variable_mapping\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 5343,\n    \"limit\": 7633,\n    \"remaining\": 3704,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "d0087bca-6d36-469f-b8fc-b3f3cd4a080d",
+    "name": "langfuse AnnotationQueues UnstableEvaluationRules API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Authentication\n\nAuthenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:\n\n- username: Langfuse Public Key\n- password: Langfuse Secret Key\n\n## Exports\n\n- OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml",
+      "type": "text/plain"
+    }
+  }
+}

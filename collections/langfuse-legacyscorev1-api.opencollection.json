@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "langfuse AnnotationQueues LegacyScoreV1 API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "LegacyScoreV1",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "legacy_scoreV1_create",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/public/scores",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Create a score (supports both trace and session scores)"
+        },
+        {
+          "info": {
+            "name": "legacy_scoreV1_delete",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/public/scores/:scoreId",
+            "params": [
+              {
+                "name": "scoreId",
+                "value": "",
+                "type": "path",
+                "description": "The unique langfuse identifier of a score"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Delete a score (supports both trace and session scores)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

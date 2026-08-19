@@ -1,0 +1,92 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "langfuse AnnotationQueues UnstableEvaluators API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "UnstableEvaluators",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "unstable_evaluators_list",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/unstable/evaluators",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number. Defaults to `1`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items per page. Defaults to `50`."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "List the evaluators available to the authenticated project.\n\nImportant behavior:\n- This endpoint returns the latest version of each available evaluator.\n- Results can include evaluators from your project and Langfuse-managed evaluators.\n- If the same evaluator name exists in both places, both are returned as separate items with different `scope` values."
+        },
+        {
+          "info": {
+            "name": "unstable_evaluators_create",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/public/unstable/evaluators",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Create an evaluator in the authenticated project.\n\nUse evaluators to define **how** Langfuse should score data: the prompt, the expected structured output, and the optional model configuration.\n\nNaming behavior:\n- If this is a new evaluator name in your project, Langfuse creates version `1`.\n- If the name already exists in your project, Langfuse creates the next version and returns it.\n- When a new project version is created, existing evaluation rules in that project automatically move to the ne"
+        },
+        {
+          "info": {
+            "name": "unstable_evaluators_get",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/unstable/evaluators/:evaluatorId",
+            "params": [
+              {
+                "name": "evaluatorId",
+                "value": "",
+                "type": "path",
+                "description": "Evaluator identifier returned by the evaluator endpoints."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get one evaluator by `id`.\n\nUse this endpoint when you want the prompt, output definition, model configuration, and derived variables for the evaluator you plan to use in an evaluation rule."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,312 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "langfuse AnnotationQueues API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "AnnotationQueues",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "annotationQueues_listQueues",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/annotation-queues",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "page number, starts at 1"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "limit of items per page"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get all annotation queues"
+        },
+        {
+          "info": {
+            "name": "annotationQueues_createQueue",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/public/annotation-queues",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Create an annotation queue"
+        },
+        {
+          "info": {
+            "name": "annotationQueues_getQueue",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/annotation-queues/:queueId",
+            "params": [
+              {
+                "name": "queueId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get an annotation queue by ID"
+        },
+        {
+          "info": {
+            "name": "annotationQueues_listQueueItems",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/annotation-queues/:queueId/items",
+            "params": [
+              {
+                "name": "queueId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "page number, starts at 1"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "limit of items per page"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get items for a specific annotation queue"
+        },
+        {
+          "info": {
+            "name": "annotationQueues_createQueueItem",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/public/annotation-queues/:queueId/items",
+            "params": [
+              {
+                "name": "queueId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Add an item to an annotation queue"
+        },
+        {
+          "info": {
+            "name": "annotationQueues_getQueueItem",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/annotation-queues/:queueId/items/:itemId",
+            "params": [
+              {
+                "name": "queueId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue"
+              },
+              {
+                "name": "itemId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue item"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get a specific item from an annotation queue"
+        },
+        {
+          "info": {
+            "name": "annotationQueues_updateQueueItem",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/public/annotation-queues/:queueId/items/:itemId",
+            "params": [
+              {
+                "name": "queueId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue"
+              },
+              {
+                "name": "itemId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue item"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Update an annotation queue item"
+        },
+        {
+          "info": {
+            "name": "annotationQueues_deleteQueueItem",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/public/annotation-queues/:queueId/items/:itemId",
+            "params": [
+              {
+                "name": "queueId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue"
+              },
+              {
+                "name": "itemId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue item"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Remove an item from an annotation queue"
+        },
+        {
+          "info": {
+            "name": "annotationQueues_createQueueAssignment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/public/annotation-queues/:queueId/assignments",
+            "params": [
+              {
+                "name": "queueId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Create an assignment for a user to an annotation queue"
+        },
+        {
+          "info": {
+            "name": "annotationQueues_deleteQueueAssignment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/public/annotation-queues/:queueId/assignments",
+            "params": [
+              {
+                "name": "queueId",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the annotation queue"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Delete an assignment for a user to an annotation queue"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

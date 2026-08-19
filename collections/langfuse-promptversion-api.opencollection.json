@@ -1,0 +1,52 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "langfuse AnnotationQueues PromptVersion API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "PromptVersion",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "promptVersion_update",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/public/v2/prompts/:name/versions/:version",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the prompt. If the prompt is in a folder (e.g., \"folder/subfolder/prompt-name\"), \nthe folder path must be URL encoded."
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "path",
+                "description": "Version of the prompt to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Update labels for a specific prompt version"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

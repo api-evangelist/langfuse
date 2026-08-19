@@ -1,0 +1,406 @@
+{
+  "item": [
+    {
+      "id": "60d26f66-868a-419c-81b8-919a3f62b76e",
+      "name": "Ingestion",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4fcc378c-2464-43aa-bcc5-1c969ec98cbd",
+          "name": "ingestion batch",
+          "request": {
+            "name": "ingestion batch",
+            "description": {
+              "content": "**Legacy endpoint for batch ingestion for Langfuse Observability.**\n\n-> Please use the OpenTelemetry endpoint (`/api/public/otel/v1/traces`). Learn more: https://langfuse.com/integrations/native/opentelemetry\n\nWithin each batch, there can be multiple events.\nEach event has a type, an id, a timestamp, metadata and a body.\nInternally, we refer to this as the \"event envelope\" as it tells us something about the event but not the trace.\nWe use the event id within this envelope to deduplicate messages to avoid processing the same event twice, i.e. the event id should be unique per request.\nThe event.body.id is the ID of the actual trace and will be used for updates and will be visible within the Langfuse App.\nI.e. if you want to update a trace, you'd use the same body id, but separate event IDs.\n\nNotes:\n- Introduction to data model: https://langfuse.com/docs/observability/data-model\n- Batch sizes are limited to 3.5 MB in total. You need to adjust the number of events per batch accordingly.\n- The API does not return a 4xx status code for input errors. Instead, it responds with a 207 status code, which includes a list of the encountered errors.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "ingestion"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"batch\": [\n    \"<object>\",\n    \"<object>\"\n  ],\n  \"metadata\": {}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "22c45fb2-7cd0-4b64-92f0-a677170e4fa3",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "ingestion"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": [\n    {\n      \"id\": \"abcdef-1234-5678-90ab\",\n      \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n      \"type\": \"trace-create\",\n      \"body\": {\n        \"id\": \"abcdef-1234-5678-90ab\",\n        \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n        \"environment\": \"production\",\n        \"name\": \"My Trace\",\n        \"userId\": \"1234-5678-90ab-cdef\",\n        \"input\": \"My input\",\n        \"output\": \"My output\",\n        \"sessionId\": \"1234-5678-90ab-cdef\",\n        \"release\": \"1.0.0\",\n        \"version\": \"1.0.0\",\n        \"metadata\": \"My metadata\",\n        \"tags\": [\n          \"tag1\",\n          \"tag2\"\n        ],\n        \"public\": true\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Multi-Status (WebDAV) (RFC 4918)",
+              "code": 207,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"successes\": [\n    {\n      \"id\": \"abcdef-1234-5678-90ab\",\n      \"status\": 201\n    }\n  ],\n  \"errors\": []\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "52dd6af9-945d-4e8d-8d2f-21bd3ff2e157",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "ingestion"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": [\n    {\n      \"id\": \"abcdef-1234-5678-90ab\",\n      \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n      \"type\": \"trace-create\",\n      \"body\": {\n        \"id\": \"abcdef-1234-5678-90ab\",\n        \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n        \"environment\": \"production\",\n        \"name\": \"My Trace\",\n        \"userId\": \"1234-5678-90ab-cdef\",\n        \"input\": \"My input\",\n        \"output\": \"My output\",\n        \"sessionId\": \"1234-5678-90ab-cdef\",\n        \"release\": \"1.0.0\",\n        \"version\": \"1.0.0\",\n        \"metadata\": \"My metadata\",\n        \"tags\": [\n          \"tag1\",\n          \"tag2\"\n        ],\n        \"public\": true\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5f5c6465-baa6-4614-ac78-5ee9c8c6cfce",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "ingestion"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": [\n    {\n      \"id\": \"abcdef-1234-5678-90ab\",\n      \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n      \"type\": \"trace-create\",\n      \"body\": {\n        \"id\": \"abcdef-1234-5678-90ab\",\n        \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n        \"environment\": \"production\",\n        \"name\": \"My Trace\",\n        \"userId\": \"1234-5678-90ab-cdef\",\n        \"input\": \"My input\",\n        \"output\": \"My output\",\n        \"sessionId\": \"1234-5678-90ab-cdef\",\n        \"release\": \"1.0.0\",\n        \"version\": \"1.0.0\",\n        \"metadata\": \"My metadata\",\n        \"tags\": [\n          \"tag1\",\n          \"tag2\"\n        ],\n        \"public\": true\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e396b19e-efa8-4ab6-a2f3-c3ad416eb56c",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "ingestion"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": [\n    {\n      \"id\": \"abcdef-1234-5678-90ab\",\n      \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n      \"type\": \"trace-create\",\n      \"body\": {\n        \"id\": \"abcdef-1234-5678-90ab\",\n        \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n        \"environment\": \"production\",\n        \"name\": \"My Trace\",\n        \"userId\": \"1234-5678-90ab-cdef\",\n        \"input\": \"My input\",\n        \"output\": \"My output\",\n        \"sessionId\": \"1234-5678-90ab-cdef\",\n        \"release\": \"1.0.0\",\n        \"version\": \"1.0.0\",\n        \"metadata\": \"My metadata\",\n        \"tags\": [\n          \"tag1\",\n          \"tag2\"\n        ],\n        \"public\": true\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "59451198-ece8-4d6d-89ab-31e5a9fd228f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "ingestion"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": [\n    {\n      \"id\": \"abcdef-1234-5678-90ab\",\n      \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n      \"type\": \"trace-create\",\n      \"body\": {\n        \"id\": \"abcdef-1234-5678-90ab\",\n        \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n        \"environment\": \"production\",\n        \"name\": \"My Trace\",\n        \"userId\": \"1234-5678-90ab-cdef\",\n        \"input\": \"My input\",\n        \"output\": \"My output\",\n        \"sessionId\": \"1234-5678-90ab-cdef\",\n        \"release\": \"1.0.0\",\n        \"version\": \"1.0.0\",\n        \"metadata\": \"My metadata\",\n        \"tags\": [\n          \"tag1\",\n          \"tag2\"\n        ],\n        \"public\": true\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "52964d07-591f-4fff-ae5b-109c47bfc53a",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "ingestion"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"batch\": [\n    {\n      \"id\": \"abcdef-1234-5678-90ab\",\n      \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n      \"type\": \"trace-create\",\n      \"body\": {\n        \"id\": \"abcdef-1234-5678-90ab\",\n        \"timestamp\": \"2022-01-01T00:00:00.000Z\",\n        \"environment\": \"production\",\n        \"name\": \"My Trace\",\n        \"userId\": \"1234-5678-90ab-cdef\",\n        \"input\": \"My input\",\n        \"output\": \"My output\",\n        \"sessionId\": \"1234-5678-90ab-cdef\",\n        \"release\": \"1.0.0\",\n        \"version\": \"1.0.0\",\n        \"metadata\": \"My metadata\",\n        \"tags\": [\n          \"tag1\",\n          \"tag2\"\n        ],\n        \"public\": true\n      }\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "9635faef-8566-4b7c-90af-2ea636c06695",
+    "name": "langfuse AnnotationQueues Ingestion API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Authentication\n\nAuthenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:\n\n- username: Langfuse Public Key\n- password: Langfuse Secret Key\n\n## Exports\n\n- OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml",
+      "type": "text/plain"
+    }
+  }
+}

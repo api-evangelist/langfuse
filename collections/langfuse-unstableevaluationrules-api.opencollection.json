@@ -1,0 +1,144 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "langfuse AnnotationQueues UnstableEvaluationRules API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "UnstableEvaluationRules",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "unstable_evaluationRules_list",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/unstable/evaluation-rules",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "1-based page number. Defaults to `1`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items per page. Defaults to `50`."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "List evaluation rules in the authenticated project.\n\nEach item describes one live evaluation rule and its effective runtime status."
+        },
+        {
+          "info": {
+            "name": "unstable_evaluationRules_create",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/public/unstable/evaluation-rules",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Create an evaluation rule.\n\nAn evaluation rule defines **what** incoming data should be evaluated and **how prompt variables should be populated** from that data.\n\nUse this resource after choosing an evaluator from the evaluator endpoints.\n\nKey rules:\n- `name` must be unique within the project for public evaluation rules\n- `target` must be `observation` or `experiment`\n- `evaluator.name` + `evaluator.scope` must identify an existing evaluator family returned by the evaluator endpoints\n- Langfuse"
+        },
+        {
+          "info": {
+            "name": "unstable_evaluationRules_get",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/unstable/evaluation-rules/:evaluationRuleId",
+            "params": [
+              {
+                "name": "evaluationRuleId",
+                "value": "",
+                "type": "path",
+                "description": "Evaluation rule identifier returned by the evaluation rule endpoints."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get one evaluation rule by its identifier.\n\nUse this endpoint to inspect the current evaluator, target, mapping, filters, and effective runtime status."
+        },
+        {
+          "info": {
+            "name": "unstable_evaluationRules_update",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/public/unstable/evaluation-rules/:evaluationRuleId",
+            "params": [
+              {
+                "name": "evaluationRuleId",
+                "value": "",
+                "type": "path",
+                "description": "Evaluation rule identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Update an evaluation rule.\n\nTypical uses:\n- enable or disable live execution\n- switch to another evaluator\n- adjust sampling\n- change filters\n- update variable mappings\n\nImportant behavior:\n- provide only the fields you want to change\n- if you provide `evaluator`, Langfuse resolves that evaluator family to its latest version before saving\n- changing `target`, `filter`, or `mapping` must still produce a valid target-specific configuration\n- if you change `target`, also send a compatible `filter` "
+        },
+        {
+          "info": {
+            "name": "unstable_evaluationRules_delete",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/public/unstable/evaluation-rules/:evaluationRuleId",
+            "params": [
+              {
+                "name": "evaluationRuleId",
+                "value": "",
+                "type": "path",
+                "description": "Evaluation rule identifier."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Delete an evaluation rule.\n\nThis removes the live-ingestion rule only. It does not delete the referenced evaluator."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

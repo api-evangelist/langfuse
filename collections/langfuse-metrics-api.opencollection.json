@@ -1,0 +1,42 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "langfuse AnnotationQueues Metrics API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Metrics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "metrics_metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/v2/metrics",
+            "params": [
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "JSON string containing the query parameters with the following structure:\n```json\n{\n  \"view\": string,           // Required. One of \"observations\", \"scores-numeric\", \"scores-categorical\"\n  \"dimensions\": [           // Optional. Default: []\n    {\n      \"field\": string       // Field to group by (see available dimensions above)\n    }\n  ],\n  \"metrics\": [              // Required. At least one metric must be provided\n    {\n      \"measure\": string,    // What to measure (see available measures above)\n      \"aggregation\": string // How to aggregate: \"sum\", \"avg\", \"count\", \"max\", \"min\", \"p50\", \"p75\", \"p90\", \"p95\", \"p99\", \"histogram\"\n    }\n  ],\n  \"filters\": [              // Optional. Default: []\n    {\n      \"column\": string,     // Column to filter on (any dimension field)\n      \"operator\": string,   // Operator based on type:\n                            // - datetime: \">\", \"<\", \">=\", \"<=\"\n                            // - string: \"=\", \"contains\", \"does not contain\", \"starts with\", \"ends with\"\n                            // - stringOptions: \"any of\", \"none of\"\n                            // - arrayOptions: \"any of\", \"none of\", \"all of\"\n                            // - number: \"=\", \">\", \"<\", \">=\", \"<=\"\n                            // - stringObject/numberObject: same as string/number with required \"key\"\n                            // - boolean: \"=\", \"<>\"\n                            // - null: \"is null\", \"is not null\"\n      \"value\": any,         // Value to compare against\n      \"type\": string,       // Data type: \"datetime\", \"string\", \"number\", \"stringOptions\", \"categoryOptions\", \"arrayOptions\", \"stringObject\", \"numberObject\", \"boolean\", \"null\"\n      \"key\": string         // Required only for stringObject/numberObject types (e.g., metadata filtering)\n    }\n  ],\n  \"timeDimension\": {        // Optional. Default: null. If provided, results will be grouped by time\n    \"granularity\": string   // One of \"auto\", \"minute\", \"hour\", \"day\", \"week\", \"month\"\n  },\n  \"fromTimestamp\": string,  // Required. ISO datetime string for start of time range\n  \"toTimestamp\": string,    // Required. ISO datetime string for end of time range (must be after fromTimestamp)\n  \"orderBy\": [              // Optional. Default: null\n    {\n      \"field\": string,      // Field to order by (dimension or metric alias)\n      \"direction\": string   // \"asc\" or \"desc\"\n    }\n  ],\n  \"config\": {               // Optional. Query-specific configuration\n    \"bins\": number,         // Optional. Number of bins for histogram aggregation (1-100), default: 10\n    \"row_limit\": number     // Optional. Maximum number of rows to return (1-1000), default: 100\n  }\n}\n```"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get metrics from the Langfuse project using a query object. V2 endpoint with optimized performance.\n\n## V2 Differences\n- Supports `observations`, `scores-numeric`, and `scores-categorical` views only (traces view not supported)\n- Direct access to tags and release fields on observations\n- Backwards-compatible: traceName, traceRelease, traceVersion dimensions are still available on observations view\n- High cardinality dimensions are not supported and will return a 400 error (see below)\n\nFor more d"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

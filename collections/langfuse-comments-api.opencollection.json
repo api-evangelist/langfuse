@@ -1,0 +1,110 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "langfuse AnnotationQueues Comments API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Comments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "comments_get",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/comments",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number, starts at 1."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit of items per page. If you encounter api issues due to too large page sizes, try to reduce the limit"
+              },
+              {
+                "name": "objectType",
+                "value": "",
+                "type": "query",
+                "description": "Filter comments by object type (trace, observation, session, prompt)."
+              },
+              {
+                "name": "objectId",
+                "value": "",
+                "type": "query",
+                "description": "Filter comments by object id. If objectType is not provided, an error will be thrown."
+              },
+              {
+                "name": "authorUserId",
+                "value": "",
+                "type": "query",
+                "description": "Filter comments by author user id."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get all comments"
+        },
+        {
+          "info": {
+            "name": "comments_create",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/public/comments",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Create a comment. Comments may be attached to different object types (trace, observation, session, prompt)."
+        },
+        {
+          "info": {
+            "name": "comments_get-by-id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/comments/:commentId",
+            "params": [
+              {
+                "name": "commentId",
+                "value": "",
+                "type": "path",
+                "description": "The unique langfuse identifier of a comment"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get a comment by id"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

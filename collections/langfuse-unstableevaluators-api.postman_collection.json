@@ -1,0 +1,1611 @@
+{
+  "item": [
+    {
+      "id": "1e4ef589-42c0-4616-883e-fe19e42ca261",
+      "name": "UnstableEvaluators",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a835b466-125d-45e9-99c1-dfae1caf1e0c",
+          "name": "unstable evaluators create",
+          "request": {
+            "name": "unstable evaluators create",
+            "description": {
+              "content": "Create an evaluator in the authenticated project.\n\nUse evaluators to define **how** Langfuse should score data: the prompt, the expected structured output, and the optional model configuration.\n\nNaming behavior:\n- If this is a new evaluator name in your project, Langfuse creates version `1`.\n- If the name already exists in your project, Langfuse creates the next version and returns it.\n- When a new project version is created, existing evaluation rules in that project automatically move to the newest version for that evaluator name.\n\nRecommended workflow:\n1. Create the evaluator.\n2. Read the returned `variables` array.\n3. Read the returned `outputDefinition.dataType` so the client knows whether future scores will be numeric, boolean, or categorical.\n4. Create one or more evaluation rules that reference the returned evaluator family using `name` and `scope`.\n\nRecovery guidance:\n- `422` with `code=evaluator_preflight_failed`: the evaluator cannot run with the resolved model configuration. Add a valid explicit `modelConfig`, or configure the project's default evaluation model, then retry the same request.\n- `400` with `code=invalid_body`: the request shape is malformed. Use the structured `details.issues` array to fix the specific fields and retry.\n- `400` with `code=invalid_body` on `outputDefinition`: send `dataType`, `reasoning.description`, and `score.description`. Do not send `version`; it is not part of the public request shape.\n\nUnstable API note:\n- This surface may evolve while the underlying evaluation data model is being redesigned.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "unstable",
+                "evaluators"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"prompt\": \"<string>\",\n  \"outputDefinition\": \"<object>\",\n  \"modelConfig\": {\n    \"provider\": \"<string>\",\n    \"model\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "5d572b3f-2667-4d21-9b0a-a0e35814d662",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"evaltmpl_123\",\n  \"name\": \"answer-correctness\",\n  \"version\": 2,\n  \"scope\": \"project\",\n  \"type\": \"llm_as_judge\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"variables\": [\n    \"input\",\n    \"output\"\n  ],\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  },\n  \"evaluationRuleCount\": 0,\n  \"createdAt\": \"2026-03-30T09:00:00.000Z\",\n  \"updatedAt\": \"2026-03-30T09:00:00.000Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4a50d285-431e-49a2-aec8-91603bdccc11",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5740db76-19ba-4ba6-988e-375efe0a33eb",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "84563bc8-a7ec-4205-a886-af4dbef8e68e",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "046bab26-52cc-4a77-9ac5-c6e9387d39c4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "29a41469-bf93-4cc0-bdc4-17f18fdcfdeb",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "908ff9ca-9f91-41d5-93a1-6776ce79d1b0",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"resource_not_found\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 8842,\n    \"limit\": 4292,\n    \"remaining\": 9487,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d40205ff-352f-4908-899e-465fd0fa27c8",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_filter_value\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 9397,\n    \"limit\": 5327,\n    \"remaining\": 3550,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b3200114-0f19-46e6-94e4-e956224c7284",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_filter_value\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 9397,\n    \"limit\": 5327,\n    \"remaining\": 3550,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bcdf60b4-ea75-44c7-84d3-5db2b67ceb59",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"answer-correctness\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"outputDefinition\": {\n    \"dataType\": \"NUMERIC\",\n    \"reasoning\": {\n      \"description\": \"Explain why the score was assigned.\"\n    },\n    \"score\": {\n      \"description\": \"Correctness score between 0 and 1.\"\n    }\n  },\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_filter_value\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 9397,\n    \"limit\": 5327,\n    \"remaining\": 3550,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "673a93c3-b5ab-437e-b34d-3906a0a4762a",
+          "name": "unstable evaluators list",
+          "request": {
+            "name": "unstable evaluators list",
+            "description": {
+              "content": "List the evaluators available to the authenticated project.\n\nImportant behavior:\n- This endpoint returns the latest version of each available evaluator.\n- Results can include evaluators from your project and Langfuse-managed evaluators.\n- If the same evaluator name exists in both places, both are returned as separate items with different `scope` values.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "unstable",
+                "evaluators"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "1-based page number. Defaults to `1`."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Maximum number of items per page. Defaults to `50`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "cda324d2-c7c4-40a5-a603-873567967195",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"evaltmpl_123\",\n      \"name\": \"answer-correctness\",\n      \"version\": 2,\n      \"scope\": \"managed\",\n      \"type\": \"llm_as_judge\",\n      \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n      \"variables\": [\n        \"input\",\n        \"output\"\n      ],\n      \"outputDefinition\": {\n        \"dataType\": \"NUMERIC\",\n        \"reasoning\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"score\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"evaluationRuleCount\": 0,\n      \"createdAt\": \"2026-03-30T09:00:00.000Z\",\n      \"updatedAt\": \"2026-03-30T09:00:00.000Z\",\n      \"modelConfig\": {\n        \"provider\": \"openai\",\n        \"model\": \"gpt-4.1-mini\"\n      }\n    },\n    {\n      \"id\": \"evaltmpl_123\",\n      \"name\": \"answer-correctness\",\n      \"version\": 2,\n      \"scope\": \"project\",\n      \"type\": \"llm_as_judge\",\n      \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n      \"variables\": [\n        \"input\",\n        \"output\"\n      ],\n      \"outputDefinition\": {\n        \"dataType\": \"NUMERIC\",\n        \"reasoning\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"score\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"evaluationRuleCount\": 0,\n      \"createdAt\": \"2026-03-30T09:00:00.000Z\",\n      \"updatedAt\": \"2026-03-30T09:00:00.000Z\",\n      \"modelConfig\": {\n        \"provider\": \"openai\",\n        \"model\": \"gpt-4.1-mini\"\n      }\n    }\n  ],\n  \"meta\": {\n    \"page\": 2667,\n    \"limit\": 6406,\n    \"totalItems\": 8282,\n    \"totalPages\": 2664\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "afa98249-439d-48b1-8484-a5e494ac88b9",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "56aa1a4c-2dcb-4ab7-b039-8730012acc05",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cd9a8272-6a77-423f-b12a-dc836e5c7e10",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6c825d8-0fec-4233-b095-a443347fc6fd",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bcc5ef57-59e1-4371-b9e9-af8b433c750d",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fb4e35ed-b088-469e-966c-05e595de9a79",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_filter_value\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 9397,\n    \"limit\": 5327,\n    \"remaining\": 3550,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4ef61540-b7b0-43b1-8ae3-5b63091f0468",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_filter_value\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 9397,\n    \"limit\": 5327,\n    \"remaining\": 3550,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f5abd43f-c6ba-4b64-8507-87f22631f5ce",
+          "name": "unstable evaluators get",
+          "request": {
+            "name": "unstable evaluators get",
+            "description": {
+              "content": "Get one evaluator by `id`.\n\nUse this endpoint when you want the prompt, output definition, model configuration, and derived variables for the evaluator you plan to use in an evaluation rule.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "unstable",
+                "evaluators",
+                ":evaluatorId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "evaluatorId",
+                  "description": "(Required) Evaluator identifier returned by the evaluator endpoints."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "8619dd47-69f8-4eb1-a9fe-0f662cce3aa6",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators",
+                    ":evaluatorId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluatorId",
+                      "description": "(Required) Evaluator identifier returned by the evaluator endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"evaltmpl_123\",\n  \"name\": \"answer-correctness\",\n  \"version\": 2,\n  \"scope\": \"managed\",\n  \"type\": \"llm_as_judge\",\n  \"prompt\": \"You are grading an answer.\\n\\nInput:\\n{{input}}\\n\\nOutput:\\n{{output}}\\n\\nReturn a score between 0 and 1.\\n\",\n  \"variables\": [\n    \"input\",\n    \"output\"\n  ],\n  \"outputDefinition\": {\n    \"dataType\": \"<string>\",\n    \"reasoning\": {\n      \"description\": \"<string>\"\n    },\n    \"score\": {\n      \"description\": \"<string>\"\n    }\n  },\n  \"evaluationRuleCount\": 0,\n  \"createdAt\": \"2026-03-30T09:00:00.000Z\",\n  \"updatedAt\": \"2026-03-30T09:00:00.000Z\",\n  \"modelConfig\": {\n    \"provider\": \"openai\",\n    \"model\": \"gpt-4.1-mini\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e2066645-4dea-483a-af7f-3e9383b69895",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators",
+                    ":evaluatorId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluatorId",
+                      "description": "(Required) Evaluator identifier returned by the evaluator endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5bac134f-87a6-46e1-a2ac-190159113cc6",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators",
+                    ":evaluatorId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluatorId",
+                      "description": "(Required) Evaluator identifier returned by the evaluator endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3ec19c1c-7332-4e86-8e04-07ca61e789ab",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators",
+                    ":evaluatorId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluatorId",
+                      "description": "(Required) Evaluator identifier returned by the evaluator endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3a956bbd-4bd9-4f06-b7d0-fe1440135003",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators",
+                    ":evaluatorId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluatorId",
+                      "description": "(Required) Evaluator identifier returned by the evaluator endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1d248c63-30a2-4f1c-81ac-34c77f9fced2",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators",
+                    ":evaluatorId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluatorId",
+                      "description": "(Required) Evaluator identifier returned by the evaluator endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a1b06d9f-4815-4c80-9fc2-21345aae2dc4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators",
+                    ":evaluatorId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluatorId",
+                      "description": "(Required) Evaluator identifier returned by the evaluator endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_filter_value\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 9397,\n    \"limit\": 5327,\n    \"remaining\": 3550,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6c210b8b-5396-49bc-b843-0eeab2eb1534",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "unstable",
+                    "evaluators",
+                    ":evaluatorId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "evaluatorId",
+                      "description": "(Required) Evaluator identifier returned by the evaluator endpoints."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Filter column \\\"type\\\" contains unsupported value(s): INVALID\",\n  \"code\": \"invalid_filter_value\",\n  \"details\": {\n    \"issues\": [\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      },\n      {\n        \"code\": \"string\",\n        \"message\": \"string\",\n        \"path\": []\n      }\n    ],\n    \"field\": \"string\",\n    \"column\": \"string\",\n    \"invalidValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"allowedValues\": [\n      \"string\",\n      \"string\"\n    ],\n    \"variable\": \"string\",\n    \"variables\": [\n      \"string\",\n      \"string\"\n    ],\n    \"value\": \"string\",\n    \"evaluatorName\": \"string\",\n    \"provider\": \"string\",\n    \"model\": \"string\",\n    \"retryAfterSeconds\": 9397,\n    \"limit\": 5327,\n    \"remaining\": 3550,\n    \"resetAt\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "45269ae5-051e-4665-822c-15f8360ac6d2",
+    "name": "langfuse AnnotationQueues UnstableEvaluators API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Authentication\n\nAuthenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:\n\n- username: Langfuse Public Key\n- password: Langfuse Secret Key\n\n## Exports\n\n- OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml",
+      "type": "text/plain"
+    }
+  }
+}

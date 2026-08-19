@@ -1,0 +1,186 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "langfuse AnnotationQueues Scores API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Scores",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "scores_get-many",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/v2/scores",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number, starts at 1."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Limit of items per page. If you encounter api issues due to too large page sizes, try to reduce the limit."
+              },
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores with this userId associated to the trace."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores with this name."
+              },
+              {
+                "name": "fromTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "Optional filter to only include scores created on or after a certain datetime (ISO 8601)"
+              },
+              {
+                "name": "toTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "Optional filter to only include scores created before a certain datetime (ISO 8601)"
+              },
+              {
+                "name": "environment",
+                "value": "",
+                "type": "query",
+                "description": "Optional filter for scores where the environment is one of the provided values."
+              },
+              {
+                "name": "source",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores from a specific source."
+              },
+              {
+                "name": "operator",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores with <operator> value."
+              },
+              {
+                "name": "value",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores with <operator> value."
+              },
+              {
+                "name": "scoreIds",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of score IDs to limit the results to."
+              },
+              {
+                "name": "configId",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores with a specific configId."
+              },
+              {
+                "name": "sessionId",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores with a specific sessionId."
+              },
+              {
+                "name": "datasetRunId",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores with a specific datasetRunId."
+              },
+              {
+                "name": "traceId",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores with a specific traceId."
+              },
+              {
+                "name": "observationId",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of observation IDs to filter scores by."
+              },
+              {
+                "name": "queueId",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores with a specific annotation queueId."
+              },
+              {
+                "name": "dataType",
+                "value": "",
+                "type": "query",
+                "description": "Retrieve only scores with a specific dataType."
+              },
+              {
+                "name": "traceTags",
+                "value": "",
+                "type": "query",
+                "description": "Only scores linked to traces that include all of these tags will be returned."
+              },
+              {
+                "name": "fields",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of field groups to include in the response. Available field groups: 'score' (core score fields), 'trace' (trace properties: userId, tags, environment, sessionId). If not specified, both 'score' and 'trace' are returned by default. Example: 'score' to exclude trace data, 'score,trace' to include both. Note: When filtering by trace properties (using userId or traceTags parameters), the 'trace' field group must be included, otherwise a 400 error will be returned."
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query",
+                "description": "A JSON stringified array of filter objects. Each object requires type, column, operator, and value. Supports filtering by score metadata using the stringObject type. Example: [{\"type\":\"stringObject\",\"column\":\"metadata\",\"key\":\"user_id\",\"operator\":\"=\",\"value\":\"abc123\"}]. Supported types: stringObject (metadata key-value filtering), string, number, datetime, stringOptions, arrayOptions. Supported operators for stringObject: =, contains, does not contain, starts with, ends with."
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get a list of scores (supports both trace and session scores)"
+        },
+        {
+          "info": {
+            "name": "scores_get-by-id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/v2/scores/:scoreId",
+            "params": [
+              {
+                "name": "scoreId",
+                "value": "",
+                "type": "path",
+                "description": "The unique langfuse identifier of a score"
+              }
+            ],
+            "auth": {
+              "type": "basic",
+              "username": "{{username}}",
+              "password": "{{password}}"
+            }
+          },
+          "docs": "Get a score (supports both trace and session scores)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

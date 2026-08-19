@@ -1,0 +1,1534 @@
+{
+  "item": [
+    {
+      "id": "7972abcc-7368-4988-80c2-76dfb8799190",
+      "name": "Models",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7347714f-aac4-47aa-a309-5bc3fc805277",
+          "name": "models create",
+          "request": {
+            "name": "models create",
+            "description": {
+              "content": "Create a model",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "models"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelName\": \"<string>\",\n  \"matchPattern\": \"<string>\",\n  \"startDate\": \"<dateTime>\",\n  \"unit\": \"<string>\",\n  \"inputPrice\": \"<double>\",\n  \"outputPrice\": \"<double>\",\n  \"totalPrice\": \"<double>\",\n  \"pricingTiers\": [\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\",\n        \"key_1\": \"<double>\",\n        \"key_2\": \"<double>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\"\n      }\n    }\n  ],\n  \"tokenizerId\": \"<string>\",\n  \"tokenizerConfig\": {}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9ccc89b5-1f2e-452d-9766-8bf1f09a2235",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"modelName\": \"<string>\",\n  \"matchPattern\": \"<string>\",\n  \"startDate\": \"<dateTime>\",\n  \"unit\": \"<string>\",\n  \"inputPrice\": \"<double>\",\n  \"outputPrice\": \"<double>\",\n  \"totalPrice\": \"<double>\",\n  \"pricingTiers\": [\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\",\n        \"key_1\": \"<double>\",\n        \"key_2\": \"<double>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\"\n      }\n    }\n  ],\n  \"tokenizerId\": \"<string>\",\n  \"tokenizerConfig\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"modelName\": \"string\",\n  \"matchPattern\": \"string\",\n  \"tokenizerConfig\": {},\n  \"isLangfuseManaged\": true,\n  \"createdAt\": \"1985-07-05T17:13:54.487Z\",\n  \"prices\": {\n    \"key_0\": {\n      \"price\": 4148.633276816802\n    },\n    \"key_1\": {\n      \"price\": 1954.3342055591418\n    },\n    \"key_2\": {\n      \"price\": 1707.1433935483672\n    },\n    \"key_3\": {\n      \"price\": 1842.8165227150962\n    },\n    \"key_4\": {\n      \"price\": 9554.036390711899\n    }\n  },\n  \"pricingTiers\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"isDefault\": true,\n      \"priority\": 4037,\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": 5261.6766491111575,\n        \"key_1\": 5542.55459334152\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"isDefault\": false,\n      \"priority\": 4364,\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": 5119.804047811231,\n        \"key_1\": 4338.984348654092,\n        \"key_2\": 9376.415328228313,\n        \"key_3\": 2360.0169892931376\n      }\n    }\n  ],\n  \"startDate\": \"1948-08-03T13:32:42.538Z\",\n  \"unit\": \"<string>\",\n  \"inputPrice\": 8055.493812690668,\n  \"outputPrice\": 746.4157155585527,\n  \"totalPrice\": 2401.1672577144627,\n  \"tokenizerId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2e020b16-0ed2-4268-bcb8-9f69791b404c",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"modelName\": \"<string>\",\n  \"matchPattern\": \"<string>\",\n  \"startDate\": \"<dateTime>\",\n  \"unit\": \"<string>\",\n  \"inputPrice\": \"<double>\",\n  \"outputPrice\": \"<double>\",\n  \"totalPrice\": \"<double>\",\n  \"pricingTiers\": [\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\",\n        \"key_1\": \"<double>\",\n        \"key_2\": \"<double>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\"\n      }\n    }\n  ],\n  \"tokenizerId\": \"<string>\",\n  \"tokenizerConfig\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fa92e79a-50b5-48c8-9f2f-b879031af8e5",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"modelName\": \"<string>\",\n  \"matchPattern\": \"<string>\",\n  \"startDate\": \"<dateTime>\",\n  \"unit\": \"<string>\",\n  \"inputPrice\": \"<double>\",\n  \"outputPrice\": \"<double>\",\n  \"totalPrice\": \"<double>\",\n  \"pricingTiers\": [\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\",\n        \"key_1\": \"<double>\",\n        \"key_2\": \"<double>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\"\n      }\n    }\n  ],\n  \"tokenizerId\": \"<string>\",\n  \"tokenizerConfig\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "be8e1d4c-ff81-444a-9f42-2186101b264e",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"modelName\": \"<string>\",\n  \"matchPattern\": \"<string>\",\n  \"startDate\": \"<dateTime>\",\n  \"unit\": \"<string>\",\n  \"inputPrice\": \"<double>\",\n  \"outputPrice\": \"<double>\",\n  \"totalPrice\": \"<double>\",\n  \"pricingTiers\": [\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\",\n        \"key_1\": \"<double>\",\n        \"key_2\": \"<double>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\"\n      }\n    }\n  ],\n  \"tokenizerId\": \"<string>\",\n  \"tokenizerConfig\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1fbced35-0c88-489f-9a1f-52123a22b61f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"modelName\": \"<string>\",\n  \"matchPattern\": \"<string>\",\n  \"startDate\": \"<dateTime>\",\n  \"unit\": \"<string>\",\n  \"inputPrice\": \"<double>\",\n  \"outputPrice\": \"<double>\",\n  \"totalPrice\": \"<double>\",\n  \"pricingTiers\": [\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\",\n        \"key_1\": \"<double>\",\n        \"key_2\": \"<double>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\"\n      }\n    }\n  ],\n  \"tokenizerId\": \"<string>\",\n  \"tokenizerConfig\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dc129f31-e700-4d43-9090-01478900679c",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"modelName\": \"<string>\",\n  \"matchPattern\": \"<string>\",\n  \"startDate\": \"<dateTime>\",\n  \"unit\": \"<string>\",\n  \"inputPrice\": \"<double>\",\n  \"outputPrice\": \"<double>\",\n  \"totalPrice\": \"<double>\",\n  \"pricingTiers\": [\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\",\n        \"key_1\": \"<double>\",\n        \"key_2\": \"<double>\"\n      }\n    },\n    {\n      \"name\": \"<string>\",\n      \"isDefault\": \"<boolean>\",\n      \"priority\": \"<integer>\",\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": \"<double>\"\n      }\n    }\n  ],\n  \"tokenizerId\": \"<string>\",\n  \"tokenizerConfig\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "83d5fc00-d2c3-49eb-9ae0-ae67eaaeff92",
+          "name": "models list",
+          "request": {
+            "name": "models list",
+            "description": {
+              "content": "Get all models",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "models"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "<integer>",
+                  "description": "page number, starts at 1"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "limit of items per page"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "88b2dfc6-2765-401d-9bd2-1fe9b1adeb49",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"string\",\n      \"modelName\": \"string\",\n      \"matchPattern\": \"string\",\n      \"tokenizerConfig\": {},\n      \"isLangfuseManaged\": true,\n      \"createdAt\": \"1965-02-07T22:13:30.556Z\",\n      \"prices\": {\n        \"key_0\": {\n          \"price\": 9776.90125837019\n        },\n        \"key_1\": {\n          \"price\": 2098.6364022740277\n        }\n      },\n      \"pricingTiers\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"isDefault\": false,\n          \"priority\": 4588,\n          \"conditions\": [\n            {\n              \"usageDetailPattern\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"caseSensitive\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"usageDetailPattern\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"caseSensitive\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"prices\": {\n            \"key_0\": 7254.267850285822,\n            \"key_1\": 9057.50404882671,\n            \"key_2\": 2079.070047079491,\n            \"key_3\": 1769.6339709828867,\n            \"key_4\": 628.2782074506299\n          }\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"isDefault\": false,\n          \"priority\": 248,\n          \"conditions\": [\n            {\n              \"usageDetailPattern\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"caseSensitive\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"usageDetailPattern\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"caseSensitive\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"prices\": {\n            \"key_0\": 627.062629791576,\n            \"key_1\": 9634.48801463514\n          }\n        }\n      ],\n      \"startDate\": \"1955-04-11T18:07:31.809Z\",\n      \"unit\": \"<string>\",\n      \"inputPrice\": 7964.416307832931,\n      \"outputPrice\": 2467.2939897774713,\n      \"totalPrice\": 1737.4734677878646,\n      \"tokenizerId\": \"string\"\n    },\n    {\n      \"id\": \"string\",\n      \"modelName\": \"string\",\n      \"matchPattern\": \"string\",\n      \"tokenizerConfig\": {},\n      \"isLangfuseManaged\": true,\n      \"createdAt\": \"1981-11-01T05:04:43.447Z\",\n      \"prices\": {\n        \"key_0\": {\n          \"price\": 3811.2304468209268\n        }\n      },\n      \"pricingTiers\": [\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"isDefault\": false,\n          \"priority\": 3074,\n          \"conditions\": [\n            {\n              \"usageDetailPattern\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"caseSensitive\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"usageDetailPattern\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"caseSensitive\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"prices\": {\n            \"key_0\": 7777.375140115467\n          }\n        },\n        {\n          \"id\": \"string\",\n          \"name\": \"string\",\n          \"isDefault\": true,\n          \"priority\": 142,\n          \"conditions\": [\n            {\n              \"usageDetailPattern\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"caseSensitive\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            },\n            {\n              \"usageDetailPattern\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"operator\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"value\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              },\n              \"caseSensitive\": {\n                \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n              }\n            }\n          ],\n          \"prices\": {\n            \"key_0\": 3768.0294423910123,\n            \"key_1\": 9849.110456197595,\n            \"key_2\": 5556.387461297717,\n            \"key_3\": 470.50409480780206\n          }\n        }\n      ],\n      \"startDate\": \"2020-10-27T18:38:27.254Z\",\n      \"unit\": \"<string>\",\n      \"inputPrice\": 6765.461659070802,\n      \"outputPrice\": 4593.337140650464,\n      \"totalPrice\": 5146.331502411387,\n      \"tokenizerId\": \"string\"\n    }\n  ],\n  \"meta\": {\n    \"page\": 9330,\n    \"limit\": 8531,\n    \"totalItems\": 4515,\n    \"totalPages\": 2778\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "673c2f8e-c044-455f-a4b9-48b7aa64561f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "49a14dc4-469e-462c-aad6-4b9f08c858d6",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "72a56328-161f-433c-a2ff-d8aa006035db",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "51ee675e-38c6-442f-a39d-21c365965a7c",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "15ab2c73-4856-4be9-b6cc-8ff59490bc0c",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8a00949b-a2c3-4492-9e1f-65c25bf8de6f",
+          "name": "models get",
+          "request": {
+            "name": "models get",
+            "description": {
+              "content": "Get a model",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "models",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "065694c6-6702-499a-b469-b7309aad3210",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"modelName\": \"string\",\n  \"matchPattern\": \"string\",\n  \"tokenizerConfig\": {},\n  \"isLangfuseManaged\": true,\n  \"createdAt\": \"1992-02-24T07:57:36.088Z\",\n  \"prices\": {\n    \"key_0\": {\n      \"price\": 9340.836230204626\n    },\n    \"key_1\": {\n      \"price\": 476.12037449436986\n    }\n  },\n  \"pricingTiers\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"isDefault\": false,\n      \"priority\": 3947,\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": 7850.21860401184\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"isDefault\": true,\n      \"priority\": 74,\n      \"conditions\": [\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        },\n        {\n          \"usageDetailPattern\": \"<string>\",\n          \"operator\": \"<string>\",\n          \"value\": \"<double>\",\n          \"caseSensitive\": \"<boolean>\"\n        }\n      ],\n      \"prices\": {\n        \"key_0\": 2598.1502206737937\n      }\n    }\n  ],\n  \"startDate\": \"1962-03-03T06:51:09.298Z\",\n  \"unit\": \"<string>\",\n  \"inputPrice\": 419.8265182054672,\n  \"outputPrice\": 8472.883299994817,\n  \"totalPrice\": 3769.3054640036803,\n  \"tokenizerId\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "df0ae08e-93b1-42ab-9ed3-8d7874d23bb0",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fffe0dd2-0528-4ead-aa13-3b6ed019186c",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7d0447e9-edec-4afb-99ee-61fa5517b072",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f0ed4877-c296-4574-b9b1-58dcaddb08da",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3ff228ab-fcf9-4f12-a6e8-bcc015773f4f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a495f8f7-aa76-4670-9bd1-e7b17a55b4d6",
+          "name": "models delete",
+          "request": {
+            "name": "models delete",
+            "description": {
+              "content": "Delete a model. Cannot delete models managed by Langfuse. You can create your own definition with the same modelName to override the definition though.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "public",
+                "models",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{basicAuthUsername}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{basicAuthPassword}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "58717f62-36d4-4a94-b337-b80b49267b6d",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d375550c-9f71-4eb9-b985-8b88cea37bc4",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "622c545f-8f19-445c-9cfc-14be4324c302",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d7882dae-e12d-4f33-a8cf-850766db4922",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3aab9790-1b0e-4864-9939-44d2a548f95f",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "632fa658-3327-4e5c-9799-73b0a7fb844a",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "public",
+                    "models",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: basic",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Basic <credentials>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Method Not Allowed",
+              "code": 405,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "/",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "ea18a071-cf72-4152-9111-ff7f4f9869d1",
+    "name": "langfuse AnnotationQueues Models API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Authentication\n\nAuthenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:\n\n- username: Langfuse Public Key\n- password: Langfuse Secret Key\n\n## Exports\n\n- OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml",
+      "type": "text/plain"
+    }
+  }
+}
