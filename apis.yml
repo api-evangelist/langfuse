@@ -21,6 +21,12 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/langfuse.png
 tags:
+  - Artificial Intelligence
+  - LLM
+  - Observability
+  - Open-Source
+  - Evaluations
+tags_raw:
   - AI
   - LLM
   - Observability
@@ -36,6 +42,8 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
+  - Annotation Queues
+  tags_raw:
   - AnnotationQueues
   properties:
   - type: OpenAPI
@@ -485,6 +493,8 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
+  - OpenTelemetry
+  tags_raw:
   - Opentelemetry
   properties:
   - type: OpenAPI
@@ -513,6 +523,8 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -541,6 +553,8 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
+  - Project
+  tags_raw:
   - Projects
   properties:
   - type: OpenAPI
@@ -625,6 +639,8 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
+  - SCIM
+  tags_raw:
   - Scim
   properties:
   - type: OpenAPI
