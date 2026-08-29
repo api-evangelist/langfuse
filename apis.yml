@@ -6,6 +6,18 @@ description: >-
   Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, datasets, and
   metrics. The Langfuse API supports both self-hosted and multi-region cloud deployments (US, EU, Japan, HIPAA-compliant
   US) and integrates with LangChain, LlamaIndex, OpenTelemetry, and any LLM stack.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
