@@ -54,7 +54,7 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
-  - Annotation Queues
+  - AnnotationQueues
   tags_raw:
   - AnnotationQueues
   properties:
@@ -505,7 +505,7 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
-  - OpenTelemetry
+  - Opentelemetry
   tags_raw:
   - Opentelemetry
   properties:
