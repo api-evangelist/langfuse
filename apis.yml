@@ -25,11 +25,12 @@ accessModel:
   try_now: true
   public: false
   label: Freemium · Self-serve signup
-  confidence: high
+  confidence: medium
   source:
   - plans
   - authentication
-  generated: '2026-07-22'
+  - security
+  generated: '2026-09-03'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/langfuse.png
 tags:
@@ -845,6 +846,9 @@ apis:
   - type: Documentation
     url: https://langfuse.com/self-hosting
 common:
+  - type: CapabilityMap
+    url: capabilities/langfuse-capability-edges.yml
+    name: Langfuse Business Capability Map
   - type: AgenticAccess
     url: agentic-access/langfuse-agentic-access.yml
   - type: TrustCenter
