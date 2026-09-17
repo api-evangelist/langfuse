@@ -49,36 +49,6 @@ created: '2026-05-08'
 modified: '2026-05-19'
 specificationVersion: '0.23'
 apis:
-- aid: langfuse:langfuse-annotationqueues-api
-  name: Langfuse AnnotationQueues API
-  description: The AnnotationQueues API from Langfuse — 5 operation(s) for annotationqueues.
-  humanURL: https://langfuse.com/docs/tracing
-  baseURL: https://cloud.langfuse.com/api/public
-  tags:
-  - Annotation Queues
-  tags_raw:
-  - AnnotationQueues
-  properties:
-  - type: OpenAPI
-    url: openapi/langfuse-annotationqueues-api-openapi.yml
-  - type: Documentation
-    url: https://langfuse.com/docs/tracing
-  - type: APIReference
-    url: https://api.reference.langfuse.com/
-  - type: Documentation
-    url: https://langfuse.com/docs/api
-  - type: Documentation
-    url: https://langfuse.com/docs/analytics
-  - type: Documentation
-    url: https://langfuse.com/docs/prompts
-  - type: Documentation
-    url: https://langfuse.com/docs/datasets
-  - type: Documentation
-    url: https://langfuse.com/docs/evaluation
-  - type: Documentation
-    url: https://langfuse.com/docs/scores
-  - type: Documentation
-    url: https://langfuse.com/self-hosting
 - aid: langfuse:langfuse-blobstorageintegrations-api
   name: Langfuse BlobStorageIntegrations API
   description: >-
@@ -500,36 +470,6 @@ apis:
     url: https://langfuse.com/docs/scores
   - type: Documentation
     url: https://langfuse.com/self-hosting
-- aid: langfuse:langfuse-opentelemetry-api
-  name: Langfuse Opentelemetry API
-  description: The Opentelemetry API from Langfuse — 1 operation(s) for opentelemetry.
-  humanURL: https://langfuse.com/docs/tracing
-  baseURL: https://cloud.langfuse.com/api/public
-  tags:
-  - OpenTelemetry
-  tags_raw:
-  - Opentelemetry
-  properties:
-  - type: OpenAPI
-    url: openapi/langfuse-opentelemetry-api-openapi.yml
-  - type: Documentation
-    url: https://langfuse.com/docs/tracing
-  - type: APIReference
-    url: https://api.reference.langfuse.com/
-  - type: Documentation
-    url: https://langfuse.com/docs/api
-  - type: Documentation
-    url: https://langfuse.com/docs/analytics
-  - type: Documentation
-    url: https://langfuse.com/docs/prompts
-  - type: Documentation
-    url: https://langfuse.com/docs/datasets
-  - type: Documentation
-    url: https://langfuse.com/docs/evaluation
-  - type: Documentation
-    url: https://langfuse.com/docs/scores
-  - type: Documentation
-    url: https://langfuse.com/self-hosting
 - aid: langfuse:langfuse-organizations-api
   name: Langfuse Organizations API
   description: The Organizations API from Langfuse — 4 operation(s) for organizations.
@@ -827,6 +767,62 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/langfuse-unstableevaluators-api-openapi.yml
+  - type: Documentation
+    url: https://langfuse.com/docs/tracing
+  - type: APIReference
+    url: https://api.reference.langfuse.com/
+  - type: Documentation
+    url: https://langfuse.com/docs/api
+  - type: Documentation
+    url: https://langfuse.com/docs/analytics
+  - type: Documentation
+    url: https://langfuse.com/docs/prompts
+  - type: Documentation
+    url: https://langfuse.com/docs/datasets
+  - type: Documentation
+    url: https://langfuse.com/docs/evaluation
+  - type: Documentation
+    url: https://langfuse.com/docs/scores
+  - type: Documentation
+    url: https://langfuse.com/self-hosting
+- aid: langfuse:langfuse-annotation-queues-api
+  name: Langfuse Annotation Queues API
+  description: The Annotation Queues API from Langfuse — 5 operation(s) for annotation queues.
+  humanURL: https://langfuse.com/docs/tracing
+  baseURL: https://cloud.langfuse.com/api/public
+  tags:
+  - Annotation Queues
+  properties:
+  - type: OpenAPI
+    url: openapi/langfuse-annotation-queues-api-openapi.yml
+  - type: Documentation
+    url: https://langfuse.com/docs/tracing
+  - type: APIReference
+    url: https://api.reference.langfuse.com/
+  - type: Documentation
+    url: https://langfuse.com/docs/api
+  - type: Documentation
+    url: https://langfuse.com/docs/analytics
+  - type: Documentation
+    url: https://langfuse.com/docs/prompts
+  - type: Documentation
+    url: https://langfuse.com/docs/datasets
+  - type: Documentation
+    url: https://langfuse.com/docs/evaluation
+  - type: Documentation
+    url: https://langfuse.com/docs/scores
+  - type: Documentation
+    url: https://langfuse.com/self-hosting
+- aid: langfuse:langfuse-open-telemetry-api
+  name: Langfuse Open Telemetry API
+  description: The Open Telemetry API from Langfuse — 1 operation(s) for open telemetry.
+  humanURL: https://langfuse.com/docs/tracing
+  baseURL: https://cloud.langfuse.com/api/public
+  tags:
+  - Open Telemetry
+  properties:
+  - type: OpenAPI
+    url: openapi/langfuse-open-telemetry-api-openapi.yml
   - type: Documentation
     url: https://langfuse.com/docs/tracing
   - type: APIReference
