@@ -38,7 +38,7 @@ tags:
   - LLM
   - Observability
   - Open-Source
-  - Evaluations
+  - Evaluation
 tags_raw:
   - AI
   - LLM
@@ -819,6 +819,8 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
+  - OpenTelemetry
+  tags_raw:
   - Open Telemetry
   properties:
   - type: OpenAPI
