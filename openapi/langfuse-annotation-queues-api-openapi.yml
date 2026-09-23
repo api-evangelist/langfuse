@@ -1,11 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: langfuse AnnotationQueues API
-  version: "1.0"
+  title: langfuse Annotation Queues API
+  version: ''
   description: '## Authentication
 
 
-    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
 
 
     - username: Langfuse Public Key
@@ -18,29 +18,31 @@ info:
 
     - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
 tags:
-- name: AnnotationQueues
+- name: Annotation Queues
 paths:
   /api/public/annotation-queues:
     get:
       description: Get all annotation queues
       operationId: annotationQueues_listQueues
       tags:
-      - AnnotationQueues
+      - Annotation Queues
       parameters:
       - name: page
         in: query
         description: page number, starts at 1
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       - name: limit
         in: query
         description: limit of items per page
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       responses:
         '200':
           description: ''
@@ -75,11 +77,13 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Annotation queues list queues
+      x-summary-source: derived
     post:
       description: Create an annotation queue
       operationId: annotationQueues_createQueue
       tags:
-      - AnnotationQueues
+      - Annotation Queues
       parameters: []
       responses:
         '200':
@@ -121,12 +125,14 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateAnnotationQueueRequest'
+      summary: Annotation queues create queue
+      x-summary-source: derived
   /api/public/annotation-queues/{queueId}:
     get:
       description: Get an annotation queue by ID
       operationId: annotationQueues_getQueue
       tags:
-      - AnnotationQueues
+      - Annotation Queues
       parameters:
       - name: queueId
         in: path
@@ -168,12 +174,14 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Annotation queues get queue
+      x-summary-source: derived
   /api/public/annotation-queues/{queueId}/items:
     get:
       description: Get items for a specific annotation queue
       operationId: annotationQueues_listQueueItems
       tags:
-      - AnnotationQueues
+      - Annotation Queues
       parameters:
       - name: queueId
         in: path
@@ -187,21 +195,22 @@ paths:
         required: false
         schema:
           $ref: '#/components/schemas/AnnotationQueueStatus'
-          nullable: true
       - name: page
         in: query
         description: page number, starts at 1
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       - name: limit
         in: query
         description: limit of items per page
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       responses:
         '200':
           description: ''
@@ -236,11 +245,13 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Annotation queues list queue items
+      x-summary-source: derived
     post:
       description: Add an item to an annotation queue
       operationId: annotationQueues_createQueueItem
       tags:
-      - AnnotationQueues
+      - Annotation Queues
       parameters:
       - name: queueId
         in: path
@@ -288,12 +299,14 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateAnnotationQueueItemRequest'
+      summary: Annotation queues create queue item
+      x-summary-source: derived
   /api/public/annotation-queues/{queueId}/items/{itemId}:
     get:
       description: Get a specific item from an annotation queue
       operationId: annotationQueues_getQueueItem
       tags:
-      - AnnotationQueues
+      - Annotation Queues
       parameters:
       - name: queueId
         in: path
@@ -341,11 +354,13 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Annotation queues get queue item
+      x-summary-source: derived
     patch:
       description: Update an annotation queue item
       operationId: annotationQueues_updateQueueItem
       tags:
-      - AnnotationQueues
+      - Annotation Queues
       parameters:
       - name: queueId
         in: path
@@ -399,11 +414,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpdateAnnotationQueueItemRequest'
+      summary: Annotation queues update queue item
+      x-summary-source: derived
     delete:
       description: Remove an item from an annotation queue
       operationId: annotationQueues_deleteQueueItem
       tags:
-      - AnnotationQueues
+      - Annotation Queues
       parameters:
       - name: queueId
         in: path
@@ -451,12 +468,14 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Annotation queues delete queue item
+      x-summary-source: derived
   /api/public/annotation-queues/{queueId}/assignments:
     post:
       description: Create an assignment for a user to an annotation queue
       operationId: annotationQueues_createQueueAssignment
       tags:
-      - AnnotationQueues
+      - Annotation Queues
       parameters:
       - name: queueId
         in: path
@@ -504,11 +523,13 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AnnotationQueueAssignmentRequest'
+      summary: Annotation queues create queue assignment
+      x-summary-source: derived
     delete:
       description: Delete an assignment for a user to an annotation queue
       operationId: annotationQueues_deleteQueueAssignment
       tags:
-      - AnnotationQueues
+      - Annotation Queues
       parameters:
       - name: queueId
         in: path
@@ -556,22 +577,113 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AnnotationQueueAssignmentRequest'
+      summary: Annotation queues delete queue assignment
+      x-summary-source: derived
 components:
   schemas:
-    AnnotationQueueAssignmentRequest:
-      title: AnnotationQueueAssignmentRequest
+    DeleteAnnotationQueueAssignmentResponse:
+      title: DeleteAnnotationQueueAssignmentResponse
       type: object
       properties:
-        userId:
+        success:
+          type: boolean
+      required:
+      - success
+    CreateAnnotationQueueRequest:
+      title: CreateAnnotationQueueRequest
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        scoreConfigIds:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - scoreConfigIds
+    AnnotationQueue:
+      title: AnnotationQueue
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        scoreConfigIds:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - scoreConfigIds
+      - createdAt
+      - updatedAt
+    DeleteAnnotationQueueItemResponse:
+      title: DeleteAnnotationQueueItemResponse
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
           type: string
       required:
-      - userId
-    AnnotationQueueStatus:
-      title: AnnotationQueueStatus
-      type: string
-      enum:
-      - PENDING
-      - COMPLETED
+      - success
+      - message
+    AnnotationQueueItem:
+      title: AnnotationQueueItem
+      type: object
+      properties:
+        id:
+          type: string
+        queueId:
+          type: string
+        objectId:
+          type: string
+        objectType:
+          $ref: '#/components/schemas/AnnotationQueueObjectType'
+        status:
+          $ref: '#/components/schemas/AnnotationQueueStatus'
+        completedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - queueId
+      - objectId
+      - objectType
+      - status
+      - createdAt
+      - updatedAt
+    UpdateAnnotationQueueItemRequest:
+      title: UpdateAnnotationQueueItemRequest
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AnnotationQueueStatus'
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -593,30 +705,20 @@ components:
       - limit
       - totalItems
       - totalPages
-    DeleteAnnotationQueueAssignmentResponse:
-      title: DeleteAnnotationQueueAssignmentResponse
+    CreateAnnotationQueueItemRequest:
+      title: CreateAnnotationQueueItemRequest
       type: object
       properties:
-        success:
-          type: boolean
-      required:
-      - success
-    CreateAnnotationQueueRequest:
-      title: CreateAnnotationQueueRequest
-      type: object
-      properties:
-        name:
+        objectId:
           type: string
-        description:
-          type: string
-          nullable: true
-        scoreConfigIds:
-          type: array
-          items:
-            type: string
+        objectType:
+          $ref: '#/components/schemas/AnnotationQueueObjectType'
+        status:
+          $ref: '#/components/schemas/AnnotationQueueStatus'
+          description: Defaults to PENDING for new queue items
       required:
-      - name
-      - scoreConfigIds
+      - objectId
+      - objectType
     PaginatedAnnotationQueues:
       title: PaginatedAnnotationQueues
       type: object
@@ -630,28 +732,33 @@ components:
       required:
       - data
       - meta
-    CreateAnnotationQueueItemRequest:
-      title: CreateAnnotationQueueItemRequest
+    PaginatedAnnotationQueueItems:
+      title: PaginatedAnnotationQueueItems
       type: object
       properties:
-        objectId:
-          type: string
-        objectType:
-          $ref: '#/components/schemas/AnnotationQueueObjectType'
-        status:
-          $ref: '#/components/schemas/AnnotationQueueStatus'
-          nullable: true
-          description: Defaults to PENDING for new queue items
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnnotationQueueItem'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
       required:
-      - objectId
-      - objectType
-    AnnotationQueueObjectType:
-      title: AnnotationQueueObjectType
+      - data
+      - meta
+    AnnotationQueueStatus:
+      title: AnnotationQueueStatus
       type: string
       enum:
-      - TRACE
-      - OBSERVATION
-      - SESSION
+      - PENDING
+      - COMPLETED
+    AnnotationQueueAssignmentRequest:
+      title: AnnotationQueueAssignmentRequest
+      type: object
+      properties:
+        userId:
+          type: string
+      required:
+      - userId
     CreateAnnotationQueueAssignmentResponse:
       title: CreateAnnotationQueueAssignmentResponse
       type: object
@@ -666,96 +773,13 @@ components:
       - userId
       - queueId
       - projectId
-    DeleteAnnotationQueueItemResponse:
-      title: DeleteAnnotationQueueItemResponse
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-      required:
-      - success
-      - message
-    UpdateAnnotationQueueItemRequest:
-      title: UpdateAnnotationQueueItemRequest
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/AnnotationQueueStatus'
-          nullable: true
-    AnnotationQueue:
-      title: AnnotationQueue
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-          nullable: true
-        scoreConfigIds:
-          type: array
-          items:
-            type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - name
-      - scoreConfigIds
-      - createdAt
-      - updatedAt
-    PaginatedAnnotationQueueItems:
-      title: PaginatedAnnotationQueueItems
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnnotationQueueItem'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    AnnotationQueueItem:
-      title: AnnotationQueueItem
-      type: object
-      properties:
-        id:
-          type: string
-        queueId:
-          type: string
-        objectId:
-          type: string
-        objectType:
-          $ref: '#/components/schemas/AnnotationQueueObjectType'
-        status:
-          $ref: '#/components/schemas/AnnotationQueueStatus'
-        completedAt:
-          type: string
-          format: date-time
-          nullable: true
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - queueId
-      - objectId
-      - objectType
-      - status
-      - createdAt
-      - updatedAt
+    AnnotationQueueObjectType:
+      title: AnnotationQueueObjectType
+      type: string
+      enum:
+      - TRACE
+      - OBSERVATION
+      - SESSION
   securitySchemes:
     BasicAuth:
       type: http

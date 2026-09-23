@@ -1,11 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: langfuse AnnotationQueues Media API
-  version: "1.0"
+  title: langfuse Media API
+  version: ''
   description: '## Authentication
 
 
-    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
 
 
     - username: Langfuse Public Key
@@ -67,6 +67,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Media get
+      x-summary-source: derived
     patch:
       description: Patch a media record
       operationId: media_patch
@@ -115,6 +117,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PatchMediaBody'
+      summary: Media patch
+      x-summary-source: derived
   /api/public/media:
     post:
       description: Get a presigned upload URL for a media record
@@ -162,21 +166,39 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/GetMediaUploadUrlRequest'
+      summary: Media get upload url
+      x-summary-source: derived
 components:
   schemas:
-    GetMediaUploadUrlResponse:
-      title: GetMediaUploadUrlResponse
+    GetMediaUploadUrlRequest:
+      title: GetMediaUploadUrlRequest
       type: object
       properties:
-        uploadUrl:
+        traceId:
           type: string
-          nullable: true
-          description: The presigned upload URL. If the asset is already uploaded, this will be null
-        mediaId:
+          description: The trace ID associated with the media record
+        observationId:
+          type:
+          - string
+          - 'null'
+          description: The observation ID associated with the media record. If the media record is associated directly with a trace, this will be null.
+        contentType:
+          $ref: '#/components/schemas/MediaContentType'
+        contentLength:
+          type: integer
+          description: The size of the media record in bytes
+        sha256Hash:
           type: string
-          description: The unique langfuse identifier of a media record
+          description: The SHA-256 hash of the media record
+        field:
+          type: string
+          description: The trace / observation field the media record is associated with. This can be one of `input`, `output`, `metadata`
       required:
-      - mediaId
+      - traceId
+      - contentType
+      - contentLength
+      - sha256Hash
+      - field
     GetMediaResponse:
       title: GetMediaResponse
       type: object
@@ -207,34 +229,6 @@ components:
       - uploadedAt
       - url
       - urlExpiry
-    GetMediaUploadUrlRequest:
-      title: GetMediaUploadUrlRequest
-      type: object
-      properties:
-        traceId:
-          type: string
-          description: The trace ID associated with the media record
-        observationId:
-          type: string
-          nullable: true
-          description: The observation ID associated with the media record. If the media record is associated directly with a trace, this will be null.
-        contentType:
-          $ref: '#/components/schemas/MediaContentType'
-        contentLength:
-          type: integer
-          description: The size of the media record in bytes
-        sha256Hash:
-          type: string
-          description: The SHA-256 hash of the media record
-        field:
-          type: string
-          description: The trace / observation field the media record is associated with. This can be one of `input`, `output`, `metadata`
-      required:
-      - traceId
-      - contentType
-      - contentLength
-      - sha256Hash
-      - field
     PatchMediaBody:
       title: PatchMediaBody
       type: object
@@ -247,16 +241,32 @@ components:
           type: integer
           description: The HTTP status code of the upload
         uploadHttpError:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: The HTTP error message of the upload
         uploadTimeMs:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
           description: The time in milliseconds it took to upload the media record
       required:
       - uploadedAt
       - uploadHttpStatus
+    GetMediaUploadUrlResponse:
+      title: GetMediaUploadUrlResponse
+      type: object
+      properties:
+        uploadUrl:
+          type:
+          - string
+          - 'null'
+          description: The presigned upload URL. If the asset is already uploaded, this will be null
+        mediaId:
+          type: string
+          description: The unique langfuse identifier of a media record
+      required:
+      - mediaId
     MediaContentType:
       title: MediaContentType
       type: string

@@ -1,11 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: langfuse AnnotationQueues LlmConnections API
-  version: "1.0"
+  title: langfuse Llm Connections API
+  version: ''
   description: '## Authentication
 
 
-    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
 
 
     - username: Langfuse Public Key
@@ -32,15 +32,17 @@ paths:
         description: page number, starts at 1
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       - name: limit
         in: query
         description: limit of items per page
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       responses:
         '200':
           description: ''
@@ -75,6 +77,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Llm connections list
+      x-summary-source: derived
     put:
       description: Create or update an LLM connection. The connection is upserted on provider.
       operationId: llmConnections_upsert
@@ -121,6 +125,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UpsertLlmConnectionRequest'
+      summary: Llm connections upsert
+      x-summary-source: derived
   /api/public/llm-connections/{id}:
     delete:
       description: Delete an LLM connection by id. Evaluators that depend on the deleted connection are automatically paused.
@@ -167,8 +173,33 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Llm connections delete
+      x-summary-source: derived
 components:
   schemas:
+    PaginatedLlmConnections:
+      title: PaginatedLlmConnections
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LlmConnection'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    LlmAdapter:
+      title: LlmAdapter
+      type: string
+      enum:
+      - anthropic
+      - openai
+      - azure
+      - bedrock
+      - google-vertex-ai
+      - google-ai-studio
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -198,72 +229,6 @@ components:
           type: string
       required:
       - message
-    LlmAdapter:
-      title: LlmAdapter
-      type: string
-      enum:
-      - anthropic
-      - openai
-      - azure
-      - bedrock
-      - google-vertex-ai
-      - google-ai-studio
-    PaginatedLlmConnections:
-      title: PaginatedLlmConnections
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/LlmConnection'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    UpsertLlmConnectionRequest:
-      title: UpsertLlmConnectionRequest
-      type: object
-      description: Request to create or update an LLM connection (upsert)
-      properties:
-        provider:
-          type: string
-          description: Provider name (e.g., 'openai', 'my-gateway'). Must be unique in project, used for upserting.
-        adapter:
-          $ref: '#/components/schemas/LlmAdapter'
-          description: The adapter used to interface with the LLM
-        secretKey:
-          type: string
-          description: Secret key for the LLM API.
-        baseURL:
-          type: string
-          nullable: true
-          description: Custom base URL for the LLM API
-        customModels:
-          type: array
-          items:
-            type: string
-          nullable: true
-          description: List of custom model names
-        withDefaultModels:
-          type: boolean
-          nullable: true
-          description: Whether to include default models. Default is true.
-        extraHeaders:
-          type: object
-          additionalProperties:
-            type: string
-          nullable: true
-          description: Extra headers to send with requests
-        config:
-          type: object
-          additionalProperties: true
-          nullable: true
-          description: 'Adapter-specific configuration. Validation rules: - **Bedrock**: Required. Must be `{"region": "<aws-region>"}` (e.g., `{"region":"us-east-1"}`) - **VertexAI**: Optional. If provided, must be `{"location": "<gcp-location>"}` (e.g., `{"location":"us-central1"}`) - **Other adapters**: Not supported. Omit this field or set to null.'
-      required:
-      - provider
-      - adapter
-      - secretKey
     LlmConnection:
       title: LlmConnection
       type: object
@@ -281,8 +246,9 @@ components:
           type: string
           description: Masked version of the secret key for display purposes
         baseURL:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Custom base URL for the LLM API
         customModels:
           type: array
@@ -298,9 +264,10 @@ components:
             type: string
           description: Keys of extra headers sent with requests (values excluded for security)
         config:
-          type: object
+          type:
+          - object
+          - 'null'
           additionalProperties: true
-          nullable: true
           description: Adapter-specific configuration. Required for Bedrock (`{"region":"us-east-1"}`), optional for VertexAI (`{"location":"us-central1"}`), not used by other adapters.
         createdAt:
           type: string
@@ -318,6 +285,54 @@ components:
       - extraHeaderKeys
       - createdAt
       - updatedAt
+    UpsertLlmConnectionRequest:
+      title: UpsertLlmConnectionRequest
+      type: object
+      description: Request to create or update an LLM connection (upsert)
+      properties:
+        provider:
+          type: string
+          description: Provider name (e.g., 'openai', 'my-gateway'). Must be unique in project, used for upserting.
+        adapter:
+          $ref: '#/components/schemas/LlmAdapter'
+          description: The adapter used to interface with the LLM
+        secretKey:
+          type: string
+          description: Secret key for the LLM API.
+        baseURL:
+          type:
+          - string
+          - 'null'
+          description: Custom base URL for the LLM API
+        customModels:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of custom model names
+        withDefaultModels:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to include default models. Default is true.
+        extraHeaders:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          description: Extra headers to send with requests
+        config:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: 'Adapter-specific configuration. Validation rules: - **Bedrock**: Required. Must be `{"region": "<aws-region>"}` (e.g., `{"region":"us-east-1"}`) - **VertexAI**: Optional. If provided, must be `{"location": "<gcp-location>"}` (e.g., `{"location":"us-central1"}`) - **Other adapters**: Not supported. Omit this field or set to null.'
+      required:
+      - provider
+      - adapter
+      - secretKey
   securitySchemes:
     BasicAuth:
       type: http

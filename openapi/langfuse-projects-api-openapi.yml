@@ -1,11 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: langfuse AnnotationQueues Projects API
-  version: "1.0"
+  title: langfuse Projects API
+  version: ''
   description: '## Authentication
 
 
-    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
 
 
     - username: Langfuse Public Key
@@ -61,6 +61,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Projects get
+      x-summary-source: derived
     post:
       description: Create a new project (requires organization-scoped API key)
       operationId: projects_create
@@ -111,9 +113,10 @@ paths:
                 name:
                   type: string
                 metadata:
-                  type: object
+                  type:
+                  - object
+                  - 'null'
                   additionalProperties: true
-                  nullable: true
                   description: Optional metadata for the project
                 retention:
                   type: integer
@@ -121,6 +124,8 @@ paths:
               required:
               - name
               - retention
+      summary: Projects create
+      x-summary-source: derived
   /api/public/projects/{projectId}:
     put:
       description: Update a project by ID (requires organization-scoped API key).
@@ -177,13 +182,15 @@ paths:
                 name:
                   type: string
                 metadata:
-                  type: object
+                  type:
+                  - object
+                  - 'null'
                   additionalProperties: true
-                  nullable: true
                   description: Optional metadata for the project
                 retention:
-                  type: integer
-                  nullable: true
+                  type:
+                  - integer
+                  - 'null'
                   description: 'Number of days to retain data.
 
                     Must be 0 or at least 3 days.
@@ -193,6 +200,8 @@ paths:
                     Optional. Will retain existing retention setting if omitted.'
               required:
               - name
+      summary: Projects update
+      x-summary-source: derived
     delete:
       description: Delete a project by ID (requires organization-scoped API key). Project deletion is processed asynchronously.
       operationId: projects_delete
@@ -238,6 +247,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Projects delete
+      x-summary-source: derived
   /api/public/projects/{projectId}/apiKeys:
     get:
       description: Get all API keys for a project (requires organization-scoped API key)
@@ -284,6 +295,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Projects get api keys
+      x-summary-source: derived
     post:
       description: Create a new API key for a project (requires organization-scoped API key)
       operationId: projects_createApiKey
@@ -337,17 +350,22 @@ paths:
               type: object
               properties:
                 note:
-                  type: string
-                  nullable: true
+                  type:
+                  - string
+                  - 'null'
                   description: Optional note for the API key
                 publicKey:
-                  type: string
-                  nullable: true
+                  type:
+                  - string
+                  - 'null'
                   description: Optional predefined public key. Must start with 'pk-lf-'. If provided, secretKey must also be provided.
                 secretKey:
-                  type: string
-                  nullable: true
+                  type:
+                  - string
+                  - 'null'
                   description: Optional predefined secret key. Must start with 'sk-lf-'. If provided, publicKey must also be provided.
+      summary: Projects create api key
+      x-summary-source: derived
   /api/public/projects/{projectId}/apiKeys/{apiKeyId}:
     delete:
       description: Delete an API key for a project (requires organization-scoped API key)
@@ -399,8 +417,81 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Projects delete api key
+      x-summary-source: derived
 components:
   schemas:
+    ApiKeySummary:
+      title: ApiKeySummary
+      type: object
+      description: Summary of an API key
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        lastUsedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        note:
+          type:
+          - string
+          - 'null'
+        publicKey:
+          type: string
+        displaySecretKey:
+          type: string
+      required:
+      - id
+      - createdAt
+      - publicKey
+      - displaySecretKey
+    Project:
+      title: Project
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        organization:
+          $ref: '#/components/schemas/Organization'
+          description: The organization this project belongs to
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Metadata for the project
+        retentionDays:
+          type:
+          - integer
+          - 'null'
+          description: Number of days to retain data. Null or 0 means no retention. Omitted if no retention is configured.
+      required:
+      - id
+      - name
+      - organization
+      - metadata
+    Organization:
+      title: Organization
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the organization
+        name:
+          type: string
+          description: The name of the organization
+      required:
+      - id
+      - name
     ApiKeyList:
       title: ApiKeyList
       type: object
@@ -412,6 +503,16 @@ components:
             $ref: '#/components/schemas/ApiKeySummary'
       required:
       - apiKeys
+    Projects:
+      title: Projects
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+      required:
+      - data
     ApiKeyDeletionResponse:
       title: ApiKeyDeletionResponse
       type: object
@@ -432,46 +533,6 @@ components:
       required:
       - success
       - message
-    ApiKeySummary:
-      title: ApiKeySummary
-      type: object
-      description: Summary of an API key
-      properties:
-        id:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        expiresAt:
-          type: string
-          format: date-time
-          nullable: true
-        lastUsedAt:
-          type: string
-          format: date-time
-          nullable: true
-        note:
-          type: string
-          nullable: true
-        publicKey:
-          type: string
-        displaySecretKey:
-          type: string
-      required:
-      - id
-      - createdAt
-      - publicKey
-      - displaySecretKey
-    Projects:
-      title: Projects
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Project'
-      required:
-      - data
     ApiKeyResponse:
       title: ApiKeyResponse
       type: object
@@ -489,51 +550,15 @@ components:
         displaySecretKey:
           type: string
         note:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
       required:
       - id
       - createdAt
       - publicKey
       - secretKey
       - displaySecretKey
-    Project:
-      title: Project
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        organization:
-          $ref: '#/components/schemas/Organization'
-          description: The organization this project belongs to
-        metadata:
-          type: object
-          additionalProperties: true
-          description: Metadata for the project
-        retentionDays:
-          type: integer
-          nullable: true
-          description: Number of days to retain data. Null or 0 means no retention. Omitted if no retention is configured.
-      required:
-      - id
-      - name
-      - organization
-      - metadata
-    Organization:
-      title: Organization
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the organization
-        name:
-          type: string
-          description: The name of the organization
-      required:
-      - id
-      - name
   securitySchemes:
     BasicAuth:
       type: http

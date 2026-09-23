@@ -1,11 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: langfuse AnnotationQueues UnstableEvaluationRules API
-  version: "1.0"
+  title: langfuse Unstable Evaluation Rules API
+  version: ''
   description: '## Authentication
 
 
-    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
 
 
     - username: Langfuse Public Key
@@ -244,6 +244,8 @@ paths:
                     source: output
                   - variable: expected_output
                     source: expected_output
+      summary: Unstable evaluation rules create
+      x-summary-source: derived
     get:
       description: 'List evaluation rules in the authenticated project.
 
@@ -258,15 +260,17 @@ paths:
         description: 1-based page number. Defaults to `1`.
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       - name: limit
         in: query
         description: Maximum number of items per page. Defaults to `50`.
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       responses:
         '200':
           description: ''
@@ -313,6 +317,8 @@ paths:
                 $ref: '#/components/schemas/unstablePublicApiError'
       security:
       - BasicAuth: []
+      summary: Unstable evaluation rules list
+      x-summary-source: derived
   /api/public/unstable/evaluation-rules/{evaluationRuleId}:
     get:
       description: 'Get one evaluation rule by its identifier.
@@ -375,6 +381,8 @@ paths:
                 $ref: '#/components/schemas/unstablePublicApiError'
       security:
       - BasicAuth: []
+      summary: Unstable evaluation rules get
+      x-summary-source: derived
     patch:
       description: 'Update an evaluation rule.
 
@@ -480,6 +488,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/unstableUpdateEvaluationRuleRequest'
+      summary: Unstable evaluation rules update
+      x-summary-source: derived
     delete:
       description: 'Delete an evaluation rule.
 
@@ -541,8 +551,312 @@ paths:
                 $ref: '#/components/schemas/unstablePublicApiError'
       security:
       - BasicAuth: []
+      summary: Unstable evaluation rules delete
+      x-summary-source: derived
 components:
   schemas:
+    unstableEvaluationRuleStringFilterOperator:
+      title: unstableEvaluationRuleStringFilterOperator
+      type: string
+      enum:
+      - '='
+      - contains
+      - does not contain
+      - starts with
+      - ends with
+    unstableArrayOptionsEvaluationRuleFilter:
+      title: unstableArrayOptionsEvaluationRuleFilter
+      type: object
+      properties:
+        column:
+          type: string
+          description: Column to filter on.
+        operator:
+          $ref: '#/components/schemas/unstableEvaluationRuleArrayOptionsFilterOperator'
+        value:
+          type: array
+          items:
+            type: string
+          description: One or more array elements to match.
+      required:
+      - column
+      - operator
+      - value
+    unstableEvaluationRules:
+      title: unstableEvaluationRules
+      type: object
+      description: Paginated list of evaluation rules.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/unstableEvaluationRule'
+          description: Evaluation rules in the current page.
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+          description: Standard pagination metadata.
+      required:
+      - data
+      - meta
+    unstablePublicApiErrorCode:
+      title: unstablePublicApiErrorCode
+      type: string
+      enum:
+      - authentication_failed
+      - access_denied
+      - invalid_request
+      - invalid_query
+      - invalid_body
+      - invalid_filter_value
+      - invalid_json_path
+      - invalid_variable_mapping
+      - missing_variable_mapping
+      - duplicate_variable_mapping
+      - resource_not_found
+      - name_conflict
+      - evaluator_preflight_failed
+      - conflict
+      - unprocessable_content
+      - rate_limited
+      - method_not_allowed
+      - internal_error
+      description: 'Machine-readable error code returned by the unstable evaluators API.
+
+
+        SDKs, CLIs, and agents should branch on `code` rather than parsing the human-readable `message`.
+
+        The HTTP status still indicates the broad error class, while `code` gives the specific failure reason.'
+    unstableEvaluationRuleMapping:
+      title: unstableEvaluationRuleMapping
+      type: object
+      description: 'Maps one evaluator prompt variable to one source field from the target object.
+
+
+        How to build a valid mapping list:
+
+        1. Create the evaluator or fetch it with `GET /evaluators/{id}`.
+
+        2. Read the evaluator `variables` array.
+
+        3. Add exactly one mapping object for each variable in that array.
+
+        4. Use the variable name exactly as returned, without braces such as `{{` or `}}`.
+
+        5. Choose a `source` that is valid for the selected `target`.
+
+
+        `jsonPath` is optional. Use it only when the selected source is a JSON object and you want to extract one nested field before inserting it into the evaluator prompt.
+
+
+        Recovery guidance:
+
+        - `invalid_variable_mapping`: the variable name is unknown for this evaluator, or the selected `source` is not valid for the chosen `target`
+
+        - `missing_variable_mapping`: one or more evaluator variables are not mapped yet
+
+        - `duplicate_variable_mapping`: the same evaluator variable appears more than once
+
+        - `invalid_json_path`: the JSONPath expression is malformed. Remove it or correct it.'
+      properties:
+        variable:
+          type: string
+          description: 'Prompt variable name without braces.
+
+
+            Example: for the prompt `Judge {{input}} against {{output}}`, use `input` and `output`.'
+          example: input
+        source:
+          $ref: '#/components/schemas/unstableEvaluationRuleMappingSource'
+          description: 'Source field that should populate the prompt variable.
+
+
+            Quick reference:
+
+            - `target=observation`: `input`, `output`, `metadata`
+
+            - `target=experiment`: `input`, `output`, `metadata`, `expected_output`'
+        jsonPath:
+          type:
+          - string
+          - 'null'
+          description: 'Optional JSONPath selector applied to the selected source before it is passed to the evaluator prompt.
+
+
+            Requirements:
+
+            - Must start with `$`
+
+            - Must be a syntactically valid JSONPath expression
+
+            - Most useful with `source=metadata`'
+      required:
+      - variable
+      - source
+    unstableDateTimeEvaluationRuleFilter:
+      title: unstableDateTimeEvaluationRuleFilter
+      type: object
+      properties:
+        column:
+          type: string
+          description: Column to filter on.
+        operator:
+          $ref: '#/components/schemas/unstableEvaluationRuleNumberFilterOperator'
+          description: Comparison operator for datetime values.
+        value:
+          type: string
+          format: date-time
+          description: Datetime value to compare against.
+      required:
+      - column
+      - operator
+      - value
+    unstableNullEvaluationRuleFilter:
+      title: unstableNullEvaluationRuleFilter
+      type: object
+      properties:
+        column:
+          type: string
+          description: Column to filter on. In the unstable public API this is currently `parentObservationId`.
+        operator:
+          $ref: '#/components/schemas/unstableEvaluationRuleNullFilterOperator'
+        value:
+          type:
+          - string
+          - 'null'
+          description: Ignored placeholder value. Clients may omit it or send an empty string.
+      required:
+      - column
+      - operator
+    unstableEvaluationRuleEvaluator:
+      title: unstableEvaluationRuleEvaluator
+      type: object
+      description: 'Resolved evaluator currently used by the evaluation rule.
+
+
+        `id` is the exact active evaluator version.
+
+        `name` and `scope` identify the evaluator family conceptually.'
+      properties:
+        id:
+          type: string
+          description: Identifier of the exact evaluator version currently used by the rule.
+        name:
+          type: string
+          description: Evaluator family name.
+        scope:
+          $ref: '#/components/schemas/unstableEvaluatorScope'
+          description: Whether the evaluator family is project-owned or Langfuse-managed.
+      required:
+      - id
+      - name
+      - scope
+    unstableEvaluationRuleEvaluatorReference:
+      title: unstableEvaluationRuleEvaluatorReference
+      type: object
+      description: 'Evaluator family reference used when creating or updating an evaluation rule.
+
+
+        `name` and `scope` are enough to identify the evaluator family in the authenticated project context.'
+      properties:
+        name:
+          type: string
+          description: Evaluator family name.
+        scope:
+          $ref: '#/components/schemas/unstableEvaluatorScope'
+          description: Whether the evaluator family is project-owned or Langfuse-managed.
+      required:
+      - name
+      - scope
+    unstableCreateEvaluationRuleRequest:
+      title: unstableCreateEvaluationRuleRequest
+      type: object
+      description: 'Request body for creating an evaluation rule.
+
+
+        Checklist for agents and SDK clients:
+
+        - reference an existing evaluator family by `evaluator.name` and `evaluator.scope`
+
+        - choose `target=observation` or `target=experiment`
+
+        - if `target=experiment` and you want a dataset filter, call `GET /api/public/v2/datasets` first and use dataset `id` values in `filter[].value`
+
+        - fetch or inspect the evaluator first, then provide a complete variable mapping for every evaluator variable listed in `variables`
+
+        - optionally narrow execution with `filter`
+
+        - set `enabled=true` only when you want live execution immediately'
+      properties:
+        name:
+          type: string
+          description: Human-readable deployment name.
+          example: answer-correctness-live
+        evaluator:
+          $ref: '#/components/schemas/unstableEvaluationRuleEvaluatorReference'
+          description: 'Evaluator family to use.
+
+
+            Use `name` and `scope` from the evaluator endpoints.
+
+            Langfuse resolves that family to its latest version before saving the rule.'
+        target:
+          $ref: '#/components/schemas/unstableEvaluationRuleTarget'
+          description: Target object type to evaluate.
+        enabled:
+          type: boolean
+          description: Whether the deployment should be active immediately after creation.
+          example: true
+        sampling:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Optional sampling fraction. Defaults to `1`.
+        filter:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/unstableEvaluationRuleFilter'
+          description: 'Optional filter list.
+
+
+            Omit or pass an empty list to evaluate all matching targets for the selected `target`.
+
+            Each filter object must use a column that is valid for that `target`.
+
+            For `target=experiment`, `column=datasetId` expects dataset `id` values from `GET /api/public/v2/datasets`, not dataset names.'
+        mapping:
+          type: array
+          items:
+            $ref: '#/components/schemas/unstableEvaluationRuleMapping'
+          description: 'Required variable mappings.
+
+
+            Every evaluator variable must appear exactly once.
+
+            Build this list from the evaluator `variables` array returned by the evaluator endpoints.'
+      required:
+      - name
+      - evaluator
+      - target
+      - enabled
+      - mapping
+    unstableEvaluationRuleStatus:
+      title: unstableEvaluationRuleStatus
+      type: string
+      enum:
+      - active
+      - inactive
+      - paused
+      description: 'Effective runtime status of the evaluation rule.
+
+
+        - `active`: enabled and currently runnable.
+
+        - `inactive`: disabled by configuration.
+
+        - `paused`: enabled, but Langfuse has blocked execution until the underlying issue is resolved.'
     unstableEvaluationRuleTarget:
       title: unstableEvaluationRuleTarget
       type: string
@@ -550,6 +864,124 @@ components:
       - observation
       - experiment
       description: "The ingestion object type that should trigger evaluation runs.\n\nChoose the target first, because it changes both the valid filter columns and the valid variable-mapping sources:\n- `observation` evaluates live-ingested observations such as generations, spans, and events.\n  It supports mapping from `input`, `output`, and `metadata`.\n- `experiment` evaluates live experiment executions and can additionally map `expected_output`.\n  It currently supports filtering by `datasetId`.\n  Discover valid dataset IDs with `GET /api/public/v2/datasets`, then use the returned dataset `id` values in your filter."
+    unstableStringOptionsEvaluationRuleFilter:
+      title: unstableStringOptionsEvaluationRuleFilter
+      type: object
+      properties:
+        column:
+          type: string
+          description: Column to filter on.
+        operator:
+          $ref: '#/components/schemas/unstableEvaluationRuleOptionsFilterOperator'
+        value:
+          type: array
+          items:
+            type: string
+          description: One or more allowed string values.
+      required:
+      - column
+      - operator
+      - value
+    unstableEvaluationRuleOptionsFilterOperator:
+      title: unstableEvaluationRuleOptionsFilterOperator
+      type: string
+      enum:
+      - any of
+      - none of
+    unstableStringObjectEvaluationRuleFilter:
+      title: unstableStringObjectEvaluationRuleFilter
+      type: object
+      properties:
+        column:
+          type: string
+          description: Object-valued column to filter on. In the unstable public API this is currently `metadata`.
+        key:
+          type: string
+          description: Top-level key inside the object-valued column to filter on.
+        operator:
+          $ref: '#/components/schemas/unstableEvaluationRuleStringFilterOperator'
+        value:
+          type: string
+      required:
+      - column
+      - key
+      - operator
+      - value
+    unstablePublicApiValidationIssue:
+      title: unstablePublicApiValidationIssue
+      type: object
+      description: 'One validation issue returned for malformed request bodies or query parameters.
+
+
+        This mirrors the most important parts of a Zod issue: a machine-readable `code`,
+
+        a human-readable `message`, and a structured `path`.'
+      properties:
+        code:
+          type: string
+          description: Machine-readable validation issue code emitted by the server validator.
+        message:
+          type: string
+          description: Human-readable explanation of the validation failure.
+        path:
+          type: array
+          items: {}
+          description: Path to the invalid field, for example `["mapping", 0, "jsonPath"]`.
+      required:
+      - code
+      - message
+      - path
+    unstableBooleanEvaluationRuleFilter:
+      title: unstableBooleanEvaluationRuleFilter
+      type: object
+      properties:
+        column:
+          type: string
+          description: Column to filter on.
+        operator:
+          $ref: '#/components/schemas/unstableEvaluationRuleBooleanFilterOperator'
+        value:
+          type: boolean
+      required:
+      - column
+      - operator
+      - value
+    unstableEvaluationRuleBooleanFilterOperator:
+      title: unstableEvaluationRuleBooleanFilterOperator
+      type: string
+      enum:
+      - '='
+      - <>
+    unstableEvaluationRuleMappingSource:
+      title: unstableEvaluationRuleMappingSource
+      type: string
+      enum:
+      - input
+      - output
+      - metadata
+      - expected_output
+      description: 'Source field used to populate a prompt variable.
+
+
+        Use these values when mapping evaluator prompt variables to live data.
+
+
+        Target-specific rules:
+
+        - `target=observation` supports `input`, `output`, and `metadata`
+
+        - `target=experiment` supports `input`, `output`, `metadata`, and `expected_output`
+
+
+        Source semantics:
+
+        - `input`: the observation or experiment input payload
+
+        - `output`: the observation or experiment output payload
+
+        - `metadata`: the metadata object for the target. Combine with `jsonPath` when you need one nested field instead of the whole object.
+
+        - `expected_output`: the experiment item''s expected output. Only valid for `target=experiment`.'
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -571,22 +1003,13 @@ components:
       - limit
       - totalItems
       - totalPages
-    unstableEvaluationRules:
-      title: unstableEvaluationRules
-      type: object
-      description: Paginated list of evaluation rules.
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/unstableEvaluationRule'
-          description: Evaluation rules in the current page.
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-          description: Standard pagination metadata.
-      required:
-      - data
-      - meta
+    unstableEvaluationRuleArrayOptionsFilterOperator:
+      title: unstableEvaluationRuleArrayOptionsFilterOperator
+      type: string
+      enum:
+      - any of
+      - none of
+      - all of
     unstableDeleteEvaluationRuleResponse:
       title: unstableDeleteEvaluationRuleResponse
       type: object
@@ -597,6 +1020,90 @@ components:
           description: Always `Evaluation rule successfully deleted`.
       required:
       - message
+    unstableEvaluationRuleNumberFilterOperator:
+      title: unstableEvaluationRuleNumberFilterOperator
+      type: string
+      enum:
+      - '='
+      - '>'
+      - <
+      - '>='
+      - <=
+    unstableUpdateEvaluationRuleRequest:
+      title: unstableUpdateEvaluationRuleRequest
+      type: object
+      description: 'Partial update body for an evaluation rule.
+
+
+        Provide only the fields you want to change.
+
+        An empty body is rejected.
+
+
+        Practical guidance:
+
+        - If you only want to rename the rule or change sampling, send just those fields.
+
+        - If you change `evaluator`, send a fresh `mapping` unless you are certain the existing mapping still matches the evaluator variables.
+
+        - If you change `target`, usually send both `filter` and `mapping` in the same request.
+
+        - If you change an experiment `datasetId` filter, call `GET /api/public/v2/datasets` and use dataset `id` values from that response.'
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Updated deployment name.
+        evaluator:
+          $ref: '#/components/schemas/unstableEvaluationRuleEvaluatorReference'
+          description: 'Updated evaluator family.
+
+
+            Langfuse resolves the provided evaluator family to its latest version before saving the rule.'
+        target:
+          $ref: '#/components/schemas/unstableEvaluationRuleTarget'
+          description: Updated target object type.
+        enabled:
+          type:
+          - boolean
+          - 'null'
+          description: Updated desired enabled state.
+        sampling:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Updated sampling fraction.
+        filter:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/unstableEvaluationRuleFilter'
+          description: 'Updated filter list.
+
+
+            For `target=experiment`, `column=datasetId` expects dataset `id` values from `GET /api/public/v2/datasets`, not dataset names.'
+        mapping:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/unstableEvaluationRuleMapping'
+          description: Updated variable mappings.
+    unstableEvaluatorScope:
+      title: unstableEvaluatorScope
+      type: string
+      enum:
+      - project
+      - managed
+      description: 'Where an evaluator comes from.
+
+
+        - `project`: created in your project
+
+        - `managed`: provided by Langfuse'
     unstableEvaluationRuleFilter:
       title: unstableEvaluationRuleFilter
       oneOf:
@@ -711,103 +1218,6 @@ components:
         required:
         - type
       description: "One filter condition used to decide whether a live-ingested target should be evaluated.\n\nAn evaluation rule can include zero or more filter objects. All filters must be satisfied for the target to run.\n\nHow to build a valid filter object:\n- Pick the `target` first, because it changes the supported columns.\n- Pick the filter `type`. That determines which fields are required.\n- Use `key` only for object filters such as `metadata`.\n- Use the correct `value` shape for the chosen filter `type`.\n\nOperator quick reference by filter `type`:\n- `string`: `\"=\"`, `contains`, `does not contain`, `starts with`, `ends with`\n- `number`: `\"=\"`, `\">\"`, `\"<\"`, `\">=\"`, `\"<=\"`\n- `datetime`: `\"=\"`, `\">\"`, `\"<\"`, `\">=\"`, `\"<=\"`\n- `stringOptions`: `any of`, `none of`\n- `arrayOptions`: `any of`, `none of`, `all of`\n- `stringObject`: same operators as `string`\n- `null`: `is null`, `is not null`\n\nSupported columns by target:\n- `target=observation`\n  - `type`: `stringOptions`, operators `any of` / `none of`, values `GENERATION`, `SPAN`, `EVENT`\n  - `name`: `stringOptions`, operators `any of` / `none of`\n  - `environment`: `stringOptions`, operators `any of` / `none of`\n  - `level`: `stringOptions`, operators `any of` / `none of`, values `DEBUG`, `DEFAULT`, `WARNING`, `ERROR`\n  - `version`: `string`\n  - `traceName`: `stringOptions`, operators `any of` / `none of`\n  - `userId`: `string`\n  - `sessionId`: `string`\n  - `tags`: `arrayOptions`, operators `any of` / `none of` / `all of`\n  - `metadata`: `stringObject` with `key`\n  - `parentObservationId`: `null`, operators `is null` / `is not null`\n  - `calledToolNames`: `arrayOptions`, operators `any of` / `none of` / `all of`\n  - `toolCalls`: `number`\n- `target=experiment`\n  - `datasetId`: `stringOptions`, operators `any of` / `none of`\n    Use dataset `id` values from `GET /api/public/v2/datasets`, not dataset names.\n\nRecovery guidance:\n- `invalid_filter_value` with `details.column` but no `invalidValues`: the selected `column` is not supported for the chosen `target`\n- `invalid_filter_value` with `details.invalidValues`: the selected values are not allowed for that column. Replace them with one of `details.allowedValues` when provided.\n- `invalid_filter_value` for `column=datasetId`: call `GET /api/public/v2/datasets`, then retry with dataset `id` values from that response."
-    unstableEvaluationRuleOptionsFilterOperator:
-      title: unstableEvaluationRuleOptionsFilterOperator
-      type: string
-      enum:
-      - any of
-      - none of
-    unstableDateTimeEvaluationRuleFilter:
-      title: unstableDateTimeEvaluationRuleFilter
-      type: object
-      properties:
-        column:
-          type: string
-          description: Column to filter on.
-        operator:
-          $ref: '#/components/schemas/unstableEvaluationRuleNumberFilterOperator'
-          description: Comparison operator for datetime values.
-        value:
-          type: string
-          format: date-time
-          description: Datetime value to compare against.
-      required:
-      - column
-      - operator
-      - value
-    unstableCreateEvaluationRuleRequest:
-      title: unstableCreateEvaluationRuleRequest
-      type: object
-      description: 'Request body for creating an evaluation rule.
-
-
-        Checklist for agents and SDK clients:
-
-        - reference an existing evaluator family by `evaluator.name` and `evaluator.scope`
-
-        - choose `target=observation` or `target=experiment`
-
-        - if `target=experiment` and you want a dataset filter, call `GET /api/public/v2/datasets` first and use dataset `id` values in `filter[].value`
-
-        - fetch or inspect the evaluator first, then provide a complete variable mapping for every evaluator variable listed in `variables`
-
-        - optionally narrow execution with `filter`
-
-        - set `enabled=true` only when you want live execution immediately'
-      properties:
-        name:
-          type: string
-          description: Human-readable deployment name.
-          example: answer-correctness-live
-        evaluator:
-          $ref: '#/components/schemas/unstableEvaluationRuleEvaluatorReference'
-          description: 'Evaluator family to use.
-
-
-            Use `name` and `scope` from the evaluator endpoints.
-
-            Langfuse resolves that family to its latest version before saving the rule.'
-        target:
-          $ref: '#/components/schemas/unstableEvaluationRuleTarget'
-          description: Target object type to evaluate.
-        enabled:
-          type: boolean
-          description: Whether the deployment should be active immediately after creation.
-          example: true
-        sampling:
-          type: number
-          format: double
-          nullable: true
-          description: Optional sampling fraction. Defaults to `1`.
-        filter:
-          type: array
-          items:
-            $ref: '#/components/schemas/unstableEvaluationRuleFilter'
-          nullable: true
-          description: 'Optional filter list.
-
-
-            Omit or pass an empty list to evaluate all matching targets for the selected `target`.
-
-            Each filter object must use a column that is valid for that `target`.
-
-            For `target=experiment`, `column=datasetId` expects dataset `id` values from `GET /api/public/v2/datasets`, not dataset names.'
-        mapping:
-          type: array
-          items:
-            $ref: '#/components/schemas/unstableEvaluationRuleMapping'
-          description: 'Required variable mappings.
-
-
-            Every evaluator variable must appear exactly once.
-
-            Build this list from the evaluator `variables` array returned by the evaluator endpoints.'
-      required:
-      - name
-      - evaluator
-      - target
-      - enabled
-      - mapping
     unstableEvaluationRule:
       title: unstableEvaluationRule
       type: object
@@ -864,12 +1274,14 @@ components:
           $ref: '#/components/schemas/unstableEvaluationRuleStatus'
           description: Effective runtime status after Langfuse applies validation and blocking rules.
         pausedReason:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Machine-readable reason when `status=paused`, otherwise `null`.
         pausedMessage:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Human-readable explanation when `status=paused`, otherwise `null`.
         sampling:
           type: number
@@ -915,89 +1327,25 @@ components:
       - mapping
       - createdAt
       - updatedAt
-    unstableEvaluationRuleStringFilterOperator:
-      title: unstableEvaluationRuleStringFilterOperator
-      type: string
-      enum:
-      - '='
-      - contains
-      - does not contain
-      - starts with
-      - ends with
-    unstableEvaluationRuleMappingSource:
-      title: unstableEvaluationRuleMappingSource
-      type: string
-      enum:
-      - input
-      - output
-      - metadata
-      - expected_output
-      description: 'Source field used to populate a prompt variable.
-
-
-        Use these values when mapping evaluator prompt variables to live data.
-
-
-        Target-specific rules:
-
-        - `target=observation` supports `input`, `output`, and `metadata`
-
-        - `target=experiment` supports `input`, `output`, `metadata`, and `expected_output`
-
-
-        Source semantics:
-
-        - `input`: the observation or experiment input payload
-
-        - `output`: the observation or experiment output payload
-
-        - `metadata`: the metadata object for the target. Combine with `jsonPath` when you need one nested field instead of the whole object.
-
-        - `expected_output`: the experiment item''s expected output. Only valid for `target=experiment`.'
-    unstablePublicApiErrorCode:
-      title: unstablePublicApiErrorCode
-      type: string
-      enum:
-      - authentication_failed
-      - access_denied
-      - invalid_request
-      - invalid_query
-      - invalid_body
-      - invalid_filter_value
-      - invalid_json_path
-      - invalid_variable_mapping
-      - missing_variable_mapping
-      - duplicate_variable_mapping
-      - resource_not_found
-      - name_conflict
-      - evaluator_preflight_failed
-      - conflict
-      - unprocessable_content
-      - rate_limited
-      - method_not_allowed
-      - internal_error
-      description: 'Machine-readable error code returned by the unstable evaluators API.
-
-
-        SDKs, CLIs, and agents should branch on `code` rather than parsing the human-readable `message`.
-
-        The HTTP status still indicates the broad error class, while `code` gives the specific failure reason.'
-    unstableArrayOptionsEvaluationRuleFilter:
-      title: unstableArrayOptionsEvaluationRuleFilter
+    unstableCategoryOptionsEvaluationRuleFilter:
+      title: unstableCategoryOptionsEvaluationRuleFilter
       type: object
       properties:
         column:
           type: string
-          description: Column to filter on.
+          description: Object-valued column to filter on.
+        key:
+          type: string
+          description: Key inside the object-valued column to filter on.
         operator:
-          $ref: '#/components/schemas/unstableEvaluationRuleArrayOptionsFilterOperator'
+          $ref: '#/components/schemas/unstableEvaluationRuleOptionsFilterOperator'
         value:
           type: array
           items:
             type: string
-          description: One or more array elements to match.
       required:
       - column
+      - key
       - operator
       - value
     unstablePublicApiError:
@@ -1025,99 +1373,31 @@ components:
           description: Stable machine-readable error code.
         details:
           $ref: '#/components/schemas/unstablePublicApiErrorDetails'
-          nullable: true
           description: Optional structured error context. Inspect the populated fields based on `code`.
       required:
       - message
       - code
-    unstableCategoryOptionsEvaluationRuleFilter:
-      title: unstableCategoryOptionsEvaluationRuleFilter
+    unstableEvaluationRuleNullFilterOperator:
+      title: unstableEvaluationRuleNullFilterOperator
+      type: string
+      enum:
+      - is null
+      - is not null
+    unstableStringEvaluationRuleFilter:
+      title: unstableStringEvaluationRuleFilter
       type: object
       properties:
         column:
           type: string
-          description: Object-valued column to filter on.
-        key:
-          type: string
-          description: Key inside the object-valued column to filter on.
+          description: Column to filter on.
         operator:
-          $ref: '#/components/schemas/unstableEvaluationRuleOptionsFilterOperator'
+          $ref: '#/components/schemas/unstableEvaluationRuleStringFilterOperator'
         value:
-          type: array
-          items:
-            type: string
+          type: string
       required:
       - column
-      - key
       - operator
       - value
-    unstableEvaluationRuleArrayOptionsFilterOperator:
-      title: unstableEvaluationRuleArrayOptionsFilterOperator
-      type: string
-      enum:
-      - any of
-      - none of
-      - all of
-    unstableUpdateEvaluationRuleRequest:
-      title: unstableUpdateEvaluationRuleRequest
-      type: object
-      description: 'Partial update body for an evaluation rule.
-
-
-        Provide only the fields you want to change.
-
-        An empty body is rejected.
-
-
-        Practical guidance:
-
-        - If you only want to rename the rule or change sampling, send just those fields.
-
-        - If you change `evaluator`, send a fresh `mapping` unless you are certain the existing mapping still matches the evaluator variables.
-
-        - If you change `target`, usually send both `filter` and `mapping` in the same request.
-
-        - If you change an experiment `datasetId` filter, call `GET /api/public/v2/datasets` and use dataset `id` values from that response.'
-      properties:
-        name:
-          type: string
-          nullable: true
-          description: Updated deployment name.
-        evaluator:
-          $ref: '#/components/schemas/unstableEvaluationRuleEvaluatorReference'
-          nullable: true
-          description: 'Updated evaluator family.
-
-
-            Langfuse resolves the provided evaluator family to its latest version before saving the rule.'
-        target:
-          $ref: '#/components/schemas/unstableEvaluationRuleTarget'
-          nullable: true
-          description: Updated target object type.
-        enabled:
-          type: boolean
-          nullable: true
-          description: Updated desired enabled state.
-        sampling:
-          type: number
-          format: double
-          nullable: true
-          description: Updated sampling fraction.
-        filter:
-          type: array
-          items:
-            $ref: '#/components/schemas/unstableEvaluationRuleFilter'
-          nullable: true
-          description: 'Updated filter list.
-
-
-            For `target=experiment`, `column=datasetId` expects dataset `id` values from `GET /api/public/v2/datasets`, not dataset names.'
-        mapping:
-          type: array
-          items:
-            $ref: '#/components/schemas/unstableEvaluationRuleMapping'
-          nullable: true
-          description: Updated variable mappings.
     unstablePublicApiErrorDetails:
       title: unstablePublicApiErrorDetails
       type: object
@@ -1139,79 +1419,88 @@ components:
         - rate limiting populates `retryAfterSeconds`, `limit`, `remaining`, and `resetAt`'
       properties:
         issues:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             $ref: '#/components/schemas/unstablePublicApiValidationIssue'
-          nullable: true
           description: Validation issues for malformed request bodies or query parameters.
         field:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Path-like reference to the failing field, for example `mapping[1].jsonPath`.
         column:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Filter column that failed validation.
         invalidValues:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
           description: Unsupported values supplied by the caller.
         allowedValues:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
           description: Allowed values for the failing filter column.
         variable:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Evaluator variable involved in the failure.
         variables:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          nullable: true
           description: Multiple evaluator variables involved in the failure, for example missing mappings.
         value:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Raw invalid value supplied by the caller.
         evaluatorName:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Evaluator name used during preflight validation.
         provider:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Provider resolved during evaluator preflight, if any.
         model:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Model resolved during evaluator preflight, if any.
         retryAfterSeconds:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
           description: Suggested retry delay for rate-limited requests.
         limit:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
           description: Numeric limit associated with the failure, for example the active evaluation-rule cap or the current rate-limit window.
         remaining:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
           description: Remaining requests in the current rate-limit window.
         resetAt:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: ISO-8601 timestamp when the current rate-limit window resets.
-    unstableEvaluationRuleBooleanFilterOperator:
-      title: unstableEvaluationRuleBooleanFilterOperator
-      type: string
-      enum:
-      - '='
-      - <>
     unstableNumberObjectEvaluationRuleFilter:
       title: unstableNumberObjectEvaluationRuleFilter
       type: object
@@ -1232,235 +1521,6 @@ components:
       - key
       - operator
       - value
-    unstableEvaluationRuleStatus:
-      title: unstableEvaluationRuleStatus
-      type: string
-      enum:
-      - active
-      - inactive
-      - paused
-      description: 'Effective runtime status of the evaluation rule.
-
-
-        - `active`: enabled and currently runnable.
-
-        - `inactive`: disabled by configuration.
-
-        - `paused`: enabled, but Langfuse has blocked execution until the underlying issue is resolved.'
-    unstableEvaluationRuleEvaluatorReference:
-      title: unstableEvaluationRuleEvaluatorReference
-      type: object
-      description: 'Evaluator family reference used when creating or updating an evaluation rule.
-
-
-        `name` and `scope` are enough to identify the evaluator family in the authenticated project context.'
-      properties:
-        name:
-          type: string
-          description: Evaluator family name.
-        scope:
-          $ref: '#/components/schemas/unstableEvaluatorScope'
-          description: Whether the evaluator family is project-owned or Langfuse-managed.
-      required:
-      - name
-      - scope
-    unstableStringObjectEvaluationRuleFilter:
-      title: unstableStringObjectEvaluationRuleFilter
-      type: object
-      properties:
-        column:
-          type: string
-          description: Object-valued column to filter on. In the unstable public API this is currently `metadata`.
-        key:
-          type: string
-          description: Top-level key inside the object-valued column to filter on.
-        operator:
-          $ref: '#/components/schemas/unstableEvaluationRuleStringFilterOperator'
-        value:
-          type: string
-      required:
-      - column
-      - key
-      - operator
-      - value
-    unstablePublicApiValidationIssue:
-      title: unstablePublicApiValidationIssue
-      type: object
-      description: 'One validation issue returned for malformed request bodies or query parameters.
-
-
-        This mirrors the most important parts of a Zod issue: a machine-readable `code`,
-
-        a human-readable `message`, and a structured `path`.'
-      properties:
-        code:
-          type: string
-          description: Machine-readable validation issue code emitted by the server validator.
-        message:
-          type: string
-          description: Human-readable explanation of the validation failure.
-        path:
-          type: array
-          items: {}
-          description: Path to the invalid field, for example `["mapping", 0, "jsonPath"]`.
-      required:
-      - code
-      - message
-      - path
-    unstableEvaluationRuleMapping:
-      title: unstableEvaluationRuleMapping
-      type: object
-      description: 'Maps one evaluator prompt variable to one source field from the target object.
-
-
-        How to build a valid mapping list:
-
-        1. Create the evaluator or fetch it with `GET /evaluators/{id}`.
-
-        2. Read the evaluator `variables` array.
-
-        3. Add exactly one mapping object for each variable in that array.
-
-        4. Use the variable name exactly as returned, without braces such as `{{` or `}}`.
-
-        5. Choose a `source` that is valid for the selected `target`.
-
-
-        `jsonPath` is optional. Use it only when the selected source is a JSON object and you want to extract one nested field before inserting it into the evaluator prompt.
-
-
-        Recovery guidance:
-
-        - `invalid_variable_mapping`: the variable name is unknown for this evaluator, or the selected `source` is not valid for the chosen `target`
-
-        - `missing_variable_mapping`: one or more evaluator variables are not mapped yet
-
-        - `duplicate_variable_mapping`: the same evaluator variable appears more than once
-
-        - `invalid_json_path`: the JSONPath expression is malformed. Remove it or correct it.'
-      properties:
-        variable:
-          type: string
-          description: 'Prompt variable name without braces.
-
-
-            Example: for the prompt `Judge {{input}} against {{output}}`, use `input` and `output`.'
-          example: input
-        source:
-          $ref: '#/components/schemas/unstableEvaluationRuleMappingSource'
-          description: 'Source field that should populate the prompt variable.
-
-
-            Quick reference:
-
-            - `target=observation`: `input`, `output`, `metadata`
-
-            - `target=experiment`: `input`, `output`, `metadata`, `expected_output`'
-        jsonPath:
-          type: string
-          nullable: true
-          description: 'Optional JSONPath selector applied to the selected source before it is passed to the evaluator prompt.
-
-
-            Requirements:
-
-            - Must start with `$`
-
-            - Must be a syntactically valid JSONPath expression
-
-            - Most useful with `source=metadata`'
-      required:
-      - variable
-      - source
-    unstableBooleanEvaluationRuleFilter:
-      title: unstableBooleanEvaluationRuleFilter
-      type: object
-      properties:
-        column:
-          type: string
-          description: Column to filter on.
-        operator:
-          $ref: '#/components/schemas/unstableEvaluationRuleBooleanFilterOperator'
-        value:
-          type: boolean
-      required:
-      - column
-      - operator
-      - value
-    unstableStringOptionsEvaluationRuleFilter:
-      title: unstableStringOptionsEvaluationRuleFilter
-      type: object
-      properties:
-        column:
-          type: string
-          description: Column to filter on.
-        operator:
-          $ref: '#/components/schemas/unstableEvaluationRuleOptionsFilterOperator'
-        value:
-          type: array
-          items:
-            type: string
-          description: One or more allowed string values.
-      required:
-      - column
-      - operator
-      - value
-    unstableStringEvaluationRuleFilter:
-      title: unstableStringEvaluationRuleFilter
-      type: object
-      properties:
-        column:
-          type: string
-          description: Column to filter on.
-        operator:
-          $ref: '#/components/schemas/unstableEvaluationRuleStringFilterOperator'
-        value:
-          type: string
-      required:
-      - column
-      - operator
-      - value
-    unstableEvaluatorScope:
-      title: unstableEvaluatorScope
-      type: string
-      enum:
-      - project
-      - managed
-      description: 'Where an evaluator comes from.
-
-
-        - `project`: created in your project
-
-        - `managed`: provided by Langfuse'
-    unstableEvaluationRuleNullFilterOperator:
-      title: unstableEvaluationRuleNullFilterOperator
-      type: string
-      enum:
-      - is null
-      - is not null
-    unstableEvaluationRuleEvaluator:
-      title: unstableEvaluationRuleEvaluator
-      type: object
-      description: 'Resolved evaluator currently used by the evaluation rule.
-
-
-        `id` is the exact active evaluator version.
-
-        `name` and `scope` identify the evaluator family conceptually.'
-      properties:
-        id:
-          type: string
-          description: Identifier of the exact evaluator version currently used by the rule.
-        name:
-          type: string
-          description: Evaluator family name.
-        scope:
-          $ref: '#/components/schemas/unstableEvaluatorScope'
-          description: Whether the evaluator family is project-owned or Langfuse-managed.
-      required:
-      - id
-      - name
-      - scope
     unstableNumberEvaluationRuleFilter:
       title: unstableNumberEvaluationRuleFilter
       type: object
@@ -1477,31 +1537,6 @@ components:
       - column
       - operator
       - value
-    unstableNullEvaluationRuleFilter:
-      title: unstableNullEvaluationRuleFilter
-      type: object
-      properties:
-        column:
-          type: string
-          description: Column to filter on. In the unstable public API this is currently `parentObservationId`.
-        operator:
-          $ref: '#/components/schemas/unstableEvaluationRuleNullFilterOperator'
-        value:
-          type: string
-          nullable: true
-          description: Ignored placeholder value. Clients may omit it or send an empty string.
-      required:
-      - column
-      - operator
-    unstableEvaluationRuleNumberFilterOperator:
-      title: unstableEvaluationRuleNumberFilterOperator
-      type: string
-      enum:
-      - '='
-      - '>'
-      - <
-      - '>='
-      - <=
   securitySchemes:
     BasicAuth:
       type: http

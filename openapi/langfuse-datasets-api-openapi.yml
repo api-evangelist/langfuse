@@ -1,11 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: langfuse AnnotationQueues Datasets API
-  version: "1.0"
+  title: langfuse Datasets API
+  version: ''
   description: '## Authentication
 
 
-    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
 
 
     - username: Langfuse Public Key
@@ -32,15 +32,17 @@ paths:
         description: page number, starts at 1
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       - name: limit
         in: query
         description: limit of items per page
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       responses:
         '200':
           description: ''
@@ -75,6 +77,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Datasets list
+      x-summary-source: derived
     post:
       description: Create a dataset
       operationId: datasets_create
@@ -121,6 +125,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateDatasetRequest'
+      summary: Datasets create
+      x-summary-source: derived
   /api/public/v2/datasets/{datasetName}:
     get:
       description: Get a dataset
@@ -167,6 +173,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Datasets get
+      x-summary-source: derived
   /api/public/datasets/{datasetName}/runs/{runName}:
     get:
       description: Get a dataset run and its items
@@ -218,6 +226,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Datasets get run
+      x-summary-source: derived
     delete:
       description: Delete a dataset run and all its run items. This action is irreversible.
       operationId: datasets_deleteRun
@@ -268,6 +278,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Datasets delete run
+      x-summary-source: derived
   /api/public/datasets/{datasetName}/runs:
     get:
       description: Get dataset runs
@@ -285,15 +297,17 @@ paths:
         description: page number, starts at 1
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       - name: limit
         in: query
         description: limit of items per page
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       responses:
         '200':
           description: ''
@@ -328,27 +342,77 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Datasets get runs
+      x-summary-source: derived
 components:
   schemas:
-    CreateDatasetRequest:
-      title: CreateDatasetRequest
+    Dataset:
+      title: Dataset
       type: object
       properties:
+        id:
+          type: string
         name:
           type: string
         description:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
+          description: Description of the dataset
         metadata:
-          nullable: true
+          description: Metadata associated with the dataset
         inputSchema:
-          nullable: true
-          description: JSON Schema for validating dataset item inputs. When set, all new and existing dataset items will be validated against this schema.
+          description: JSON Schema for validating dataset item inputs
         expectedOutputSchema:
-          nullable: true
-          description: JSON Schema for validating dataset item expected outputs. When set, all new and existing dataset items will be validated against this schema.
+          description: JSON Schema for validating dataset item expected outputs
+        projectId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
       required:
+      - id
       - name
+      - metadata
+      - projectId
+      - createdAt
+      - updatedAt
+    DatasetRunItem:
+      title: DatasetRunItem
+      type: object
+      properties:
+        id:
+          type: string
+        datasetRunId:
+          type: string
+        datasetRunName:
+          type: string
+        datasetItemId:
+          type: string
+        traceId:
+          type: string
+        observationId:
+          type:
+          - string
+          - 'null'
+          description: The observation ID associated with this run item
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - datasetRunId
+      - datasetRunName
+      - datasetItemId
+      - traceId
+      - createdAt
+      - updatedAt
     DatasetRun:
       title: DatasetRun
       type: object
@@ -360,8 +424,9 @@ components:
           type: string
           description: Name of the dataset run
         description:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Description of the run
         metadata:
           description: Metadata of the dataset run
@@ -387,6 +452,36 @@ components:
       - datasetName
       - createdAt
       - updatedAt
+    PaginatedDatasetRuns:
+      title: PaginatedDatasetRuns
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetRun'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    CreateDatasetRequest:
+      title: CreateDatasetRequest
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        metadata: {}
+        inputSchema:
+          description: JSON Schema for validating dataset item inputs. When set, all new and existing dataset items will be validated against this schema.
+        expectedOutputSchema:
+          description: JSON Schema for validating dataset item expected outputs. When set, all new and existing dataset items will be validated against this schema.
+      required:
+      - name
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -416,73 +511,6 @@ components:
           type: string
       required:
       - message
-    DatasetRunItem:
-      title: DatasetRunItem
-      type: object
-      properties:
-        id:
-          type: string
-        datasetRunId:
-          type: string
-        datasetRunName:
-          type: string
-        datasetItemId:
-          type: string
-        traceId:
-          type: string
-        observationId:
-          type: string
-          nullable: true
-          description: The observation ID associated with this run item
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - datasetRunId
-      - datasetRunName
-      - datasetItemId
-      - traceId
-      - createdAt
-      - updatedAt
-    Dataset:
-      title: Dataset
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        description:
-          type: string
-          nullable: true
-          description: Description of the dataset
-        metadata:
-          description: Metadata associated with the dataset
-        inputSchema:
-          nullable: true
-          description: JSON Schema for validating dataset item inputs
-        expectedOutputSchema:
-          nullable: true
-          description: JSON Schema for validating dataset item expected outputs
-        projectId:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - name
-      - metadata
-      - projectId
-      - createdAt
-      - updatedAt
     DatasetRunWithItems:
       title: DatasetRunWithItems
       type: object
@@ -495,19 +523,6 @@ components:
       - datasetRunItems
       allOf:
       - $ref: '#/components/schemas/DatasetRun'
-    PaginatedDatasetRuns:
-      title: PaginatedDatasetRuns
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DatasetRun'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
     PaginatedDatasets:
       title: PaginatedDatasets
       type: object

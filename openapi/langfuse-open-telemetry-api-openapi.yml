@@ -1,11 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: langfuse AnnotationQueues Opentelemetry API
-  version: "1.0"
+  title: langfuse Opentelemetry API
+  version: ''
   description: '## Authentication
 
 
-    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
 
 
     - username: Langfuse Public Key
@@ -18,7 +18,7 @@ info:
 
     - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
 tags:
-- name: Opentelemetry
+- name: Open Telemetry
 paths:
   /api/public/otel/v1/traces:
     post:
@@ -39,7 +39,7 @@ paths:
 
         **Specification Compliance:**
 
-        - Conforms to [OTLP/HTTP Trace Export](https://opentelemetry.io/docs/specs/otlp/#otlphttp)
+        - Conforms to OTLP/HTTP Trace Export
 
         - Implements `ExportTraceServiceRequest` message format
 
@@ -51,7 +51,7 @@ paths:
         - Data model: https://langfuse.com/docs/observability/data-model'
       operationId: opentelemetry_exportTraces
       tags:
-      - Opentelemetry
+      - Open Telemetry
       parameters: []
       responses:
         '200':
@@ -132,8 +132,57 @@ paths:
                           value:
                             stringValue: generation
                         status: {}
+      summary: Opentelemetry export traces
+      x-summary-source: derived
 components:
   schemas:
+    OtelAttribute:
+      title: OtelAttribute
+      type: object
+      description: Key-value attribute pair for resources, scopes, or spans
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: Attribute key (e.g., "service.name", "langfuse.observation.type")
+        value:
+          $ref: '#/components/schemas/OtelAttributeValue'
+          description: Attribute value
+    OtelScope:
+      title: OtelScope
+      type: object
+      description: Instrumentation scope information
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Instrumentation scope name
+        version:
+          type:
+          - string
+          - 'null'
+          description: Instrumentation scope version
+        attributes:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OtelAttribute'
+          description: Additional scope attributes
+    OtelResource:
+      title: OtelResource
+      type: object
+      description: Resource attributes identifying the source of telemetry
+      properties:
+        attributes:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OtelAttribute'
+          description: Resource attributes like service.name, service.version, etc.
     OtelResourceSpan:
       title: OtelResourceSpan
       type: object
@@ -141,13 +190,13 @@ components:
       properties:
         resource:
           $ref: '#/components/schemas/OtelResource'
-          nullable: true
           description: Resource information
         scopeSpans:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             $ref: '#/components/schemas/OtelScopeSpan'
-          nullable: true
           description: Array of scope spans
     OtelTraceResponse:
       title: OtelTraceResponse
@@ -160,21 +209,25 @@ components:
       description: Attribute value wrapper supporting different value types
       properties:
         stringValue:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: String value
         intValue:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
           description: Integer value
         doubleValue:
-          type: number
+          type:
+          - number
+          - 'null'
           format: double
-          nullable: true
           description: Double value
         boolValue:
-          type: boolean
-          nullable: true
+          type:
+          - boolean
+          - 'null'
           description: Boolean value
     OtelScopeSpan:
       title: OtelScopeSpan
@@ -183,93 +236,47 @@ components:
       properties:
         scope:
           $ref: '#/components/schemas/OtelScope'
-          nullable: true
           description: Instrumentation scope information
         spans:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             $ref: '#/components/schemas/OtelSpan'
-          nullable: true
           description: Array of spans
-    OtelResource:
-      title: OtelResource
-      type: object
-      description: Resource attributes identifying the source of telemetry
-      properties:
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/OtelAttribute'
-          nullable: true
-          description: Resource attributes like service.name, service.version, etc.
-    OtelAttribute:
-      title: OtelAttribute
-      type: object
-      description: Key-value attribute pair for resources, scopes, or spans
-      properties:
-        key:
-          type: string
-          nullable: true
-          description: Attribute key (e.g., "service.name", "langfuse.observation.type")
-        value:
-          $ref: '#/components/schemas/OtelAttributeValue'
-          nullable: true
-          description: Attribute value
-    OtelScope:
-      title: OtelScope
-      type: object
-      description: Instrumentation scope information
-      properties:
-        name:
-          type: string
-          nullable: true
-          description: Instrumentation scope name
-        version:
-          type: string
-          nullable: true
-          description: Instrumentation scope version
-        attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/OtelAttribute'
-          nullable: true
-          description: Additional scope attributes
     OtelSpan:
       title: OtelSpan
       type: object
       description: Individual span representing a unit of work or operation
       properties:
         traceId:
-          nullable: true
           description: Trace ID (16 bytes, hex-encoded string in JSON or Buffer in binary)
         spanId:
-          nullable: true
           description: Span ID (8 bytes, hex-encoded string in JSON or Buffer in binary)
         parentSpanId:
-          nullable: true
           description: Parent span ID if this is a child span
         name:
-          type: string
-          nullable: true
+          type:
+          - string
+          - 'null'
           description: Span name describing the operation
         kind:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
           description: Span kind (1=INTERNAL, 2=SERVER, 3=CLIENT, 4=PRODUCER, 5=CONSUMER)
         startTimeUnixNano:
-          nullable: true
           description: Start time in nanoseconds since Unix epoch
         endTimeUnixNano:
-          nullable: true
           description: End time in nanoseconds since Unix epoch
         attributes:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             $ref: '#/components/schemas/OtelAttribute'
-          nullable: true
           description: Span attributes including Langfuse-specific attributes (langfuse.observation.*)
         status:
-          nullable: true
           description: Span status object
   securitySchemes:
     BasicAuth:

@@ -1,11 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: langfuse AnnotationQueues DatasetRunItems API
-  version: "1.0"
+  title: langfuse Dataset Run Items API
+  version: ''
   description: '## Authentication
 
 
-    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
 
 
     - username: Langfuse Public Key
@@ -67,6 +67,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateDatasetRunItemRequest'
+      summary: Dataset run items create
+      x-summary-source: derived
     get:
       description: List dataset run items
       operationId: datasetRunItems_list
@@ -88,15 +90,17 @@ paths:
         description: page number, starts at 1
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       - name: limit
         in: query
         description: limit of items per page
         required: false
         schema:
-          type: integer
-          nullable: true
+          type:
+          - integer
+          - 'null'
       responses:
         '200':
           description: ''
@@ -131,75 +135,10 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Dataset run items list
+      x-summary-source: derived
 components:
   schemas:
-    DatasetRunItem:
-      title: DatasetRunItem
-      type: object
-      properties:
-        id:
-          type: string
-        datasetRunId:
-          type: string
-        datasetRunName:
-          type: string
-        datasetItemId:
-          type: string
-        traceId:
-          type: string
-        observationId:
-          type: string
-          nullable: true
-          description: The observation ID associated with this run item
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - datasetRunId
-      - datasetRunName
-      - datasetItemId
-      - traceId
-      - createdAt
-      - updatedAt
-    CreateDatasetRunItemRequest:
-      title: CreateDatasetRunItemRequest
-      type: object
-      properties:
-        runName:
-          type: string
-        runDescription:
-          type: string
-          nullable: true
-          description: Description of the run. If run exists, description will be updated.
-        metadata:
-          nullable: true
-          description: Metadata of the dataset run, updates run if run already exists
-        datasetItemId:
-          type: string
-        observationId:
-          type: string
-          nullable: true
-        traceId:
-          type: string
-          nullable: true
-          description: traceId should always be provided. For compatibility with older SDK versions it can also be inferred from the provided observationId.
-        datasetVersion:
-          type: string
-          format: date-time
-          nullable: true
-          description: "ISO 8601 timestamp (RFC 3339, Section 5.6) in UTC (e.g., \"2026-01-21T14:35:42Z\").\nSpecifies the dataset version to use for this experiment run. \nIf provided, the experiment will use dataset items as they existed at or before this timestamp.\nIf not provided, uses the latest version of dataset items."
-        createdAt:
-          type: string
-          format: date-time
-          nullable: true
-          description: Optional timestamp to set the createdAt field of the dataset run item. If not provided or null, defaults to current timestamp.
-      required:
-      - runName
-      - datasetItemId
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -221,6 +160,39 @@ components:
       - limit
       - totalItems
       - totalPages
+    DatasetRunItem:
+      title: DatasetRunItem
+      type: object
+      properties:
+        id:
+          type: string
+        datasetRunId:
+          type: string
+        datasetRunName:
+          type: string
+        datasetItemId:
+          type: string
+        traceId:
+          type: string
+        observationId:
+          type:
+          - string
+          - 'null'
+          description: The observation ID associated with this run item
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - datasetRunId
+      - datasetRunName
+      - datasetItemId
+      - traceId
+      - createdAt
+      - updatedAt
     PaginatedDatasetRunItems:
       title: PaginatedDatasetRunItems
       type: object
@@ -234,6 +206,45 @@ components:
       required:
       - data
       - meta
+    CreateDatasetRunItemRequest:
+      title: CreateDatasetRunItemRequest
+      type: object
+      properties:
+        runName:
+          type: string
+        runDescription:
+          type:
+          - string
+          - 'null'
+          description: Description of the run. If run exists, description will be updated.
+        metadata:
+          description: Metadata of the dataset run, updates run if run already exists
+        datasetItemId:
+          type: string
+        observationId:
+          type:
+          - string
+          - 'null'
+        traceId:
+          type:
+          - string
+          - 'null'
+          description: traceId should always be provided. For compatibility with older SDK versions it can also be inferred from the provided observationId.
+        datasetVersion:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: "ISO 8601 timestamp (RFC 3339, Section 5.6) in UTC (e.g., \"2026-01-21T14:35:42Z\").\nSpecifies the dataset version to use for this experiment run. \nIf provided, the experiment will use dataset items as they existed at or before this timestamp.\nIf not provided, uses the latest version of dataset items."
+        createdAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Optional timestamp to set the createdAt field of the dataset run item. If not provided or null, defaults to current timestamp.
+      required:
+      - runName
+      - datasetItemId
   securitySchemes:
     BasicAuth:
       type: http

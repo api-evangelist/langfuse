@@ -1,11 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: langfuse AnnotationQueues Organizations API
-  version: "1.0"
+  title: langfuse Organizations API
+  version: ''
   description: '## Authentication
 
 
-    Authenticate with the API using [Basic Auth](https://en.wikipedia.org/wiki/Basic_access_authentication), get API keys in the project settings:
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
 
 
     - username: Langfuse Public Key
@@ -61,6 +61,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Organizations get organization memberships
+      x-summary-source: derived
     put:
       description: Create or update a membership for the organization associated with the API key (requires organization-scoped API key)
       operationId: organizations_updateOrganizationMembership
@@ -107,6 +109,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MembershipRequest'
+      summary: Organizations update organization membership
+      x-summary-source: derived
     delete:
       description: Delete a membership from the organization associated with the API key (requires organization-scoped API key)
       operationId: organizations_deleteOrganizationMembership
@@ -153,6 +157,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DeleteMembershipRequest'
+      summary: Organizations delete organization membership
+      x-summary-source: derived
   /api/public/projects/{projectId}/memberships:
     get:
       description: Get all memberships for a specific project (requires organization-scoped API key)
@@ -199,6 +205,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Organizations get project memberships
+      x-summary-source: derived
     put:
       description: Create or update a membership for a specific project (requires organization-scoped API key). The user must already be a member of the organization.
       operationId: organizations_updateProjectMembership
@@ -250,6 +258,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/MembershipRequest'
+      summary: Organizations update project membership
+      x-summary-source: derived
     delete:
       description: Delete a membership from a specific project (requires organization-scoped API key). The user must be a member of the organization.
       operationId: organizations_deleteProjectMembership
@@ -301,6 +311,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DeleteMembershipRequest'
+      summary: Organizations delete project membership
+      x-summary-source: derived
   /api/public/organizations/projects:
     get:
       description: Get all projects for the organization associated with the API key (requires organization-scoped API key)
@@ -342,6 +354,8 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Organizations get organization projects
+      x-summary-source: derived
   /api/public/organizations/apiKeys:
     get:
       description: Get all API keys for the organization associated with the API key (requires organization-scoped API key)
@@ -383,18 +397,42 @@ paths:
               schema: {}
       security:
       - BasicAuth: []
+      summary: Organizations get organization api keys
+      x-summary-source: derived
 components:
   schemas:
-    OrganizationProjectsResponse:
-      title: OrganizationProjectsResponse
+    OrganizationApiKey:
+      title: OrganizationApiKey
       type: object
       properties:
-        projects:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationProject'
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        lastUsedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        note:
+          type:
+          - string
+          - 'null'
+        publicKey:
+          type: string
+        displaySecretKey:
+          type: string
       required:
-      - projects
+      - id
+      - createdAt
+      - publicKey
+      - displaySecretKey
     MembershipRequest:
       title: MembershipRequest
       type: object
@@ -406,6 +444,40 @@ components:
       required:
       - userId
       - role
+    OrganizationProject:
+      title: OrganizationProject
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - createdAt
+      - updatedAt
+    OrganizationProjectsResponse:
+      title: OrganizationProjectsResponse
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationProject'
+      required:
+      - projects
     MembershipDeletionResponse:
       title: MembershipDeletionResponse
       type: object
@@ -434,39 +506,14 @@ components:
       - role
       - email
       - name
-    MembershipsResponse:
-      title: MembershipsResponse
+    DeleteMembershipRequest:
+      title: DeleteMembershipRequest
       type: object
       properties:
-        memberships:
-          type: array
-          items:
-            $ref: '#/components/schemas/MembershipResponse'
+        userId:
+          type: string
       required:
-      - memberships
-    OrganizationProject:
-      title: OrganizationProject
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        metadata:
-          type: object
-          additionalProperties: true
-          nullable: true
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - name
-      - createdAt
-      - updatedAt
+      - userId
     OrganizationApiKeysResponse:
       title: OrganizationApiKeysResponse
       type: object
@@ -477,6 +524,16 @@ components:
             $ref: '#/components/schemas/OrganizationApiKey'
       required:
       - apiKeys
+    MembershipsResponse:
+      title: MembershipsResponse
+      type: object
+      properties:
+        memberships:
+          type: array
+          items:
+            $ref: '#/components/schemas/MembershipResponse'
+      required:
+      - memberships
     MembershipRole:
       title: MembershipRole
       type: string
@@ -485,43 +542,6 @@ components:
       - ADMIN
       - MEMBER
       - VIEWER
-    OrganizationApiKey:
-      title: OrganizationApiKey
-      type: object
-      properties:
-        id:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        expiresAt:
-          type: string
-          format: date-time
-          nullable: true
-        lastUsedAt:
-          type: string
-          format: date-time
-          nullable: true
-        note:
-          type: string
-          nullable: true
-        publicKey:
-          type: string
-        displaySecretKey:
-          type: string
-      required:
-      - id
-      - createdAt
-      - publicKey
-      - displaySecretKey
-    DeleteMembershipRequest:
-      title: DeleteMembershipRequest
-      type: object
-      properties:
-        userId:
-          type: string
-      required:
-      - userId
   securitySchemes:
     BasicAuth:
       type: http
