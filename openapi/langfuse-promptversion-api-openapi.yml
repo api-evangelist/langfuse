@@ -91,21 +91,86 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ChatMessageType:
-      title: ChatMessageType
-      type: string
-      enum:
-      - chatmessage
-    ChatMessageWithPlaceholders:
-      title: ChatMessageWithPlaceholders
-      oneOf:
-      - $ref: '#/components/schemas/ChatMessage'
-      - $ref: '#/components/schemas/PlaceholderMessage'
+    ChatPrompt:
+      title: ChatPrompt
+      type: object
+      properties:
+        prompt:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
+      required:
+      - prompt
+      allOf:
+      - $ref: '#/components/schemas/BasePrompt'
     PlaceholderMessageType:
       title: PlaceholderMessageType
       type: string
       enum:
       - placeholder
+    PlaceholderMessage:
+      title: PlaceholderMessage
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/PlaceholderMessageType'
+      required:
+      - name
+    ChatMessageType:
+      title: ChatMessageType
+      type: string
+      enum:
+      - chatmessage
+    TextPrompt:
+      title: TextPrompt
+      type: object
+      properties:
+        prompt:
+          type: string
+      required:
+      - prompt
+      allOf:
+      - $ref: '#/components/schemas/BasePrompt'
+    ChatMessage:
+      title: ChatMessage
+      type: object
+      properties:
+        role:
+          type: string
+        content:
+          type: string
+        type:
+          $ref: '#/components/schemas/ChatMessageType'
+      required:
+      - role
+      - content
+    Prompt:
+      title: Prompt
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - chat
+        - $ref: '#/components/schemas/ChatPrompt'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - text
+        - $ref: '#/components/schemas/TextPrompt'
+        required:
+        - type
     BasePrompt:
       title: BasePrompt
       type: object
@@ -142,76 +207,11 @@ components:
       - config
       - labels
       - tags
-    PlaceholderMessage:
-      title: PlaceholderMessage
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          $ref: '#/components/schemas/PlaceholderMessageType'
-      required:
-      - name
-    Prompt:
-      title: Prompt
+    ChatMessageWithPlaceholders:
+      title: ChatMessageWithPlaceholders
       oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - chat
-        - $ref: '#/components/schemas/ChatPrompt'
-        required:
-        - type
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - text
-        - $ref: '#/components/schemas/TextPrompt'
-        required:
-        - type
-    TextPrompt:
-      title: TextPrompt
-      type: object
-      properties:
-        prompt:
-          type: string
-      required:
-      - prompt
-      allOf:
-      - $ref: '#/components/schemas/BasePrompt'
-    ChatPrompt:
-      title: ChatPrompt
-      type: object
-      properties:
-        prompt:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
-      required:
-      - prompt
-      allOf:
-      - $ref: '#/components/schemas/BasePrompt'
-    ChatMessage:
-      title: ChatMessage
-      type: object
-      properties:
-        role:
-          type: string
-        content:
-          type: string
-        type:
-          $ref: '#/components/schemas/ChatMessageType'
-      required:
-      - role
-      - content
+      - $ref: '#/components/schemas/ChatMessage'
+      - $ref: '#/components/schemas/PlaceholderMessage'
   securitySchemes:
     BasicAuth:
       type: http

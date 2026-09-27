@@ -232,18 +232,60 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ConfigCategory:
-      title: ConfigCategory
+    ScoreConfig:
+      title: ScoreConfig
       type: object
+      description: Configuration for a score
       properties:
-        value:
-          type: number
-          format: double
-        label:
+        id:
           type: string
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        projectId:
+          type: string
+        dataType:
+          $ref: '#/components/schemas/ScoreConfigDataType'
+        isArchived:
+          type: boolean
+          description: Whether the score config is archived. Defaults to false
+        minValue:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Sets minimum value for numerical scores. If not set, the minimum value defaults to -∞
+        maxValue:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Sets maximum value for numerical scores. If not set, the maximum value defaults to +∞
+        categories:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ConfigCategory'
+          description: Configures custom categories for categorical scores
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the score config
       required:
-      - value
-      - label
+      - id
+      - name
+      - createdAt
+      - updatedAt
+      - projectId
+      - dataType
+      - isArchived
     UpdateScoreConfigRequest:
       title: UpdateScoreConfigRequest
       type: object
@@ -303,60 +345,6 @@ components:
       - limit
       - totalItems
       - totalPages
-    ScoreConfig:
-      title: ScoreConfig
-      type: object
-      description: Configuration for a score
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        projectId:
-          type: string
-        dataType:
-          $ref: '#/components/schemas/ScoreConfigDataType'
-        isArchived:
-          type: boolean
-          description: Whether the score config is archived. Defaults to false
-        minValue:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: Sets minimum value for numerical scores. If not set, the minimum value defaults to -∞
-        maxValue:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: Sets maximum value for numerical scores. If not set, the maximum value defaults to +∞
-        categories:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ConfigCategory'
-          description: Configures custom categories for categorical scores
-        description:
-          type:
-          - string
-          - 'null'
-          description: Description of the score config
-      required:
-      - id
-      - name
-      - createdAt
-      - updatedAt
-      - projectId
-      - dataType
-      - isArchived
     ScoreConfigDataType:
       title: ScoreConfigDataType
       type: string
@@ -365,6 +353,31 @@ components:
       - BOOLEAN
       - CATEGORICAL
       - TEXT
+    ConfigCategory:
+      title: ConfigCategory
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+        label:
+          type: string
+      required:
+      - value
+      - label
+    ScoreConfigs:
+      title: ScoreConfigs
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoreConfig'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
     CreateScoreConfigRequest:
       title: CreateScoreConfigRequest
       type: object
@@ -401,19 +414,6 @@ components:
       required:
       - name
       - dataType
-    ScoreConfigs:
-      title: ScoreConfigs
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScoreConfig'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
   securitySchemes:
     BasicAuth:
       type: http

@@ -401,6 +401,25 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    DeleteMembershipRequest:
+      title: DeleteMembershipRequest
+      type: object
+      properties:
+        userId:
+          type: string
+      required:
+      - userId
+    MembershipRequest:
+      title: MembershipRequest
+      type: object
+      properties:
+        userId:
+          type: string
+        role:
+          $ref: '#/components/schemas/MembershipRole'
+      required:
+      - userId
+      - role
     OrganizationApiKey:
       title: OrganizationApiKey
       type: object
@@ -433,17 +452,6 @@ components:
       - createdAt
       - publicKey
       - displaySecretKey
-    MembershipRequest:
-      title: MembershipRequest
-      type: object
-      properties:
-        userId:
-          type: string
-        role:
-          $ref: '#/components/schemas/MembershipRole'
-      required:
-      - userId
-      - role
     OrganizationProject:
       title: OrganizationProject
       type: object
@@ -468,16 +476,6 @@ components:
       - name
       - createdAt
       - updatedAt
-    OrganizationProjectsResponse:
-      title: OrganizationProjectsResponse
-      type: object
-      properties:
-        projects:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationProject'
-      required:
-      - projects
     MembershipDeletionResponse:
       title: MembershipDeletionResponse
       type: object
@@ -506,24 +504,6 @@ components:
       - role
       - email
       - name
-    DeleteMembershipRequest:
-      title: DeleteMembershipRequest
-      type: object
-      properties:
-        userId:
-          type: string
-      required:
-      - userId
-    OrganizationApiKeysResponse:
-      title: OrganizationApiKeysResponse
-      type: object
-      properties:
-        apiKeys:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationApiKey'
-      required:
-      - apiKeys
     MembershipsResponse:
       title: MembershipsResponse
       type: object
@@ -542,6 +522,26 @@ components:
       - ADMIN
       - MEMBER
       - VIEWER
+    OrganizationApiKeysResponse:
+      title: OrganizationApiKeysResponse
+      type: object
+      properties:
+        apiKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationApiKey'
+      required:
+      - apiKeys
+    OrganizationProjectsResponse:
+      title: OrganizationProjectsResponse
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationProject'
+      required:
+      - projects
   securitySchemes:
     BasicAuth:
       type: http

@@ -260,12 +260,46 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PaginatedDatasetItems:
+      title: PaginatedDatasetItems
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetItem'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
     DatasetStatus:
       title: DatasetStatus
       type: string
       enum:
       - ACTIVE
       - ARCHIVED
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
     DeleteDatasetItemResponse:
       title: DeleteDatasetItemResponse
       type: object
@@ -275,6 +309,33 @@ components:
           description: Success message after deletion
       required:
       - message
+    CreateDatasetItemRequest:
+      title: CreateDatasetItemRequest
+      type: object
+      properties:
+        datasetName:
+          type: string
+        input: {}
+        expectedOutput: {}
+        metadata: {}
+        sourceTraceId:
+          type:
+          - string
+          - 'null'
+        sourceObservationId:
+          type:
+          - string
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+          description: Dataset items are upserted on their id. Id needs to be unique (project-level) and cannot be reused across datasets.
+        status:
+          $ref: '#/components/schemas/DatasetStatus'
+          description: Defaults to ACTIVE for newly created items
+      required:
+      - datasetName
     DatasetItem:
       title: DatasetItem
       type: object
@@ -319,67 +380,6 @@ components:
       - datasetName
       - createdAt
       - updatedAt
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    PaginatedDatasetItems:
-      title: PaginatedDatasetItems
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DatasetItem'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    CreateDatasetItemRequest:
-      title: CreateDatasetItemRequest
-      type: object
-      properties:
-        datasetName:
-          type: string
-        input: {}
-        expectedOutput: {}
-        metadata: {}
-        sourceTraceId:
-          type:
-          - string
-          - 'null'
-        sourceObservationId:
-          type:
-          - string
-          - 'null'
-        id:
-          type:
-          - string
-          - 'null'
-          description: Dataset items are upserted on their id. Id needs to be unique (project-level) and cannot be reused across datasets.
-        status:
-          $ref: '#/components/schemas/DatasetStatus'
-          description: Defaults to ACTIVE for newly created items
-      required:
-      - datasetName
   securitySchemes:
     BasicAuth:
       type: http

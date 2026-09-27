@@ -7,16 +7,21 @@ description: >-
   metrics. The Langfuse API supports both self-hosted and multi-region cloud deployments (US, EU, Japan, HIPAA-compliant
   US) and integrates with LangChain, LlamaIndex, OpenTelemetry, and any LLM stack.
 deliveryModel:
-  model: saas
-  open_source: false
+  model: unknown
+  license_evidence:
+    repo: langfuse/langfuse
+    spdx: NOASSERTION
+    stars: 35037
+  open_source: unknown
   commercial: true
-  callable_host: true
-  label: Hosted service · you call their endpoint
-  confidence: high
+  callable_host: false
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
   source:
   - openapi
   - pricing
-  generated: '2026-08-28'
+  - repository-unlicensed
+  generated: '2026-09-25'
   method: derived
 accessModel:
   pricing: freemium
@@ -37,7 +42,7 @@ tags:
   - Artificial Intelligence
   - LLM
   - Observability
-  - Open-Source
+  - Open Source
   - Evaluation
 tags_raw:
   - AI
@@ -45,6 +50,7 @@ tags_raw:
   - Observability
   - Open Source
   - Evaluations
+  - Open-Source
 created: '2026-05-08'
 modified: '2026-05-19'
 specificationVersion: '0.23'
@@ -819,8 +825,6 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
-  - OpenTelemetry
-  tags_raw:
   - Open Telemetry
   properties:
   - type: OpenAPI

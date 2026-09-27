@@ -443,6 +443,291 @@ components:
       - usageDetails
       - costDetails
       - environment
+    DeleteTraceResponse:
+      title: DeleteTraceResponse
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    NumericScoreV1:
+      title: NumericScoreV1
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: The numeric value of the score
+      required:
+      - value
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV1'
+    Traces:
+      title: Traces
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TraceWithDetails'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    ScoreV1:
+      title: ScoreV1
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/NumericScoreV1'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/CategoricalScoreV1'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/BooleanScoreV1'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - TEXT
+        - $ref: '#/components/schemas/TextScoreV1'
+        required:
+        - dataType
+    BooleanScoreV1:
+      title: BooleanScoreV1
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: The numeric value of the score. Equals 1 for "True" and 0 for "False"
+        stringValue:
+          type: string
+          description: The string representation of the score value. Is inferred from the numeric value and equals "True" or "False"
+      required:
+      - value
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV1'
+    TraceWithFullDetails:
+      title: TraceWithFullDetails
+      type: object
+      properties:
+        htmlPath:
+          type: string
+          description: Path of trace in Langfuse UI
+        latency:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Latency of trace in seconds
+        totalCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Cost of trace in USD
+        observations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObservationsView'
+          description: List of observations
+        scores:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoreV1'
+          description: List of scores
+      required:
+      - htmlPath
+      - observations
+      - scores
+      allOf:
+      - $ref: '#/components/schemas/Trace'
+    BaseScoreV1:
+      title: BaseScoreV1
+      type: object
+      properties:
+        id:
+          type: string
+        traceId:
+          type: string
+        name:
+          type: string
+        source:
+          $ref: '#/components/schemas/ScoreSource'
+        observationId:
+          type:
+          - string
+          - 'null'
+          description: The observation ID associated with the score
+        timestamp:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        authorUserId:
+          type:
+          - string
+          - 'null'
+          description: The user ID of the author
+        comment:
+          type:
+          - string
+          - 'null'
+          description: Comment on the score
+        metadata:
+          description: Metadata associated with the score
+        configId:
+          type:
+          - string
+          - 'null'
+          description: Reference a score config on a score. When set, config and score name must be equal and value must comply to optionally defined numerical range
+        queueId:
+          type:
+          - string
+          - 'null'
+          description: The annotation queue referenced by the score. Indicates if score was initially created while processing annotation queue.
+        environment:
+          type: string
+          description: The environment from which this score originated. Can be any lowercase alphanumeric string with hyphens and underscores that does not start with 'langfuse'.
+      required:
+      - id
+      - traceId
+      - name
+      - source
+      - timestamp
+      - createdAt
+      - updatedAt
+      - metadata
+      - environment
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    ScoreSource:
+      title: ScoreSource
+      type: string
+      enum:
+      - ANNOTATION
+      - API
+      - EVAL
+    Usage:
+      title: Usage
+      type: object
+      description: (Deprecated. Use usageDetails and costDetails instead.) Standard interface for usage and cost
+      properties:
+        input:
+          type: integer
+          description: Number of input units (e.g. tokens)
+        output:
+          type: integer
+          description: Number of output units (e.g. tokens)
+        total:
+          type: integer
+          description: Defaults to input+output if not set
+        unit:
+          type:
+          - string
+          - 'null'
+          description: Unit of measurement
+        inputCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: USD input cost
+        outputCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: USD output cost
+        totalCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: USD total cost, defaults to input+output
+      required:
+      - input
+      - output
+      - total
+    CategoricalScoreV1:
+      title: CategoricalScoreV1
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: Represents the numeric category mapping of the stringValue. If no config is linked, defaults to 0.
+        stringValue:
+          type: string
+          description: The string representation of the score value. If no config is linked, can be any string. Otherwise, must map to a config category
+      required:
+      - value
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV1'
+    ObservationLevel:
+      title: ObservationLevel
+      type: string
+      enum:
+      - DEBUG
+      - DEFAULT
+      - WARNING
+      - ERROR
     TraceWithDetails:
       title: TraceWithDetails
       type: object
@@ -480,24 +765,15 @@ components:
       - htmlPath
       allOf:
       - $ref: '#/components/schemas/Trace'
-    DeleteTraceResponse:
-      title: DeleteTraceResponse
+    TextScoreV1:
+      title: TextScoreV1
       type: object
       properties:
-        message:
+        stringValue:
           type: string
+          description: The text content of the score (1-500 characters)
       required:
-      - message
-    NumericScoreV1:
-      title: NumericScoreV1
-      type: object
-      properties:
-        value:
-          type: number
-          format: double
-          description: The numeric value of the score
-      required:
-      - value
+      - stringValue
       allOf:
       - $ref: '#/components/schemas/BaseScoreV1'
     ObservationsView:
@@ -569,258 +845,6 @@ components:
           description: The time to the first token in seconds
       allOf:
       - $ref: '#/components/schemas/Observation'
-    ScoreSource:
-      title: ScoreSource
-      type: string
-      enum:
-      - ANNOTATION
-      - API
-      - EVAL
-    CategoricalScoreV1:
-      title: CategoricalScoreV1
-      type: object
-      properties:
-        value:
-          type: number
-          format: double
-          description: Represents the numeric category mapping of the stringValue. If no config is linked, defaults to 0.
-        stringValue:
-          type: string
-          description: The string representation of the score value. If no config is linked, can be any string. Otherwise, must map to a config category
-      required:
-      - value
-      - stringValue
-      allOf:
-      - $ref: '#/components/schemas/BaseScoreV1'
-    ObservationLevel:
-      title: ObservationLevel
-      type: string
-      enum:
-      - DEBUG
-      - DEFAULT
-      - WARNING
-      - ERROR
-    ScoreV1:
-      title: ScoreV1
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - NUMERIC
-        - $ref: '#/components/schemas/NumericScoreV1'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - CATEGORICAL
-        - $ref: '#/components/schemas/CategoricalScoreV1'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - BOOLEAN
-        - $ref: '#/components/schemas/BooleanScoreV1'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - TEXT
-        - $ref: '#/components/schemas/TextScoreV1'
-        required:
-        - dataType
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    TraceWithFullDetails:
-      title: TraceWithFullDetails
-      type: object
-      properties:
-        htmlPath:
-          type: string
-          description: Path of trace in Langfuse UI
-        latency:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: Latency of trace in seconds
-        totalCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: Cost of trace in USD
-        observations:
-          type: array
-          items:
-            $ref: '#/components/schemas/ObservationsView'
-          description: List of observations
-        scores:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScoreV1'
-          description: List of scores
-      required:
-      - htmlPath
-      - observations
-      - scores
-      allOf:
-      - $ref: '#/components/schemas/Trace'
-    Usage:
-      title: Usage
-      type: object
-      description: (Deprecated. Use usageDetails and costDetails instead.) Standard interface for usage and cost
-      properties:
-        input:
-          type: integer
-          description: Number of input units (e.g. tokens)
-        output:
-          type: integer
-          description: Number of output units (e.g. tokens)
-        total:
-          type: integer
-          description: Defaults to input+output if not set
-        unit:
-          type:
-          - string
-          - 'null'
-          description: Unit of measurement
-        inputCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: USD input cost
-        outputCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: USD output cost
-        totalCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: USD total cost, defaults to input+output
-      required:
-      - input
-      - output
-      - total
-    BaseScoreV1:
-      title: BaseScoreV1
-      type: object
-      properties:
-        id:
-          type: string
-        traceId:
-          type: string
-        name:
-          type: string
-        source:
-          $ref: '#/components/schemas/ScoreSource'
-        observationId:
-          type:
-          - string
-          - 'null'
-          description: The observation ID associated with the score
-        timestamp:
-          type: string
-          format: date-time
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        authorUserId:
-          type:
-          - string
-          - 'null'
-          description: The user ID of the author
-        comment:
-          type:
-          - string
-          - 'null'
-          description: Comment on the score
-        metadata:
-          description: Metadata associated with the score
-        configId:
-          type:
-          - string
-          - 'null'
-          description: Reference a score config on a score. When set, config and score name must be equal and value must comply to optionally defined numerical range
-        queueId:
-          type:
-          - string
-          - 'null'
-          description: The annotation queue referenced by the score. Indicates if score was initially created while processing annotation queue.
-        environment:
-          type: string
-          description: The environment from which this score originated. Can be any lowercase alphanumeric string with hyphens and underscores that does not start with 'langfuse'.
-      required:
-      - id
-      - traceId
-      - name
-      - source
-      - timestamp
-      - createdAt
-      - updatedAt
-      - metadata
-      - environment
-    BooleanScoreV1:
-      title: BooleanScoreV1
-      type: object
-      properties:
-        value:
-          type: number
-          format: double
-          description: The numeric value of the score. Equals 1 for "True" and 0 for "False"
-        stringValue:
-          type: string
-          description: The string representation of the score value. Is inferred from the numeric value and equals "True" or "False"
-      required:
-      - value
-      - stringValue
-      allOf:
-      - $ref: '#/components/schemas/BaseScoreV1'
     Trace:
       title: Trace
       type: object
@@ -880,30 +904,6 @@ components:
       - tags
       - public
       - environment
-    TextScoreV1:
-      title: TextScoreV1
-      type: object
-      properties:
-        stringValue:
-          type: string
-          description: The text content of the score (1-500 characters)
-      required:
-      - stringValue
-      allOf:
-      - $ref: '#/components/schemas/BaseScoreV1'
-    Traces:
-      title: Traces
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TraceWithDetails'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
   securitySchemes:
     BasicAuth:
       type: http

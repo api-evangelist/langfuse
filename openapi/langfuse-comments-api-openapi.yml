@@ -235,32 +235,14 @@ components:
       - objectType
       - objectId
       - content
-    CreateCommentRequest:
-      title: CreateCommentRequest
-      type: object
-      properties:
-        projectId:
-          type: string
-          description: The id of the project to attach the comment to.
-        objectType:
-          type: string
-          description: The type of the object to attach the comment to (trace, observation, session, prompt).
-        objectId:
-          type: string
-          description: The id of the object to attach the comment to. If this does not reference a valid existing object, an error will be thrown.
-        content:
-          type: string
-          description: The content of the comment. May include markdown. Currently limited to 5000 characters.
-        authorUserId:
-          type:
-          - string
-          - 'null'
-          description: The id of the user who created the comment.
-      required:
-      - projectId
-      - objectType
-      - objectId
-      - content
+    CommentObjectType:
+      title: CommentObjectType
+      type: string
+      enum:
+      - TRACE
+      - OBSERVATION
+      - SESSION
+      - PROMPT
     GetCommentsResponse:
       title: GetCommentsResponse
       type: object
@@ -304,14 +286,32 @@ components:
           description: The id of the created object in Langfuse
       required:
       - id
-    CommentObjectType:
-      title: CommentObjectType
-      type: string
-      enum:
-      - TRACE
-      - OBSERVATION
-      - SESSION
-      - PROMPT
+    CreateCommentRequest:
+      title: CreateCommentRequest
+      type: object
+      properties:
+        projectId:
+          type: string
+          description: The id of the project to attach the comment to.
+        objectType:
+          type: string
+          description: The type of the object to attach the comment to (trace, observation, session, prompt).
+        objectId:
+          type: string
+          description: The id of the object to attach the comment to. If this does not reference a valid existing object, an error will be thrown.
+        content:
+          type: string
+          description: The content of the comment. May include markdown. Currently limited to 5000 characters.
+        authorUserId:
+          type:
+          - string
+          - 'null'
+          description: The id of the user who created the comment.
+      required:
+      - projectId
+      - objectType
+      - objectId
+      - content
   securitySchemes:
     BasicAuth:
       type: http

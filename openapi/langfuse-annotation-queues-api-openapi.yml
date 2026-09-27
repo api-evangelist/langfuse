@@ -581,70 +581,25 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    DeleteAnnotationQueueAssignmentResponse:
-      title: DeleteAnnotationQueueAssignmentResponse
+    UpdateAnnotationQueueItemRequest:
+      title: UpdateAnnotationQueueItemRequest
       type: object
       properties:
-        success:
-          type: boolean
-      required:
-      - success
-    CreateAnnotationQueueRequest:
-      title: CreateAnnotationQueueRequest
+        status:
+          $ref: '#/components/schemas/AnnotationQueueStatus'
+    PaginatedAnnotationQueues:
+      title: PaginatedAnnotationQueues
       type: object
       properties:
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        scoreConfigIds:
+        data:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/AnnotationQueue'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
       required:
-      - name
-      - scoreConfigIds
-    AnnotationQueue:
-      title: AnnotationQueue
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        scoreConfigIds:
-          type: array
-          items:
-            type: string
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - name
-      - scoreConfigIds
-      - createdAt
-      - updatedAt
-    DeleteAnnotationQueueItemResponse:
-      title: DeleteAnnotationQueueItemResponse
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-      required:
-      - success
-      - message
+      - data
+      - meta
     AnnotationQueueItem:
       title: AnnotationQueueItem
       type: object
@@ -678,12 +633,6 @@ components:
       - status
       - createdAt
       - updatedAt
-    UpdateAnnotationQueueItemRequest:
-      title: UpdateAnnotationQueueItemRequest
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/AnnotationQueueStatus'
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -705,6 +654,30 @@ components:
       - limit
       - totalItems
       - totalPages
+    CreateAnnotationQueueRequest:
+      title: CreateAnnotationQueueRequest
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        scoreConfigIds:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+      - scoreConfigIds
+    AnnotationQueueObjectType:
+      title: AnnotationQueueObjectType
+      type: string
+      enum:
+      - TRACE
+      - OBSERVATION
+      - SESSION
     CreateAnnotationQueueItemRequest:
       title: CreateAnnotationQueueItemRequest
       type: object
@@ -719,46 +692,14 @@ components:
       required:
       - objectId
       - objectType
-    PaginatedAnnotationQueues:
-      title: PaginatedAnnotationQueues
+    DeleteAnnotationQueueAssignmentResponse:
+      title: DeleteAnnotationQueueAssignmentResponse
       type: object
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnnotationQueue'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
+        success:
+          type: boolean
       required:
-      - data
-      - meta
-    PaginatedAnnotationQueueItems:
-      title: PaginatedAnnotationQueueItems
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnnotationQueueItem'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    AnnotationQueueStatus:
-      title: AnnotationQueueStatus
-      type: string
-      enum:
-      - PENDING
-      - COMPLETED
-    AnnotationQueueAssignmentRequest:
-      title: AnnotationQueueAssignmentRequest
-      type: object
-      properties:
-        userId:
-          type: string
-      required:
-      - userId
+      - success
     CreateAnnotationQueueAssignmentResponse:
       title: CreateAnnotationQueueAssignmentResponse
       type: object
@@ -773,13 +714,72 @@ components:
       - userId
       - queueId
       - projectId
-    AnnotationQueueObjectType:
-      title: AnnotationQueueObjectType
+    DeleteAnnotationQueueItemResponse:
+      title: DeleteAnnotationQueueItemResponse
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+      - success
+      - message
+    PaginatedAnnotationQueueItems:
+      title: PaginatedAnnotationQueueItems
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnnotationQueueItem'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    AnnotationQueueAssignmentRequest:
+      title: AnnotationQueueAssignmentRequest
+      type: object
+      properties:
+        userId:
+          type: string
+      required:
+      - userId
+    AnnotationQueueStatus:
+      title: AnnotationQueueStatus
       type: string
       enum:
-      - TRACE
-      - OBSERVATION
-      - SESSION
+      - PENDING
+      - COMPLETED
+    AnnotationQueue:
+      title: AnnotationQueue
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        scoreConfigIds:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - scoreConfigIds
+      - createdAt
+      - updatedAt
   securitySchemes:
     BasicAuth:
       type: http

@@ -301,39 +301,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CreateTextPromptRequest:
-      title: CreateTextPromptRequest
-      type: object
-      properties:
-        name:
-          type: string
-        prompt:
-          type: string
-        config: {}
-        type:
-          $ref: '#/components/schemas/CreateTextPromptType'
-        labels:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of deployment labels of this prompt version.
-        tags:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of tags to apply to all versions of this prompt.
-        commitMessage:
-          type:
-          - string
-          - 'null'
-          description: Commit message for this prompt version.
-      required:
-      - name
-      - prompt
     PromptMetaListResponse:
       title: PromptMetaListResponse
       type: object
@@ -347,178 +314,23 @@ components:
       required:
       - data
       - meta
-    ChatMessageType:
-      title: ChatMessageType
-      type: string
-      enum:
-      - chatmessage
-    ChatMessageWithPlaceholders:
-      title: ChatMessageWithPlaceholders
-      oneOf:
-      - $ref: '#/components/schemas/ChatMessage'
-      - $ref: '#/components/schemas/PlaceholderMessage'
+    ChatPrompt:
+      title: ChatPrompt
+      type: object
+      properties:
+        prompt:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
+      required:
+      - prompt
+      allOf:
+      - $ref: '#/components/schemas/BasePrompt'
     PlaceholderMessageType:
       title: PlaceholderMessageType
       type: string
       enum:
       - placeholder
-    PlaceholderMessage:
-      title: PlaceholderMessage
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          $ref: '#/components/schemas/PlaceholderMessageType'
-      required:
-      - name
-    CreateTextPromptType:
-      title: CreateTextPromptType
-      type: string
-      enum:
-      - text
-    BasePrompt:
-      title: BasePrompt
-      type: object
-      properties:
-        name:
-          type: string
-        version:
-          type: integer
-        config: {}
-        labels:
-          type: array
-          items:
-            type: string
-          description: List of deployment labels of this prompt version.
-        tags:
-          type: array
-          items:
-            type: string
-          description: List of tags. Used to filter via UI and API. The same across versions of a prompt.
-        commitMessage:
-          type:
-          - string
-          - 'null'
-          description: Commit message for this prompt version.
-        resolutionGraph:
-          type:
-          - object
-          - 'null'
-          additionalProperties: true
-          description: The dependency resolution graph for the current prompt. Null if the prompt has no dependencies or if `resolve=false` was used.
-      required:
-      - name
-      - version
-      - config
-      - labels
-      - tags
-    CreateChatPromptType:
-      title: CreateChatPromptType
-      type: string
-      enum:
-      - chat
-    PromptType:
-      title: PromptType
-      type: string
-      enum:
-      - chat
-      - text
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    CreatePromptRequest:
-      title: CreatePromptRequest
-      oneOf:
-      - $ref: '#/components/schemas/CreateChatPromptRequest'
-      - $ref: '#/components/schemas/CreateTextPromptRequest'
-    PromptMeta:
-      title: PromptMeta
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          $ref: '#/components/schemas/PromptType'
-          description: Indicates whether the prompt is a text or chat prompt.
-        versions:
-          type: array
-          items:
-            type: integer
-        labels:
-          type: array
-          items:
-            type: string
-        tags:
-          type: array
-          items:
-            type: string
-        lastUpdatedAt:
-          type: string
-          format: date-time
-        lastConfig:
-          description: Config object of the most recent prompt version that matches the filters (if any are provided)
-      required:
-      - name
-      - type
-      - versions
-      - labels
-      - tags
-      - lastUpdatedAt
-      - lastConfig
-    Prompt:
-      title: Prompt
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - chat
-        - $ref: '#/components/schemas/ChatPrompt'
-        required:
-        - type
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - text
-        - $ref: '#/components/schemas/TextPrompt'
-        required:
-        - type
-    TextPrompt:
-      title: TextPrompt
-      type: object
-      properties:
-        prompt:
-          type: string
-      required:
-      - prompt
-      allOf:
-      - $ref: '#/components/schemas/BasePrompt'
     CreateChatPromptRequest:
       title: CreateChatPromptRequest
       type: object
@@ -555,18 +367,91 @@ components:
       - name
       - prompt
       - type
-    ChatPrompt:
-      title: ChatPrompt
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    PromptMeta:
+      title: PromptMeta
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/PromptType'
+          description: Indicates whether the prompt is a text or chat prompt.
+        versions:
+          type: array
+          items:
+            type: integer
+        labels:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        lastUpdatedAt:
+          type: string
+          format: date-time
+        lastConfig:
+          description: Config object of the most recent prompt version that matches the filters (if any are provided)
+      required:
+      - name
+      - type
+      - versions
+      - labels
+      - tags
+      - lastUpdatedAt
+      - lastConfig
+    PlaceholderMessage:
+      title: PlaceholderMessage
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/PlaceholderMessageType'
+      required:
+      - name
+    TextPrompt:
+      title: TextPrompt
       type: object
       properties:
         prompt:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
+          type: string
       required:
       - prompt
       allOf:
       - $ref: '#/components/schemas/BasePrompt'
+    ChatMessageType:
+      title: ChatMessageType
+      type: string
+      enum:
+      - chatmessage
+    CreatePromptRequest:
+      title: CreatePromptRequest
+      oneOf:
+      - $ref: '#/components/schemas/CreateChatPromptRequest'
+      - $ref: '#/components/schemas/CreateTextPromptRequest'
     ChatMessage:
       title: ChatMessage
       type: object
@@ -580,6 +465,121 @@ components:
       required:
       - role
       - content
+    CreateChatPromptType:
+      title: CreateChatPromptType
+      type: string
+      enum:
+      - chat
+    Prompt:
+      title: Prompt
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - chat
+        - $ref: '#/components/schemas/ChatPrompt'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - text
+        - $ref: '#/components/schemas/TextPrompt'
+        required:
+        - type
+    CreateTextPromptRequest:
+      title: CreateTextPromptRequest
+      type: object
+      properties:
+        name:
+          type: string
+        prompt:
+          type: string
+        config: {}
+        type:
+          $ref: '#/components/schemas/CreateTextPromptType'
+        labels:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of deployment labels of this prompt version.
+        tags:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of tags to apply to all versions of this prompt.
+        commitMessage:
+          type:
+          - string
+          - 'null'
+          description: Commit message for this prompt version.
+      required:
+      - name
+      - prompt
+    BasePrompt:
+      title: BasePrompt
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: integer
+        config: {}
+        labels:
+          type: array
+          items:
+            type: string
+          description: List of deployment labels of this prompt version.
+        tags:
+          type: array
+          items:
+            type: string
+          description: List of tags. Used to filter via UI and API. The same across versions of a prompt.
+        commitMessage:
+          type:
+          - string
+          - 'null'
+          description: Commit message for this prompt version.
+        resolutionGraph:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: The dependency resolution graph for the current prompt. Null if the prompt has no dependencies or if `resolve=false` was used.
+      required:
+      - name
+      - version
+      - config
+      - labels
+      - tags
+    PromptType:
+      title: PromptType
+      type: string
+      enum:
+      - chat
+      - text
+    ChatMessageWithPlaceholders:
+      title: ChatMessageWithPlaceholders
+      oneOf:
+      - $ref: '#/components/schemas/ChatMessage'
+      - $ref: '#/components/schemas/PlaceholderMessage'
+    CreateTextPromptType:
+      title: CreateTextPromptType
+      type: string
+      enum:
+      - text
   securitySchemes:
     BasicAuth:
       type: http

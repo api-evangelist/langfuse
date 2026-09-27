@@ -346,6 +346,110 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    CreateDatasetRequest:
+      title: CreateDatasetRequest
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        metadata: {}
+        inputSchema:
+          description: JSON Schema for validating dataset item inputs. When set, all new and existing dataset items will be validated against this schema.
+        expectedOutputSchema:
+          description: JSON Schema for validating dataset item expected outputs. When set, all new and existing dataset items will be validated against this schema.
+      required:
+      - name
+    DatasetRunItem:
+      title: DatasetRunItem
+      type: object
+      properties:
+        id:
+          type: string
+        datasetRunId:
+          type: string
+        datasetRunName:
+          type: string
+        datasetItemId:
+          type: string
+        traceId:
+          type: string
+        observationId:
+          type:
+          - string
+          - 'null'
+          description: The observation ID associated with this run item
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - datasetRunId
+      - datasetRunName
+      - datasetItemId
+      - traceId
+      - createdAt
+      - updatedAt
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    PaginatedDatasets:
+      title: PaginatedDatasets
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dataset'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    DeleteDatasetRunResponse:
+      title: DeleteDatasetRunResponse
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    DatasetRunWithItems:
+      title: DatasetRunWithItems
+      type: object
+      properties:
+        datasetRunItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetRunItem'
+      required:
+      - datasetRunItems
+      allOf:
+      - $ref: '#/components/schemas/DatasetRun'
     Dataset:
       title: Dataset
       type: object
@@ -380,39 +484,19 @@ components:
       - projectId
       - createdAt
       - updatedAt
-    DatasetRunItem:
-      title: DatasetRunItem
+    PaginatedDatasetRuns:
+      title: PaginatedDatasetRuns
       type: object
       properties:
-        id:
-          type: string
-        datasetRunId:
-          type: string
-        datasetRunName:
-          type: string
-        datasetItemId:
-          type: string
-        traceId:
-          type: string
-        observationId:
-          type:
-          - string
-          - 'null'
-          description: The observation ID associated with this run item
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetRun'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
       required:
-      - id
-      - datasetRunId
-      - datasetRunName
-      - datasetItemId
-      - traceId
-      - createdAt
-      - updatedAt
+      - data
+      - meta
     DatasetRun:
       title: DatasetRun
       type: object
@@ -452,90 +536,6 @@ components:
       - datasetName
       - createdAt
       - updatedAt
-    PaginatedDatasetRuns:
-      title: PaginatedDatasetRuns
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DatasetRun'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    CreateDatasetRequest:
-      title: CreateDatasetRequest
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        metadata: {}
-        inputSchema:
-          description: JSON Schema for validating dataset item inputs. When set, all new and existing dataset items will be validated against this schema.
-        expectedOutputSchema:
-          description: JSON Schema for validating dataset item expected outputs. When set, all new and existing dataset items will be validated against this schema.
-      required:
-      - name
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    DeleteDatasetRunResponse:
-      title: DeleteDatasetRunResponse
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
-    DatasetRunWithItems:
-      title: DatasetRunWithItems
-      type: object
-      properties:
-        datasetRunItems:
-          type: array
-          items:
-            $ref: '#/components/schemas/DatasetRunItem'
-      required:
-      - datasetRunItems
-      allOf:
-      - $ref: '#/components/schemas/DatasetRun'
-    PaginatedDatasets:
-      title: PaginatedDatasets
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Dataset'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
   securitySchemes:
     BasicAuth:
       type: http

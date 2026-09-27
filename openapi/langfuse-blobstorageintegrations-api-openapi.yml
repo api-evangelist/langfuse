@@ -208,13 +208,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    BlobStorageExportMode:
-      title: BlobStorageExportMode
-      type: string
-      enum:
-      - FULL_HISTORY
-      - FROM_TODAY
-      - FROM_CUSTOM_DATE
     BlobStorageIntegrationStatusResponse:
       title: BlobStorageIntegrationStatusResponse
       type: object
@@ -255,81 +248,13 @@ components:
       - projectId
       - syncStatus
       - enabled
-    CreateBlobStorageIntegrationRequest:
-      title: CreateBlobStorageIntegrationRequest
-      type: object
-      properties:
-        projectId:
-          type: string
-          description: ID of the project in which to configure the blob storage integration
-        type:
-          $ref: '#/components/schemas/BlobStorageIntegrationType'
-        bucketName:
-          type: string
-          description: Name of the storage bucket. For AZURE_BLOB_STORAGE, must be a valid Azure container name (3-63 chars, lowercase letters, numbers, and hyphens only, must start and end with a letter or number, no consecutive hyphens).
-        endpoint:
-          type:
-          - string
-          - 'null'
-          description: Custom endpoint URL (required for S3_COMPATIBLE type)
-        region:
-          type: string
-          description: Storage region
-        accessKeyId:
-          type:
-          - string
-          - 'null'
-          description: Access key ID for authentication
-        secretAccessKey:
-          type:
-          - string
-          - 'null'
-          description: Secret access key for authentication (will be encrypted when stored)
-        prefix:
-          type:
-          - string
-          - 'null'
-          description: Path prefix for exported files (must end with forward slash if provided)
-        exportFrequency:
-          $ref: '#/components/schemas/BlobStorageExportFrequency'
-        enabled:
-          type: boolean
-          description: Whether the integration is active
-        forcePathStyle:
-          type: boolean
-          description: Use path-style URLs for S3 requests
-        fileType:
-          $ref: '#/components/schemas/BlobStorageIntegrationFileType'
-        exportMode:
-          $ref: '#/components/schemas/BlobStorageExportMode'
-        exportStartDate:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: Custom start date for exports (required when exportMode is FROM_CUSTOM_DATE)
-        compressed:
-          type:
-          - boolean
-          - 'null'
-          description: Enable gzip compression for exported files (.csv.gz, .json.gz, .jsonl.gz). Defaults to true.
-      required:
-      - projectId
-      - type
-      - bucketName
-      - region
-      - exportFrequency
-      - enabled
-      - forcePathStyle
-      - fileType
-      - exportMode
-    BlobStorageIntegrationType:
-      title: BlobStorageIntegrationType
+    BlobStorageExportMode:
+      title: BlobStorageExportMode
       type: string
       enum:
-      - S3
-      - S3_COMPATIBLE
-      - AZURE_BLOB_STORAGE
+      - FULL_HISTORY
+      - FROM_TODAY
+      - FROM_CUSTOM_DATE
     BlobStorageIntegrationResponse:
       title: BlobStorageIntegrationResponse
       type: object
@@ -411,23 +336,21 @@ components:
       - compressed
       - createdAt
       - updatedAt
-    BlobStorageExportFrequency:
-      title: BlobStorageExportFrequency
+    BlobStorageIntegrationFileType:
+      title: BlobStorageIntegrationFileType
       type: string
       enum:
-      - hourly
-      - daily
-      - weekly
-    BlobStorageIntegrationsResponse:
-      title: BlobStorageIntegrationsResponse
+      - JSON
+      - CSV
+      - JSONL
+    BlobStorageIntegrationDeletionResponse:
+      title: BlobStorageIntegrationDeletionResponse
       type: object
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/BlobStorageIntegrationResponse'
+        message:
+          type: string
       required:
-      - data
+      - message
     BlobStorageSyncStatus:
       title: BlobStorageSyncStatus
       type: string
@@ -455,21 +378,98 @@ components:
         ETL bookmark to determine if new data is available. Note that exports run with a 30-minute lag buffer,
 
         so `lastSyncAt` will always be at least 30 minutes behind real-time.'
-    BlobStorageIntegrationDeletionResponse:
-      title: BlobStorageIntegrationDeletionResponse
+    BlobStorageIntegrationsResponse:
+      title: BlobStorageIntegrationsResponse
       type: object
       properties:
-        message:
-          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlobStorageIntegrationResponse'
       required:
-      - message
-    BlobStorageIntegrationFileType:
-      title: BlobStorageIntegrationFileType
+      - data
+    CreateBlobStorageIntegrationRequest:
+      title: CreateBlobStorageIntegrationRequest
+      type: object
+      properties:
+        projectId:
+          type: string
+          description: ID of the project in which to configure the blob storage integration
+        type:
+          $ref: '#/components/schemas/BlobStorageIntegrationType'
+        bucketName:
+          type: string
+          description: Name of the storage bucket. For AZURE_BLOB_STORAGE, must be a valid Azure container name (3-63 chars, lowercase letters, numbers, and hyphens only, must start and end with a letter or number, no consecutive hyphens).
+        endpoint:
+          type:
+          - string
+          - 'null'
+          description: Custom endpoint URL (required for S3_COMPATIBLE type)
+        region:
+          type: string
+          description: Storage region
+        accessKeyId:
+          type:
+          - string
+          - 'null'
+          description: Access key ID for authentication
+        secretAccessKey:
+          type:
+          - string
+          - 'null'
+          description: Secret access key for authentication (will be encrypted when stored)
+        prefix:
+          type:
+          - string
+          - 'null'
+          description: Path prefix for exported files (must end with forward slash if provided)
+        exportFrequency:
+          $ref: '#/components/schemas/BlobStorageExportFrequency'
+        enabled:
+          type: boolean
+          description: Whether the integration is active
+        forcePathStyle:
+          type: boolean
+          description: Use path-style URLs for S3 requests
+        fileType:
+          $ref: '#/components/schemas/BlobStorageIntegrationFileType'
+        exportMode:
+          $ref: '#/components/schemas/BlobStorageExportMode'
+        exportStartDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Custom start date for exports (required when exportMode is FROM_CUSTOM_DATE)
+        compressed:
+          type:
+          - boolean
+          - 'null'
+          description: Enable gzip compression for exported files (.csv.gz, .json.gz, .jsonl.gz). Defaults to true.
+      required:
+      - projectId
+      - type
+      - bucketName
+      - region
+      - exportFrequency
+      - enabled
+      - forcePathStyle
+      - fileType
+      - exportMode
+    BlobStorageExportFrequency:
+      title: BlobStorageExportFrequency
       type: string
       enum:
-      - JSON
-      - CSV
-      - JSONL
+      - hourly
+      - daily
+      - weekly
+    BlobStorageIntegrationType:
+      title: BlobStorageIntegrationType
+      type: string
+      enum:
+      - S3
+      - S3_COMPATIBLE
+      - AZURE_BLOB_STORAGE
   securitySchemes:
     BasicAuth:
       type: http

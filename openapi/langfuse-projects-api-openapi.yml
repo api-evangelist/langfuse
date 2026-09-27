@@ -421,39 +421,26 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ApiKeySummary:
-      title: ApiKeySummary
+    ApiKeyDeletionResponse:
+      title: ApiKeyDeletionResponse
       type: object
-      description: Summary of an API key
+      description: Response for API key deletion
       properties:
-        id:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        expiresAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        lastUsedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        note:
-          type:
-          - string
-          - 'null'
-        publicKey:
-          type: string
-        displaySecretKey:
-          type: string
+        success:
+          type: boolean
       required:
-      - id
-      - createdAt
-      - publicKey
-      - displaySecretKey
+      - success
+    ApiKeyList:
+      title: ApiKeyList
+      type: object
+      description: List of API keys for a project
+      properties:
+        apiKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiKeySummary'
+      required:
+      - apiKeys
     Project:
       title: Project
       type: object
@@ -492,36 +479,6 @@ components:
       required:
       - id
       - name
-    ApiKeyList:
-      title: ApiKeyList
-      type: object
-      description: List of API keys for a project
-      properties:
-        apiKeys:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApiKeySummary'
-      required:
-      - apiKeys
-    Projects:
-      title: Projects
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Project'
-      required:
-      - data
-    ApiKeyDeletionResponse:
-      title: ApiKeyDeletionResponse
-      type: object
-      description: Response for API key deletion
-      properties:
-        success:
-          type: boolean
-      required:
-      - success
     ProjectDeletionResponse:
       title: ProjectDeletionResponse
       type: object
@@ -558,6 +515,49 @@ components:
       - createdAt
       - publicKey
       - secretKey
+      - displaySecretKey
+    Projects:
+      title: Projects
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+      required:
+      - data
+    ApiKeySummary:
+      title: ApiKeySummary
+      type: object
+      description: Summary of an API key
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        lastUsedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        note:
+          type:
+          - string
+          - 'null'
+        publicKey:
+          type: string
+        displaySecretKey:
+          type: string
+      required:
+      - id
+      - createdAt
+      - publicKey
       - displaySecretKey
   securitySchemes:
     BasicAuth:

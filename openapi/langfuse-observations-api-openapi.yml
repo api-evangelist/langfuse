@@ -430,6 +430,16 @@ components:
       - startTime
       - projectId
       - type
+    ObservationsV2Meta:
+      title: ObservationsV2Meta
+      type: object
+      description: Metadata for cursor-based pagination
+      properties:
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: Base64-encoded cursor to use for retrieving the next page. If not present, there are no more results.
     ObservationsV2Response:
       title: ObservationsV2Response
       type: object
@@ -450,16 +460,6 @@ components:
       required:
       - data
       - meta
-    ObservationsV2Meta:
-      title: ObservationsV2Meta
-      type: object
-      description: Metadata for cursor-based pagination
-      properties:
-        cursor:
-          type:
-          - string
-          - 'null'
-          description: Base64-encoded cursor to use for retrieving the next page. If not present, there are no more results.
   securitySchemes:
     BasicAuth:
       type: http

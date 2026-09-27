@@ -158,6 +158,19 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PaginatedSessions:
+      title: PaginatedSessions
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
     Session:
       title: Session
       type: object
@@ -210,19 +223,6 @@ components:
       - traces
       allOf:
       - $ref: '#/components/schemas/Session'
-    PaginatedSessions:
-      title: PaginatedSessions
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Session'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
     Trace:
       title: Trace
       type: object

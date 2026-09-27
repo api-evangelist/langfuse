@@ -320,6 +320,89 @@ components:
       - usageDetails
       - costDetails
       - environment
+    Usage:
+      title: Usage
+      type: object
+      description: (Deprecated. Use usageDetails and costDetails instead.) Standard interface for usage and cost
+      properties:
+        input:
+          type: integer
+          description: Number of input units (e.g. tokens)
+        output:
+          type: integer
+          description: Number of output units (e.g. tokens)
+        total:
+          type: integer
+          description: Defaults to input+output if not set
+        unit:
+          type:
+          - string
+          - 'null'
+          description: Unit of measurement
+        inputCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: USD input cost
+        outputCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: USD output cost
+        totalCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: USD total cost, defaults to input+output
+      required:
+      - input
+      - output
+      - total
+    ObservationLevel:
+      title: ObservationLevel
+      type: string
+      enum:
+      - DEBUG
+      - DEFAULT
+      - WARNING
+      - ERROR
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    legacyObservationsViews:
+      title: legacyObservationsViews
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObservationsView'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
     ObservationsView:
       title: ObservationsView
       type: object
@@ -389,89 +472,6 @@ components:
           description: The time to the first token in seconds
       allOf:
       - $ref: '#/components/schemas/Observation'
-    legacyObservationsViews:
-      title: legacyObservationsViews
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ObservationsView'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    ObservationLevel:
-      title: ObservationLevel
-      type: string
-      enum:
-      - DEBUG
-      - DEFAULT
-      - WARNING
-      - ERROR
-    Usage:
-      title: Usage
-      type: object
-      description: (Deprecated. Use usageDetails and costDetails instead.) Standard interface for usage and cost
-      properties:
-        input:
-          type: integer
-          description: Number of input units (e.g. tokens)
-        output:
-          type: integer
-          description: Number of output units (e.g. tokens)
-        total:
-          type: integer
-          description: Defaults to input+output if not set
-        unit:
-          type:
-          - string
-          - 'null'
-          description: Unit of measurement
-        inputCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: USD input cost
-        outputCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: USD output cost
-        totalCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: USD total cost, defaults to input+output
-      required:
-      - input
-      - output
-      - total
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
   securitySchemes:
     BasicAuth:
       type: http

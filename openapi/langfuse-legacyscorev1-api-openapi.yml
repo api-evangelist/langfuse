@@ -179,13 +179,15 @@ components:
       required:
       - name
       - value
-    CreateScoreValue:
-      title: CreateScoreValue
-      oneOf:
-      - type: number
-        format: double
-      - type: string
-      description: The value of the score. Must be passed as string for categorical and text scores, and numeric for boolean and numeric scores
+    ScoreDataType:
+      title: ScoreDataType
+      type: string
+      enum:
+      - NUMERIC
+      - BOOLEAN
+      - CATEGORICAL
+      - CORRECTION
+      - TEXT
     legacyCreateScoreSource:
       title: legacyCreateScoreSource
       type: string
@@ -197,15 +199,6 @@ components:
         EVAL is reserved for internal evaluator outputs and is intentionally not
 
         exposed here — use commons.ScoreSource when reading scores.'
-    ScoreDataType:
-      title: ScoreDataType
-      type: string
-      enum:
-      - NUMERIC
-      - BOOLEAN
-      - CATEGORICAL
-      - CORRECTION
-      - TEXT
     legacyCreateScoreResponse:
       title: legacyCreateScoreResponse
       type: object
@@ -215,6 +208,13 @@ components:
           description: The id of the created object in Langfuse
       required:
       - id
+    CreateScoreValue:
+      title: CreateScoreValue
+      oneOf:
+      - type: number
+        format: double
+      - type: string
+      description: The value of the score. Must be passed as string for categorical and text scores, and numeric for boolean and numeric scores
   securitySchemes:
     BasicAuth:
       type: http
