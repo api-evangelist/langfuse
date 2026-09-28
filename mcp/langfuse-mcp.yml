@@ -16,12 +16,22 @@ deployment:
 tools_count: 4
 tools:
 - name: submitFeedback
-  description: ''
+  description: Submit explicit user-approved feedback to the Langfuse team. Before calling, ask permission
+    and show the exact payload. If the user wants a reply, ask them to include their email address in
+    the feedback text; only use an address they explic
 - name: searchLangfuseDocs
-  description: ''
+  description: Semantic search (RAG) over the Langfuse documentation. Use this whenever the user asks
+    a broader question that cannot be answered by a specific single page. Returns a concise answer synthesized
+    from relevant docs. The raw provider response
 - name: getLangfuseDocsPage
-  description: ''
+  description: Fetch the raw Markdown for a single Langfuse docs page. Accepts a docs path (e.g., /docs/observability/overview)
+    or a full https://langfuse.com URL. Returns the exact Markdown (may include front matter). Use when
+    you need a specific page co
 - name: getLangfuseOverview
-  description: ''
+  description: Get a high-level, machine-readable index by downloading https://langfuse.com/llms.txt.
+    Use this at the start of a session when needed to discover key docs endpoints or to seed follow-up
+    calls to searchLangfuseDocs or getLangfuseDocsPage. Re
 tools_source: live tools/list via initialize handshake, 2026-09-11 (signals/audit_mcp_authorship.py --probe)
 authorship: provider
+descriptions_source: live tools/list (authorship probe or saved capture); filled by backfill-tools-from-authorship.py
+  --descriptions, 2026-09-28
