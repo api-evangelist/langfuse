@@ -235,27 +235,6 @@ components:
       - objectType
       - objectId
       - content
-    CommentObjectType:
-      title: CommentObjectType
-      type: string
-      enum:
-      - TRACE
-      - OBSERVATION
-      - SESSION
-      - PROMPT
-    GetCommentsResponse:
-      title: GetCommentsResponse
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Comment'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -277,15 +256,6 @@ components:
       - limit
       - totalItems
       - totalPages
-    CreateCommentResponse:
-      title: CreateCommentResponse
-      type: object
-      properties:
-        id:
-          type: string
-          description: The id of the created object in Langfuse
-      required:
-      - id
     CreateCommentRequest:
       title: CreateCommentRequest
       type: object
@@ -312,6 +282,36 @@ components:
       - objectType
       - objectId
       - content
+    CreateCommentResponse:
+      title: CreateCommentResponse
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the created object in Langfuse
+      required:
+      - id
+    CommentObjectType:
+      title: CommentObjectType
+      type: string
+      enum:
+      - TRACE
+      - OBSERVATION
+      - SESSION
+      - PROMPT
+    GetCommentsResponse:
+      title: GetCommentsResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
   securitySchemes:
     BasicAuth:
       type: http

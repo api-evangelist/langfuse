@@ -116,6 +116,24 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ScoreDataType:
+      title: ScoreDataType
+      type: string
+      enum:
+      - NUMERIC
+      - BOOLEAN
+      - CATEGORICAL
+      - CORRECTION
+      - TEXT
+    legacyCreateScoreResponse:
+      title: legacyCreateScoreResponse
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the created object in Langfuse
+      required:
+      - id
     legacyCreateScoreRequest:
       title: legacyCreateScoreRequest
       type: object
@@ -179,15 +197,6 @@ components:
       required:
       - name
       - value
-    ScoreDataType:
-      title: ScoreDataType
-      type: string
-      enum:
-      - NUMERIC
-      - BOOLEAN
-      - CATEGORICAL
-      - CORRECTION
-      - TEXT
     legacyCreateScoreSource:
       title: legacyCreateScoreSource
       type: string
@@ -199,15 +208,6 @@ components:
         EVAL is reserved for internal evaluator outputs and is intentionally not
 
         exposed here — use commons.ScoreSource when reading scores.'
-    legacyCreateScoreResponse:
-      title: legacyCreateScoreResponse
-      type: object
-      properties:
-        id:
-          type: string
-          description: The id of the created object in Langfuse
-      required:
-      - id
     CreateScoreValue:
       title: CreateScoreValue
       oneOf:

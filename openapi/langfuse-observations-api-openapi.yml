@@ -249,6 +249,36 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ObservationsV2Meta:
+      title: ObservationsV2Meta
+      type: object
+      description: Metadata for cursor-based pagination
+      properties:
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: Base64-encoded cursor to use for retrieving the next page. If not present, there are no more results.
+    ObservationsV2Response:
+      title: ObservationsV2Response
+      type: object
+      description: 'Response containing observations with field-group-based filtering and cursor-based pagination.
+
+
+        The `data` array contains observation objects with only the requested field groups included.
+
+        Use the `cursor` in `meta` to retrieve the next page of results.'
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObservationV2'
+          description: Array of observation objects. Fields included depend on the `fields` parameter in the request.
+        meta:
+          $ref: '#/components/schemas/ObservationsV2Meta'
+      required:
+      - data
+      - meta
     ObservationLevel:
       title: ObservationLevel
       type: string
@@ -430,36 +460,6 @@ components:
       - startTime
       - projectId
       - type
-    ObservationsV2Meta:
-      title: ObservationsV2Meta
-      type: object
-      description: Metadata for cursor-based pagination
-      properties:
-        cursor:
-          type:
-          - string
-          - 'null'
-          description: Base64-encoded cursor to use for retrieving the next page. If not present, there are no more results.
-    ObservationsV2Response:
-      title: ObservationsV2Response
-      type: object
-      description: 'Response containing observations with field-group-based filtering and cursor-based pagination.
-
-
-        The `data` array contains observation objects with only the requested field groups included.
-
-        Use the `cursor` in `meta` to retrieve the next page of results.'
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ObservationV2'
-          description: Array of observation objects. Fields included depend on the `fields` parameter in the request.
-        meta:
-          $ref: '#/components/schemas/ObservationsV2Meta'
-      required:
-      - data
-      - meta
   securitySchemes:
     BasicAuth:
       type: http

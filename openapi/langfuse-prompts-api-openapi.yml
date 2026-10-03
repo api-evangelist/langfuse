@@ -301,72 +301,42 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PromptMetaListResponse:
-      title: PromptMetaListResponse
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PromptMeta'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    ChatPrompt:
-      title: ChatPrompt
-      type: object
-      properties:
-        prompt:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
-      required:
-      - prompt
-      allOf:
-      - $ref: '#/components/schemas/BasePrompt'
     PlaceholderMessageType:
       title: PlaceholderMessageType
       type: string
       enum:
       - placeholder
-    CreateChatPromptRequest:
-      title: CreateChatPromptRequest
+    ChatMessageType:
+      title: ChatMessageType
+      type: string
+      enum:
+      - chatmessage
+    CreateChatPromptType:
+      title: CreateChatPromptType
+      type: string
+      enum:
+      - chat
+    PromptType:
+      title: PromptType
+      type: string
+      enum:
+      - chat
+      - text
+    TextPrompt:
+      title: TextPrompt
       type: object
       properties:
-        name:
-          type: string
         prompt:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
-        config: {}
-        type:
-          $ref: '#/components/schemas/CreateChatPromptType'
-        labels:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of deployment labels of this prompt version.
-        tags:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of tags to apply to all versions of this prompt.
-        commitMessage:
-          type:
-          - string
-          - 'null'
-          description: Commit message for this prompt version.
+          type: string
       required:
-      - name
       - prompt
-      - type
+      allOf:
+      - $ref: '#/components/schemas/BasePrompt'
+    ChatMessageWithPlaceholders:
+      title: ChatMessageWithPlaceholders
+      oneOf:
+      - $ref: '#/components/schemas/ChatMessage'
+      - $ref: '#/components/schemas/PlaceholderMessage'
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -388,88 +358,6 @@ components:
       - limit
       - totalItems
       - totalPages
-    PromptMeta:
-      title: PromptMeta
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          $ref: '#/components/schemas/PromptType'
-          description: Indicates whether the prompt is a text or chat prompt.
-        versions:
-          type: array
-          items:
-            type: integer
-        labels:
-          type: array
-          items:
-            type: string
-        tags:
-          type: array
-          items:
-            type: string
-        lastUpdatedAt:
-          type: string
-          format: date-time
-        lastConfig:
-          description: Config object of the most recent prompt version that matches the filters (if any are provided)
-      required:
-      - name
-      - type
-      - versions
-      - labels
-      - tags
-      - lastUpdatedAt
-      - lastConfig
-    PlaceholderMessage:
-      title: PlaceholderMessage
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          $ref: '#/components/schemas/PlaceholderMessageType'
-      required:
-      - name
-    TextPrompt:
-      title: TextPrompt
-      type: object
-      properties:
-        prompt:
-          type: string
-      required:
-      - prompt
-      allOf:
-      - $ref: '#/components/schemas/BasePrompt'
-    ChatMessageType:
-      title: ChatMessageType
-      type: string
-      enum:
-      - chatmessage
-    CreatePromptRequest:
-      title: CreatePromptRequest
-      oneOf:
-      - $ref: '#/components/schemas/CreateChatPromptRequest'
-      - $ref: '#/components/schemas/CreateTextPromptRequest'
-    ChatMessage:
-      title: ChatMessage
-      type: object
-      properties:
-        role:
-          type: string
-        content:
-          type: string
-        type:
-          $ref: '#/components/schemas/ChatMessageType'
-      required:
-      - role
-      - content
-    CreateChatPromptType:
-      title: CreateChatPromptType
-      type: string
-      enum:
-      - chat
     Prompt:
       title: Prompt
       oneOf:
@@ -495,39 +383,6 @@ components:
         - $ref: '#/components/schemas/TextPrompt'
         required:
         - type
-    CreateTextPromptRequest:
-      title: CreateTextPromptRequest
-      type: object
-      properties:
-        name:
-          type: string
-        prompt:
-          type: string
-        config: {}
-        type:
-          $ref: '#/components/schemas/CreateTextPromptType'
-        labels:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of deployment labels of this prompt version.
-        tags:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of tags to apply to all versions of this prompt.
-        commitMessage:
-          type:
-          - string
-          - 'null'
-          description: Commit message for this prompt version.
-      required:
-      - name
-      - prompt
     BasePrompt:
       title: BasePrompt
       type: object
@@ -564,22 +419,167 @@ components:
       - config
       - labels
       - tags
-    PromptType:
-      title: PromptType
-      type: string
-      enum:
-      - chat
-      - text
-    ChatMessageWithPlaceholders:
-      title: ChatMessageWithPlaceholders
-      oneOf:
-      - $ref: '#/components/schemas/ChatMessage'
-      - $ref: '#/components/schemas/PlaceholderMessage'
+    PromptMetaListResponse:
+      title: PromptMetaListResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PromptMeta'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    PlaceholderMessage:
+      title: PlaceholderMessage
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/PlaceholderMessageType'
+      required:
+      - name
     CreateTextPromptType:
       title: CreateTextPromptType
       type: string
       enum:
       - text
+    PromptMeta:
+      title: PromptMeta
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/PromptType'
+          description: Indicates whether the prompt is a text or chat prompt.
+        versions:
+          type: array
+          items:
+            type: integer
+        labels:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        lastUpdatedAt:
+          type: string
+          format: date-time
+        lastConfig:
+          description: Config object of the most recent prompt version that matches the filters (if any are provided)
+      required:
+      - name
+      - type
+      - versions
+      - labels
+      - tags
+      - lastUpdatedAt
+      - lastConfig
+    CreateChatPromptRequest:
+      title: CreateChatPromptRequest
+      type: object
+      properties:
+        name:
+          type: string
+        prompt:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
+        config: {}
+        type:
+          $ref: '#/components/schemas/CreateChatPromptType'
+        labels:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of deployment labels of this prompt version.
+        tags:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of tags to apply to all versions of this prompt.
+        commitMessage:
+          type:
+          - string
+          - 'null'
+          description: Commit message for this prompt version.
+      required:
+      - name
+      - prompt
+      - type
+    CreatePromptRequest:
+      title: CreatePromptRequest
+      oneOf:
+      - $ref: '#/components/schemas/CreateChatPromptRequest'
+      - $ref: '#/components/schemas/CreateTextPromptRequest'
+    ChatMessage:
+      title: ChatMessage
+      type: object
+      properties:
+        role:
+          type: string
+        content:
+          type: string
+        type:
+          $ref: '#/components/schemas/ChatMessageType'
+      required:
+      - role
+      - content
+    CreateTextPromptRequest:
+      title: CreateTextPromptRequest
+      type: object
+      properties:
+        name:
+          type: string
+        prompt:
+          type: string
+        config: {}
+        type:
+          $ref: '#/components/schemas/CreateTextPromptType'
+        labels:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of deployment labels of this prompt version.
+        tags:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of tags to apply to all versions of this prompt.
+        commitMessage:
+          type:
+          - string
+          - 'null'
+          description: Commit message for this prompt version.
+      required:
+      - name
+      - prompt
+    ChatPrompt:
+      title: ChatPrompt
+      type: object
+      properties:
+        prompt:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
+      required:
+      - prompt
+      allOf:
+      - $ref: '#/components/schemas/BasePrompt'
   securitySchemes:
     BasicAuth:
       type: http

@@ -177,75 +177,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    UpsertLlmConnectionRequest:
-      title: UpsertLlmConnectionRequest
-      type: object
-      description: Request to create or update an LLM connection (upsert)
-      properties:
-        provider:
-          type: string
-          description: Provider name (e.g., 'openai', 'my-gateway'). Must be unique in project, used for upserting.
-        adapter:
-          $ref: '#/components/schemas/LlmAdapter'
-          description: The adapter used to interface with the LLM
-        secretKey:
-          type: string
-          description: Secret key for the LLM API.
-        baseURL:
-          type:
-          - string
-          - 'null'
-          description: Custom base URL for the LLM API
-        customModels:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of custom model names
-        withDefaultModels:
-          type:
-          - boolean
-          - 'null'
-          description: Whether to include default models. Default is true.
-        extraHeaders:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: string
-          description: Extra headers to send with requests
-        config:
-          type:
-          - object
-          - 'null'
-          additionalProperties: true
-          description: 'Adapter-specific configuration. Validation rules: - **Bedrock**: Required. Must be `{"region": "<aws-region>"}` (e.g., `{"region":"us-east-1"}`) - **VertexAI**: Optional. If provided, must be `{"location": "<gcp-location>"}` (e.g., `{"location":"us-central1"}`) - **Other adapters**: Not supported. Omit this field or set to null.'
-      required:
-      - provider
-      - adapter
-      - secretKey
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
     LlmAdapter:
       title: LlmAdapter
       type: string
@@ -256,27 +187,6 @@ components:
       - bedrock
       - google-vertex-ai
       - google-ai-studio
-    PaginatedLlmConnections:
-      title: PaginatedLlmConnections
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/LlmConnection'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    DeleteLlmConnectionResponse:
-      title: DeleteLlmConnectionResponse
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
     LlmConnection:
       title: LlmConnection
       type: object
@@ -333,6 +243,96 @@ components:
       - extraHeaderKeys
       - createdAt
       - updatedAt
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    DeleteLlmConnectionResponse:
+      title: DeleteLlmConnectionResponse
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    UpsertLlmConnectionRequest:
+      title: UpsertLlmConnectionRequest
+      type: object
+      description: Request to create or update an LLM connection (upsert)
+      properties:
+        provider:
+          type: string
+          description: Provider name (e.g., 'openai', 'my-gateway'). Must be unique in project, used for upserting.
+        adapter:
+          $ref: '#/components/schemas/LlmAdapter'
+          description: The adapter used to interface with the LLM
+        secretKey:
+          type: string
+          description: Secret key for the LLM API.
+        baseURL:
+          type:
+          - string
+          - 'null'
+          description: Custom base URL for the LLM API
+        customModels:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of custom model names
+        withDefaultModels:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to include default models. Default is true.
+        extraHeaders:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          description: Extra headers to send with requests
+        config:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: 'Adapter-specific configuration. Validation rules: - **Bedrock**: Required. Must be `{"region": "<aws-region>"}` (e.g., `{"region":"us-east-1"}`) - **VertexAI**: Optional. If provided, must be `{"location": "<gcp-location>"}` (e.g., `{"location":"us-central1"}`) - **Other adapters**: Not supported. Omit this field or set to null.'
+      required:
+      - provider
+      - adapter
+      - secretKey
+    PaginatedLlmConnections:
+      title: PaginatedLlmConnections
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LlmConnection'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
   securitySchemes:
     BasicAuth:
       type: http

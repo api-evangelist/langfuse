@@ -158,38 +158,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedSessions:
-      title: PaginatedSessions
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Session'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    Session:
-      title: Session
-      type: object
-      properties:
-        id:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        projectId:
-          type: string
-        environment:
-          type: string
-          description: The environment from which this session originated.
-      required:
-      - id
-      - createdAt
-      - projectId
-      - environment
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -211,18 +179,25 @@ components:
       - limit
       - totalItems
       - totalPages
-    SessionWithTraces:
-      title: SessionWithTraces
+    Session:
+      title: Session
       type: object
       properties:
-        traces:
-          type: array
-          items:
-            $ref: '#/components/schemas/Trace'
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        projectId:
+          type: string
+        environment:
+          type: string
+          description: The environment from which this session originated.
       required:
-      - traces
-      allOf:
-      - $ref: '#/components/schemas/Session'
+      - id
+      - createdAt
+      - projectId
+      - environment
     Trace:
       title: Trace
       type: object
@@ -282,6 +257,31 @@ components:
       - tags
       - public
       - environment
+    SessionWithTraces:
+      title: SessionWithTraces
+      type: object
+      properties:
+        traces:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trace'
+      required:
+      - traces
+      allOf:
+      - $ref: '#/components/schemas/Session'
+    PaginatedSessions:
+      title: PaginatedSessions
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
   securitySchemes:
     BasicAuth:
       type: http

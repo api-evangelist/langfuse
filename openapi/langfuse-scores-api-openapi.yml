@@ -285,14 +285,109 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    GetScoresResponseDataCorrection:
-      title: GetScoresResponseDataCorrection
+    TextScore:
+      title: TextScore
+      type: object
+      properties:
+        stringValue:
+          type: string
+          description: The text content of the score (1-500 characters)
+      required:
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScore'
+    GetScoresResponseDataBoolean:
+      title: GetScoresResponseDataBoolean
       type: object
       properties:
         trace:
           $ref: '#/components/schemas/GetScoresResponseTraceData'
       allOf:
-      - $ref: '#/components/schemas/CorrectionScore'
+      - $ref: '#/components/schemas/BooleanScore'
+    GetScoresResponseTraceData:
+      title: GetScoresResponseTraceData
+      type: object
+      properties:
+        userId:
+          type:
+          - string
+          - 'null'
+          description: The user ID associated with the trace referenced by score
+        tags:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: A list of tags associated with the trace referenced by score
+        environment:
+          type:
+          - string
+          - 'null'
+          description: The environment of the trace referenced by score
+        sessionId:
+          type:
+          - string
+          - 'null'
+          description: The session ID associated with the trace referenced by score
+    Score:
+      title: Score
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/NumericScore'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/CategoricalScore'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/BooleanScore'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CORRECTION
+        - $ref: '#/components/schemas/CorrectionScore'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - TEXT
+        - $ref: '#/components/schemas/TextScore'
+        required:
+        - dataType
     NumericScore:
       title: NumericScore
       type: object
@@ -305,6 +400,44 @@ components:
       - value
       allOf:
       - $ref: '#/components/schemas/BaseScore'
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    GetScoresResponseDataCategorical:
+      title: GetScoresResponseDataCategorical
+      type: object
+      properties:
+        trace:
+          $ref: '#/components/schemas/GetScoresResponseTraceData'
+      allOf:
+      - $ref: '#/components/schemas/CategoricalScore'
+    ScoreDataType:
+      title: ScoreDataType
+      type: string
+      enum:
+      - NUMERIC
+      - BOOLEAN
+      - CATEGORICAL
+      - CORRECTION
+      - TEXT
     CategoricalScore:
       title: CategoricalScore
       type: object
@@ -321,14 +454,6 @@ components:
       - stringValue
       allOf:
       - $ref: '#/components/schemas/BaseScore'
-    GetScoresResponseDataBoolean:
-      title: GetScoresResponseDataBoolean
-      type: object
-      properties:
-        trace:
-          $ref: '#/components/schemas/GetScoresResponseTraceData'
-      allOf:
-      - $ref: '#/components/schemas/BooleanScore'
     GetScoresResponse:
       title: GetScoresResponse
       type: object
@@ -342,14 +467,127 @@ components:
       required:
       - data
       - meta
-    GetScoresResponseDataCategorical:
-      title: GetScoresResponseDataCategorical
+    GetScoresResponseDataText:
+      title: GetScoresResponseDataText
       type: object
       properties:
         trace:
           $ref: '#/components/schemas/GetScoresResponseTraceData'
       allOf:
-      - $ref: '#/components/schemas/CategoricalScore'
+      - $ref: '#/components/schemas/TextScore'
+    CorrectionScore:
+      title: CorrectionScore
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: The numeric value of the score. Always 0 for correction scores.
+        stringValue:
+          type: string
+          description: The string representation of the correction content
+      required:
+      - value
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScore'
+    GetScoresResponseDataNumeric:
+      title: GetScoresResponseDataNumeric
+      type: object
+      properties:
+        trace:
+          $ref: '#/components/schemas/GetScoresResponseTraceData'
+      allOf:
+      - $ref: '#/components/schemas/NumericScore'
+    GetScoresResponseDataCorrection:
+      title: GetScoresResponseDataCorrection
+      type: object
+      properties:
+        trace:
+          $ref: '#/components/schemas/GetScoresResponseTraceData'
+      allOf:
+      - $ref: '#/components/schemas/CorrectionScore'
+    ScoreSource:
+      title: ScoreSource
+      type: string
+      enum:
+      - ANNOTATION
+      - API
+      - EVAL
+    BooleanScore:
+      title: BooleanScore
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: The numeric value of the score. Equals 1 for "True" and 0 for "False"
+        stringValue:
+          type: string
+          description: The string representation of the score value. Is inferred from the numeric value and equals "True" or "False"
+      required:
+      - value
+      - stringValue
+      allOf:
+      - $ref: '#/components/schemas/BaseScore'
+    GetScoresResponseData:
+      title: GetScoresResponseData
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/GetScoresResponseDataNumeric'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/GetScoresResponseDataCategorical'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/GetScoresResponseDataBoolean'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CORRECTION
+        - $ref: '#/components/schemas/GetScoresResponseDataCorrection'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - TEXT
+        - $ref: '#/components/schemas/GetScoresResponseDataText'
+        required:
+        - dataType
     BaseScore:
       title: BaseScore
       type: object
@@ -423,244 +661,6 @@ components:
       - updatedAt
       - metadata
       - environment
-    ScoreSource:
-      title: ScoreSource
-      type: string
-      enum:
-      - ANNOTATION
-      - API
-      - EVAL
-    Score:
-      title: Score
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - NUMERIC
-        - $ref: '#/components/schemas/NumericScore'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - CATEGORICAL
-        - $ref: '#/components/schemas/CategoricalScore'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - BOOLEAN
-        - $ref: '#/components/schemas/BooleanScore'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - CORRECTION
-        - $ref: '#/components/schemas/CorrectionScore'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - TEXT
-        - $ref: '#/components/schemas/TextScore'
-        required:
-        - dataType
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    GetScoresResponseData:
-      title: GetScoresResponseData
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - NUMERIC
-        - $ref: '#/components/schemas/GetScoresResponseDataNumeric'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - CATEGORICAL
-        - $ref: '#/components/schemas/GetScoresResponseDataCategorical'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - BOOLEAN
-        - $ref: '#/components/schemas/GetScoresResponseDataBoolean'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - CORRECTION
-        - $ref: '#/components/schemas/GetScoresResponseDataCorrection'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - TEXT
-        - $ref: '#/components/schemas/GetScoresResponseDataText'
-        required:
-        - dataType
-    BooleanScore:
-      title: BooleanScore
-      type: object
-      properties:
-        value:
-          type: number
-          format: double
-          description: The numeric value of the score. Equals 1 for "True" and 0 for "False"
-        stringValue:
-          type: string
-          description: The string representation of the score value. Is inferred from the numeric value and equals "True" or "False"
-      required:
-      - value
-      - stringValue
-      allOf:
-      - $ref: '#/components/schemas/BaseScore'
-    CorrectionScore:
-      title: CorrectionScore
-      type: object
-      properties:
-        value:
-          type: number
-          format: double
-          description: The numeric value of the score. Always 0 for correction scores.
-        stringValue:
-          type: string
-          description: The string representation of the correction content
-      required:
-      - value
-      - stringValue
-      allOf:
-      - $ref: '#/components/schemas/BaseScore'
-    ScoreDataType:
-      title: ScoreDataType
-      type: string
-      enum:
-      - NUMERIC
-      - BOOLEAN
-      - CATEGORICAL
-      - CORRECTION
-      - TEXT
-    GetScoresResponseDataNumeric:
-      title: GetScoresResponseDataNumeric
-      type: object
-      properties:
-        trace:
-          $ref: '#/components/schemas/GetScoresResponseTraceData'
-      allOf:
-      - $ref: '#/components/schemas/NumericScore'
-    GetScoresResponseDataText:
-      title: GetScoresResponseDataText
-      type: object
-      properties:
-        trace:
-          $ref: '#/components/schemas/GetScoresResponseTraceData'
-      allOf:
-      - $ref: '#/components/schemas/TextScore'
-    GetScoresResponseTraceData:
-      title: GetScoresResponseTraceData
-      type: object
-      properties:
-        userId:
-          type:
-          - string
-          - 'null'
-          description: The user ID associated with the trace referenced by score
-        tags:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: A list of tags associated with the trace referenced by score
-        environment:
-          type:
-          - string
-          - 'null'
-          description: The environment of the trace referenced by score
-        sessionId:
-          type:
-          - string
-          - 'null'
-          description: The session ID associated with the trace referenced by score
-    TextScore:
-      title: TextScore
-      type: object
-      properties:
-        stringValue:
-          type: string
-          description: The text content of the score (1-500 characters)
-      required:
-      - stringValue
-      allOf:
-      - $ref: '#/components/schemas/BaseScore'
   securitySchemes:
     BasicAuth:
       type: http

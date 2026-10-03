@@ -136,6 +136,54 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    OtelScope:
+      title: OtelScope
+      type: object
+      description: Instrumentation scope information
+      properties:
+        name:
+          type:
+          - string
+          - 'null'
+          description: Instrumentation scope name
+        version:
+          type:
+          - string
+          - 'null'
+          description: Instrumentation scope version
+        attributes:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OtelAttribute'
+          description: Additional scope attributes
+    OtelAttributeValue:
+      title: OtelAttributeValue
+      type: object
+      description: Attribute value wrapper supporting different value types
+      properties:
+        stringValue:
+          type:
+          - string
+          - 'null'
+          description: String value
+        intValue:
+          type:
+          - integer
+          - 'null'
+          description: Integer value
+        doubleValue:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Double value
+        boolValue:
+          type:
+          - boolean
+          - 'null'
+          description: Boolean value
     OtelSpan:
       title: OtelSpan
       type: object
@@ -170,54 +218,11 @@ components:
           description: Span attributes including Langfuse-specific attributes (langfuse.observation.*)
         status:
           description: Span status object
-    OtelAttributeValue:
-      title: OtelAttributeValue
+    OtelTraceResponse:
+      title: OtelTraceResponse
       type: object
-      description: Attribute value wrapper supporting different value types
-      properties:
-        stringValue:
-          type:
-          - string
-          - 'null'
-          description: String value
-        intValue:
-          type:
-          - integer
-          - 'null'
-          description: Integer value
-        doubleValue:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: Double value
-        boolValue:
-          type:
-          - boolean
-          - 'null'
-          description: Boolean value
-    OtelScope:
-      title: OtelScope
-      type: object
-      description: Instrumentation scope information
-      properties:
-        name:
-          type:
-          - string
-          - 'null'
-          description: Instrumentation scope name
-        version:
-          type:
-          - string
-          - 'null'
-          description: Instrumentation scope version
-        attributes:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/OtelAttribute'
-          description: Additional scope attributes
+      description: Response from trace export request. Empty object indicates success.
+      properties: {}
     OtelScopeSpan:
       title: OtelScopeSpan
       type: object
@@ -246,11 +251,6 @@ components:
         value:
           $ref: '#/components/schemas/OtelAttributeValue'
           description: Attribute value
-    OtelTraceResponse:
-      title: OtelTraceResponse
-      type: object
-      description: Response from trace export request. Empty object indicates success.
-      properties: {}
     OtelResource:
       title: OtelResource
       type: object

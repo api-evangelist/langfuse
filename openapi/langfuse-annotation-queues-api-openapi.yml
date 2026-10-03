@@ -581,25 +581,75 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    UpdateAnnotationQueueItemRequest:
-      title: UpdateAnnotationQueueItemRequest
+    DeleteAnnotationQueueItemResponse:
+      title: DeleteAnnotationQueueItemResponse
       type: object
       properties:
-        status:
-          $ref: '#/components/schemas/AnnotationQueueStatus'
-    PaginatedAnnotationQueues:
-      title: PaginatedAnnotationQueues
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+      - success
+      - message
+    CreateAnnotationQueueRequest:
+      title: CreateAnnotationQueueRequest
       type: object
       properties:
-        data:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        scoreConfigIds:
           type: array
           items:
-            $ref: '#/components/schemas/AnnotationQueue'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
+            type: string
       required:
-      - data
-      - meta
+      - name
+      - scoreConfigIds
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    CreateAnnotationQueueItemRequest:
+      title: CreateAnnotationQueueItemRequest
+      type: object
+      properties:
+        objectId:
+          type: string
+        objectType:
+          $ref: '#/components/schemas/AnnotationQueueObjectType'
+        status:
+          $ref: '#/components/schemas/AnnotationQueueStatus'
+          description: Defaults to PENDING for new queue items
+      required:
+      - objectId
+      - objectType
+    AnnotationQueueStatus:
+      title: AnnotationQueueStatus
+      type: string
+      enum:
+      - PENDING
+      - COMPLETED
     AnnotationQueueItem:
       title: AnnotationQueueItem
       type: object
@@ -633,65 +683,12 @@ components:
       - status
       - createdAt
       - updatedAt
-    utilsMetaResponse:
-      title: utilsMetaResponse
+    UpdateAnnotationQueueItemRequest:
+      title: UpdateAnnotationQueueItemRequest
       type: object
       properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    CreateAnnotationQueueRequest:
-      title: CreateAnnotationQueueRequest
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        scoreConfigIds:
-          type: array
-          items:
-            type: string
-      required:
-      - name
-      - scoreConfigIds
-    AnnotationQueueObjectType:
-      title: AnnotationQueueObjectType
-      type: string
-      enum:
-      - TRACE
-      - OBSERVATION
-      - SESSION
-    CreateAnnotationQueueItemRequest:
-      title: CreateAnnotationQueueItemRequest
-      type: object
-      properties:
-        objectId:
-          type: string
-        objectType:
-          $ref: '#/components/schemas/AnnotationQueueObjectType'
         status:
           $ref: '#/components/schemas/AnnotationQueueStatus'
-          description: Defaults to PENDING for new queue items
-      required:
-      - objectId
-      - objectType
     DeleteAnnotationQueueAssignmentResponse:
       title: DeleteAnnotationQueueAssignmentResponse
       type: object
@@ -714,44 +711,6 @@ components:
       - userId
       - queueId
       - projectId
-    DeleteAnnotationQueueItemResponse:
-      title: DeleteAnnotationQueueItemResponse
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-      required:
-      - success
-      - message
-    PaginatedAnnotationQueueItems:
-      title: PaginatedAnnotationQueueItems
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnnotationQueueItem'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    AnnotationQueueAssignmentRequest:
-      title: AnnotationQueueAssignmentRequest
-      type: object
-      properties:
-        userId:
-          type: string
-      required:
-      - userId
-    AnnotationQueueStatus:
-      title: AnnotationQueueStatus
-      type: string
-      enum:
-      - PENDING
-      - COMPLETED
     AnnotationQueue:
       title: AnnotationQueue
       type: object
@@ -780,6 +739,47 @@ components:
       - scoreConfigIds
       - createdAt
       - updatedAt
+    PaginatedAnnotationQueues:
+      title: PaginatedAnnotationQueues
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnnotationQueue'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    AnnotationQueueObjectType:
+      title: AnnotationQueueObjectType
+      type: string
+      enum:
+      - TRACE
+      - OBSERVATION
+      - SESSION
+    AnnotationQueueAssignmentRequest:
+      title: AnnotationQueueAssignmentRequest
+      type: object
+      properties:
+        userId:
+          type: string
+      required:
+      - userId
+    PaginatedAnnotationQueueItems:
+      title: PaginatedAnnotationQueueItems
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnnotationQueueItem'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
   securitySchemes:
     BasicAuth:
       type: http

@@ -420,6 +420,76 @@ components:
       required:
       - userId
       - role
+    MembershipDeletionResponse:
+      title: MembershipDeletionResponse
+      type: object
+      properties:
+        message:
+          type: string
+        userId:
+          type: string
+      required:
+      - message
+      - userId
+    OrganizationProject:
+      title: OrganizationProject
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - createdAt
+      - updatedAt
+    MembershipRole:
+      title: MembershipRole
+      type: string
+      enum:
+      - OWNER
+      - ADMIN
+      - MEMBER
+      - VIEWER
+    OrganizationProjectsResponse:
+      title: OrganizationProjectsResponse
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationProject'
+      required:
+      - projects
+    MembershipResponse:
+      title: MembershipResponse
+      type: object
+      properties:
+        userId:
+          type: string
+        role:
+          $ref: '#/components/schemas/MembershipRole'
+        email:
+          type: string
+        name:
+          type: string
+      required:
+      - userId
+      - role
+      - email
+      - name
     OrganizationApiKey:
       title: OrganizationApiKey
       type: object
@@ -452,58 +522,6 @@ components:
       - createdAt
       - publicKey
       - displaySecretKey
-    OrganizationProject:
-      title: OrganizationProject
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        metadata:
-          type:
-          - object
-          - 'null'
-          additionalProperties: true
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - name
-      - createdAt
-      - updatedAt
-    MembershipDeletionResponse:
-      title: MembershipDeletionResponse
-      type: object
-      properties:
-        message:
-          type: string
-        userId:
-          type: string
-      required:
-      - message
-      - userId
-    MembershipResponse:
-      title: MembershipResponse
-      type: object
-      properties:
-        userId:
-          type: string
-        role:
-          $ref: '#/components/schemas/MembershipRole'
-        email:
-          type: string
-        name:
-          type: string
-      required:
-      - userId
-      - role
-      - email
-      - name
     MembershipsResponse:
       title: MembershipsResponse
       type: object
@@ -514,14 +532,6 @@ components:
             $ref: '#/components/schemas/MembershipResponse'
       required:
       - memberships
-    MembershipRole:
-      title: MembershipRole
-      type: string
-      enum:
-      - OWNER
-      - ADMIN
-      - MEMBER
-      - VIEWER
     OrganizationApiKeysResponse:
       title: OrganizationApiKeysResponse
       type: object
@@ -532,16 +542,6 @@ components:
             $ref: '#/components/schemas/OrganizationApiKey'
       required:
       - apiKeys
-    OrganizationProjectsResponse:
-      title: OrganizationProjectsResponse
-      type: object
-      properties:
-        projects:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationProject'
-      required:
-      - projects
   securitySchemes:
     BasicAuth:
       type: http

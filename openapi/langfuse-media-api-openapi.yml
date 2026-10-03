@@ -170,59 +170,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    GetMediaUploadUrlRequest:
-      title: GetMediaUploadUrlRequest
-      type: object
-      properties:
-        traceId:
-          type: string
-          description: The trace ID associated with the media record
-        observationId:
-          type:
-          - string
-          - 'null'
-          description: The observation ID associated with the media record. If the media record is associated directly with a trace, this will be null.
-        contentType:
-          $ref: '#/components/schemas/MediaContentType'
-        contentLength:
-          type: integer
-          description: The size of the media record in bytes
-        sha256Hash:
-          type: string
-          description: The SHA-256 hash of the media record
-        field:
-          type: string
-          description: The trace / observation field the media record is associated with. This can be one of `input`, `output`, `metadata`
-      required:
-      - traceId
-      - contentType
-      - contentLength
-      - sha256Hash
-      - field
-    PatchMediaBody:
-      title: PatchMediaBody
-      type: object
-      properties:
-        uploadedAt:
-          type: string
-          format: date-time
-          description: The date and time when the media record was uploaded
-        uploadHttpStatus:
-          type: integer
-          description: The HTTP status code of the upload
-        uploadHttpError:
-          type:
-          - string
-          - 'null'
-          description: The HTTP error message of the upload
-        uploadTimeMs:
-          type:
-          - integer
-          - 'null'
-          description: The time in milliseconds it took to upload the media record
-      required:
-      - uploadedAt
-      - uploadHttpStatus
     GetMediaResponse:
       title: GetMediaResponse
       type: object
@@ -253,6 +200,73 @@ components:
       - uploadedAt
       - url
       - urlExpiry
+    PatchMediaBody:
+      title: PatchMediaBody
+      type: object
+      properties:
+        uploadedAt:
+          type: string
+          format: date-time
+          description: The date and time when the media record was uploaded
+        uploadHttpStatus:
+          type: integer
+          description: The HTTP status code of the upload
+        uploadHttpError:
+          type:
+          - string
+          - 'null'
+          description: The HTTP error message of the upload
+        uploadTimeMs:
+          type:
+          - integer
+          - 'null'
+          description: The time in milliseconds it took to upload the media record
+      required:
+      - uploadedAt
+      - uploadHttpStatus
+    GetMediaUploadUrlRequest:
+      title: GetMediaUploadUrlRequest
+      type: object
+      properties:
+        traceId:
+          type: string
+          description: The trace ID associated with the media record
+        observationId:
+          type:
+          - string
+          - 'null'
+          description: The observation ID associated with the media record. If the media record is associated directly with a trace, this will be null.
+        contentType:
+          $ref: '#/components/schemas/MediaContentType'
+        contentLength:
+          type: integer
+          description: The size of the media record in bytes
+        sha256Hash:
+          type: string
+          description: The SHA-256 hash of the media record
+        field:
+          type: string
+          description: The trace / observation field the media record is associated with. This can be one of `input`, `output`, `metadata`
+      required:
+      - traceId
+      - contentType
+      - contentLength
+      - sha256Hash
+      - field
+    GetMediaUploadUrlResponse:
+      title: GetMediaUploadUrlResponse
+      type: object
+      properties:
+        uploadUrl:
+          type:
+          - string
+          - 'null'
+          description: The presigned upload URL. If the asset is already uploaded, this will be null
+        mediaId:
+          type: string
+          description: The unique langfuse identifier of a media record
+      required:
+      - mediaId
     MediaContentType:
       title: MediaContentType
       type: string
@@ -310,20 +324,6 @@ components:
       - application/x-tar
       - application/x-7z-compressed
       description: The MIME type of the media record
-    GetMediaUploadUrlResponse:
-      title: GetMediaUploadUrlResponse
-      type: object
-      properties:
-        uploadUrl:
-          type:
-          - string
-          - 'null'
-          description: The presigned upload URL. If the asset is already uploaded, this will be null
-        mediaId:
-          type: string
-          description: The unique langfuse identifier of a media record
-      required:
-      - mediaId
   securitySchemes:
     BasicAuth:
       type: http
