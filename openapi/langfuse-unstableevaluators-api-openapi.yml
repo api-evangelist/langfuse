@@ -343,244 +343,34 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    unstablePublicApiErrorDetails:
-      title: unstablePublicApiErrorDetails
-      type: object
-      description: 'Optional structured context attached to an unstable-evals error.
+    unstableEvaluatorScope:
+      title: unstableEvaluatorScope
+      type: string
+      enum:
+      - project
+      - managed
+      description: 'Where an evaluator comes from.
 
 
-        The populated fields depend on the error `code`:
+        - `project`: created in your project
 
-        - request parsing failures populate `issues`
-
-        - filter validation failures populate `field`, `column`, `invalidValues`, and `allowedValues`
-
-        - variable mapping failures populate `field`, `variable`, or `variables`
-
-        - JSONPath validation failures populate `field`, `variable`, and `value`
-
-        - evaluator preflight failures populate `evaluatorName`, `provider`, and `model`
-
-        - rate limiting populates `retryAfterSeconds`, `limit`, `remaining`, and `resetAt`'
-      properties:
-        issues:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/unstablePublicApiValidationIssue'
-          description: Validation issues for malformed request bodies or query parameters.
-        field:
-          type:
-          - string
-          - 'null'
-          description: Path-like reference to the failing field, for example `mapping[1].jsonPath`.
-        column:
-          type:
-          - string
-          - 'null'
-          description: Filter column that failed validation.
-        invalidValues:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: Unsupported values supplied by the caller.
-        allowedValues:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: Allowed values for the failing filter column.
-        variable:
-          type:
-          - string
-          - 'null'
-          description: Evaluator variable involved in the failure.
-        variables:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: Multiple evaluator variables involved in the failure, for example missing mappings.
-        value:
-          type:
-          - string
-          - 'null'
-          description: Raw invalid value supplied by the caller.
-        evaluatorName:
-          type:
-          - string
-          - 'null'
-          description: Evaluator name used during preflight validation.
-        provider:
-          type:
-          - string
-          - 'null'
-          description: Provider resolved during evaluator preflight, if any.
-        model:
-          type:
-          - string
-          - 'null'
-          description: Model resolved during evaluator preflight, if any.
-        retryAfterSeconds:
-          type:
-          - integer
-          - 'null'
-          description: Suggested retry delay for rate-limited requests.
-        limit:
-          type:
-          - integer
-          - 'null'
-          description: Numeric limit associated with the failure, for example the active evaluation-rule cap or the current rate-limit window.
-        remaining:
-          type:
-          - integer
-          - 'null'
-          description: Remaining requests in the current rate-limit window.
-        resetAt:
-          type:
-          - string
-          - 'null'
-          description: ISO-8601 timestamp when the current rate-limit window resets.
-    unstableEvaluatorOutputFieldDefinition:
-      title: unstableEvaluatorOutputFieldDefinition
+        - `managed`: provided by Langfuse'
+    unstablePublicCategoricalEvaluatorOutputScoreDefinition:
+      title: unstablePublicCategoricalEvaluatorOutputScoreDefinition
       type: object
       properties:
         description:
           type: string
-          description: Human-readable instructions for what the evaluator should return in this field.
+        categories:
+          type: array
+          items:
+            type: string
+        shouldAllowMultipleMatches:
+          type: boolean
       required:
       - description
-    unstablePublicBooleanEvaluatorOutputDefinition:
-      title: unstablePublicBooleanEvaluatorOutputDefinition
-      type: object
-      properties:
-        dataType:
-          $ref: '#/components/schemas/unstableEvaluatorOutputDataType'
-          description: Always `BOOLEAN`.
-        reasoning:
-          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
-        score:
-          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
-      required:
-      - dataType
-      - reasoning
-      - score
-    unstableEvaluatorModelConfig:
-      title: unstableEvaluatorModelConfig
-      type: object
-      description: 'Optional explicit model configuration for an evaluator.
-
-
-        If omitted, Langfuse uses the project''s default evaluation model.
-
-        If provided, the model must be available to the project when the evaluator or evaluation rule is enabled.
-
-
-        To discover valid configured `provider` values for a project, call `GET /api/public/llm-connections` and read the `provider` field from the returned connections.
-
-        Use a `provider` value that matches one of the connections already configured in the same project.
-
-
-        Recovery guidance:
-
-        - If evaluator creation returns `422` with `code=evaluator_preflight_failed`, either provide a valid explicit `modelConfig` here or configure the project''s default evaluation model, then retry the same request.'
-      properties:
-        provider:
-          type: string
-          description: 'Provider identifier to use for this evaluator, for example `openai` or `anthropic`.
-
-
-            To discover valid values for the current project, call `GET /api/public/llm-connections` and use one of the returned `provider` values.'
-          example: openai
-        model:
-          type: string
-          description: Model identifier exposed by the provider, for example `gpt-4.1-mini`.
-          example: gpt-4.1-mini
-      required:
-      - provider
-      - model
-    unstableCreateEvaluatorRequest:
-      title: unstableCreateEvaluatorRequest
-      type: object
-      description: 'Request body for creating an evaluator.
-
-
-        If the same `name` already exists in your project, Langfuse creates the next version and returns it.
-
-        Existing evaluation rules in the same project are then moved to that new latest version automatically.'
-      properties:
-        name:
-          type: string
-          description: Evaluator name within the authenticated project.
-          example: answer-correctness
-        prompt:
-          type: string
-          description: Prompt template used by the evaluator.
-          example: 'You are grading an answer.
-
-
-            Input:
-
-            {{input}}
-
-
-            Output:
-
-            {{output}}
-
-
-            Return a score between 0 and 1.
-
-            '
-        outputDefinition:
-          $ref: '#/components/schemas/unstableEvaluatorOutputDefinition'
-          description: 'Structured output schema the evaluator must return.
-
-
-            Always send `dataType`.
-
-            Do not send `version`; it is an internal storage detail and not part of the public request contract.'
-        modelConfig:
-          $ref: '#/components/schemas/unstableEvaluatorModelConfig'
-          description: Optional explicit model configuration. Omit or set to `null` to use the project default evaluation model.
-      required:
-      - name
-      - prompt
-      - outputDefinition
-    unstablePublicApiError:
-      title: unstablePublicApiError
-      type: object
-      description: 'Standard error envelope for the unstable evaluators API.
-
-
-        Response handling guidance:
-
-        - Use the HTTP status code for the broad class of failure.
-
-        - Use `code` for precise branching in SDKs, CLIs, or agents.
-
-        - Inspect `details` for field-level validation context such as invalid filter values, malformed JSONPath expressions, or missing variable mappings.
-
-        - Retry only after fixing the specific issue described by `code` and `details`.'
-      properties:
-        message:
-          type: string
-          description: Human-readable description of the failure.
-          example: 'Filter column "type" contains unsupported value(s): INVALID'
-        code:
-          $ref: '#/components/schemas/unstablePublicApiErrorCode'
-          description: Stable machine-readable error code.
-        details:
-          $ref: '#/components/schemas/unstablePublicApiErrorDetails'
-          description: Optional structured error context. Inspect the populated fields based on `code`.
-      required:
-      - message
-      - code
+      - categories
+      - shouldAllowMultipleMatches
     unstablePublicCategoricalEvaluatorOutputDefinition:
       title: unstablePublicCategoricalEvaluatorOutputDefinition
       type: object
@@ -613,22 +403,172 @@ components:
         - `BOOLEAN`: a boolean score such as `true`
 
         - `CATEGORICAL`: one or more category labels from a fixed list'
-    unstablePublicCategoricalEvaluatorOutputScoreDefinition:
-      title: unstablePublicCategoricalEvaluatorOutputScoreDefinition
+    unstableEvaluatorType:
+      title: unstableEvaluatorType
+      type: string
+      enum:
+      - llm_as_judge
+      description: 'The evaluator engine type.
+
+
+        The unstable public API currently supports only LLM-as-a-judge evaluators.'
+    unstablePublicBooleanEvaluatorOutputDefinition:
+      title: unstablePublicBooleanEvaluatorOutputDefinition
       type: object
       properties:
-        description:
-          type: string
-        categories:
-          type: array
-          items:
-            type: string
-        shouldAllowMultipleMatches:
-          type: boolean
+        dataType:
+          $ref: '#/components/schemas/unstableEvaluatorOutputDataType'
+          description: Always `BOOLEAN`.
+        reasoning:
+          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
+        score:
+          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
       required:
-      - description
-      - categories
-      - shouldAllowMultipleMatches
+      - dataType
+      - reasoning
+      - score
+    unstablePublicApiErrorCode:
+      title: unstablePublicApiErrorCode
+      type: string
+      enum:
+      - authentication_failed
+      - access_denied
+      - invalid_request
+      - invalid_query
+      - invalid_body
+      - invalid_filter_value
+      - invalid_json_path
+      - invalid_variable_mapping
+      - missing_variable_mapping
+      - duplicate_variable_mapping
+      - resource_not_found
+      - name_conflict
+      - evaluator_preflight_failed
+      - conflict
+      - unprocessable_content
+      - rate_limited
+      - method_not_allowed
+      - internal_error
+      description: 'Machine-readable error code returned by the unstable evaluators API.
+
+
+        SDKs, CLIs, and agents should branch on `code` rather than parsing the human-readable `message`.
+
+        The HTTP status still indicates the broad error class, while `code` gives the specific failure reason.'
+    unstablePublicNumericEvaluatorOutputDefinition:
+      title: unstablePublicNumericEvaluatorOutputDefinition
+      type: object
+      properties:
+        dataType:
+          $ref: '#/components/schemas/unstableEvaluatorOutputDataType'
+          description: Always `NUMERIC`.
+        reasoning:
+          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
+        score:
+          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
+      required:
+      - dataType
+      - reasoning
+      - score
+    unstableEvaluatorOutputDefinition:
+      title: unstableEvaluatorOutputDefinition
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/unstablePublicNumericEvaluatorOutputDefinition'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/unstablePublicBooleanEvaluatorOutputDefinition'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/unstablePublicCategoricalEvaluatorOutputDefinition'
+        required:
+        - dataType
+      description: 'Structured output definition to send when creating an evaluator.
+
+
+        Agent guidance:
+
+        - `dataType` is required.
+
+        - Do not send `version`; that is an internal storage detail and is not part of the public request contract.
+
+        - For `NUMERIC` and `BOOLEAN`, provide `reasoning.description` and `score.description`.
+
+        - For `CATEGORICAL`, also provide `score.categories` and `score.shouldAllowMultipleMatches`.'
+    unstablePublicEvaluatorOutputDefinition:
+      title: unstablePublicEvaluatorOutputDefinition
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/unstablePublicNumericEvaluatorOutputDefinition'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/unstablePublicBooleanEvaluatorOutputDefinition'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/unstablePublicCategoricalEvaluatorOutputDefinition'
+        required:
+        - dataType
+      description: 'Evaluator output definition returned by the public API.
+
+
+        This response always includes `dataType` and never includes an internal output-definition `version`.
+
+        Legacy stored evaluator definitions are normalized into this shape before they are returned.
+
+
+        Use this response shape when deciding how to interpret future evaluation scores:
+
+        - `NUMERIC`: expect numeric score values
+
+        - `BOOLEAN`: expect `true` / `false`
+
+        - `CATEGORICAL`: expect one or more values from `score.categories`'
     unstableEvaluator:
       title: unstableEvaluator
       type: object
@@ -751,21 +691,263 @@ components:
       - evaluationRuleCount
       - createdAt
       - updatedAt
-    unstablePublicNumericEvaluatorOutputDefinition:
-      title: unstablePublicNumericEvaluatorOutputDefinition
+    unstablePublicApiErrorDetails:
+      title: unstablePublicApiErrorDetails
+      type: object
+      description: 'Optional structured context attached to an unstable-evals error.
+
+
+        The populated fields depend on the error `code`:
+
+        - request parsing failures populate `issues`
+
+        - filter validation failures populate `field`, `column`, `invalidValues`, and `allowedValues`
+
+        - variable mapping failures populate `field`, `variable`, or `variables`
+
+        - JSONPath validation failures populate `field`, `variable`, and `value`
+
+        - evaluator preflight failures populate `evaluatorName`, `provider`, and `model`
+
+        - rate limiting populates `retryAfterSeconds`, `limit`, `remaining`, and `resetAt`'
+      properties:
+        issues:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/unstablePublicApiValidationIssue'
+          description: Validation issues for malformed request bodies or query parameters.
+        field:
+          type:
+          - string
+          - 'null'
+          description: Path-like reference to the failing field, for example `mapping[1].jsonPath`.
+        column:
+          type:
+          - string
+          - 'null'
+          description: Filter column that failed validation.
+        invalidValues:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Unsupported values supplied by the caller.
+        allowedValues:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Allowed values for the failing filter column.
+        variable:
+          type:
+          - string
+          - 'null'
+          description: Evaluator variable involved in the failure.
+        variables:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Multiple evaluator variables involved in the failure, for example missing mappings.
+        value:
+          type:
+          - string
+          - 'null'
+          description: Raw invalid value supplied by the caller.
+        evaluatorName:
+          type:
+          - string
+          - 'null'
+          description: Evaluator name used during preflight validation.
+        provider:
+          type:
+          - string
+          - 'null'
+          description: Provider resolved during evaluator preflight, if any.
+        model:
+          type:
+          - string
+          - 'null'
+          description: Model resolved during evaluator preflight, if any.
+        retryAfterSeconds:
+          type:
+          - integer
+          - 'null'
+          description: Suggested retry delay for rate-limited requests.
+        limit:
+          type:
+          - integer
+          - 'null'
+          description: Numeric limit associated with the failure, for example the active evaluation-rule cap or the current rate-limit window.
+        remaining:
+          type:
+          - integer
+          - 'null'
+          description: Remaining requests in the current rate-limit window.
+        resetAt:
+          type:
+          - string
+          - 'null'
+          description: ISO-8601 timestamp when the current rate-limit window resets.
+    unstableCreateEvaluatorRequest:
+      title: unstableCreateEvaluatorRequest
+      type: object
+      description: 'Request body for creating an evaluator.
+
+
+        If the same `name` already exists in your project, Langfuse creates the next version and returns it.
+
+        Existing evaluation rules in the same project are then moved to that new latest version automatically.'
+      properties:
+        name:
+          type: string
+          description: Evaluator name within the authenticated project.
+          example: answer-correctness
+        prompt:
+          type: string
+          description: Prompt template used by the evaluator.
+          example: 'You are grading an answer.
+
+
+            Input:
+
+            {{input}}
+
+
+            Output:
+
+            {{output}}
+
+
+            Return a score between 0 and 1.
+
+            '
+        outputDefinition:
+          $ref: '#/components/schemas/unstableEvaluatorOutputDefinition'
+          description: 'Structured output schema the evaluator must return.
+
+
+            Always send `dataType`.
+
+            Do not send `version`; it is an internal storage detail and not part of the public request contract.'
+        modelConfig:
+          $ref: '#/components/schemas/unstableEvaluatorModelConfig'
+          description: Optional explicit model configuration. Omit or set to `null` to use the project default evaluation model.
+      required:
+      - name
+      - prompt
+      - outputDefinition
+    unstableEvaluatorOutputFieldDefinition:
+      title: unstableEvaluatorOutputFieldDefinition
       type: object
       properties:
-        dataType:
-          $ref: '#/components/schemas/unstableEvaluatorOutputDataType'
-          description: Always `NUMERIC`.
-        reasoning:
-          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
-        score:
-          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
+        description:
+          type: string
+          description: Human-readable instructions for what the evaluator should return in this field.
       required:
-      - dataType
-      - reasoning
-      - score
+      - description
+    unstableEvaluators:
+      title: unstableEvaluators
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/unstableEvaluator'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    unstableEvaluatorModelConfig:
+      title: unstableEvaluatorModelConfig
+      type: object
+      description: 'Optional explicit model configuration for an evaluator.
+
+
+        If omitted, Langfuse uses the project''s default evaluation model.
+
+        If provided, the model must be available to the project when the evaluator or evaluation rule is enabled.
+
+
+        To discover valid configured `provider` values for a project, call `GET /api/public/llm-connections` and read the `provider` field from the returned connections.
+
+        Use a `provider` value that matches one of the connections already configured in the same project.
+
+
+        Recovery guidance:
+
+        - If evaluator creation returns `422` with `code=evaluator_preflight_failed`, either provide a valid explicit `modelConfig` here or configure the project''s default evaluation model, then retry the same request.'
+      properties:
+        provider:
+          type: string
+          description: 'Provider identifier to use for this evaluator, for example `openai` or `anthropic`.
+
+
+            To discover valid values for the current project, call `GET /api/public/llm-connections` and use one of the returned `provider` values.'
+          example: openai
+        model:
+          type: string
+          description: Model identifier exposed by the provider, for example `gpt-4.1-mini`.
+          example: gpt-4.1-mini
+      required:
+      - provider
+      - model
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    unstablePublicApiError:
+      title: unstablePublicApiError
+      type: object
+      description: 'Standard error envelope for the unstable evaluators API.
+
+
+        Response handling guidance:
+
+        - Use the HTTP status code for the broad class of failure.
+
+        - Use `code` for precise branching in SDKs, CLIs, or agents.
+
+        - Inspect `details` for field-level validation context such as invalid filter values, malformed JSONPath expressions, or missing variable mappings.
+
+        - Retry only after fixing the specific issue described by `code` and `details`.'
+      properties:
+        message:
+          type: string
+          description: Human-readable description of the failure.
+          example: 'Filter column "type" contains unsupported value(s): INVALID'
+        code:
+          $ref: '#/components/schemas/unstablePublicApiErrorCode'
+          description: Stable machine-readable error code.
+        details:
+          $ref: '#/components/schemas/unstablePublicApiErrorDetails'
+          description: Optional structured error context. Inspect the populated fields based on `code`.
+      required:
+      - message
+      - code
     unstablePublicApiValidationIssue:
       title: unstablePublicApiValidationIssue
       type: object
@@ -790,188 +972,6 @@ components:
       - code
       - message
       - path
-    unstablePublicEvaluatorOutputDefinition:
-      title: unstablePublicEvaluatorOutputDefinition
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - NUMERIC
-        - $ref: '#/components/schemas/unstablePublicNumericEvaluatorOutputDefinition'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - BOOLEAN
-        - $ref: '#/components/schemas/unstablePublicBooleanEvaluatorOutputDefinition'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - CATEGORICAL
-        - $ref: '#/components/schemas/unstablePublicCategoricalEvaluatorOutputDefinition'
-        required:
-        - dataType
-      description: 'Evaluator output definition returned by the public API.
-
-
-        This response always includes `dataType` and never includes an internal output-definition `version`.
-
-        Legacy stored evaluator definitions are normalized into this shape before they are returned.
-
-
-        Use this response shape when deciding how to interpret future evaluation scores:
-
-        - `NUMERIC`: expect numeric score values
-
-        - `BOOLEAN`: expect `true` / `false`
-
-        - `CATEGORICAL`: expect one or more values from `score.categories`'
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    unstableEvaluatorScope:
-      title: unstableEvaluatorScope
-      type: string
-      enum:
-      - project
-      - managed
-      description: 'Where an evaluator comes from.
-
-
-        - `project`: created in your project
-
-        - `managed`: provided by Langfuse'
-    unstableEvaluatorType:
-      title: unstableEvaluatorType
-      type: string
-      enum:
-      - llm_as_judge
-      description: 'The evaluator engine type.
-
-
-        The unstable public API currently supports only LLM-as-a-judge evaluators.'
-    unstableEvaluatorOutputDefinition:
-      title: unstableEvaluatorOutputDefinition
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - NUMERIC
-        - $ref: '#/components/schemas/unstablePublicNumericEvaluatorOutputDefinition'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - BOOLEAN
-        - $ref: '#/components/schemas/unstablePublicBooleanEvaluatorOutputDefinition'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - CATEGORICAL
-        - $ref: '#/components/schemas/unstablePublicCategoricalEvaluatorOutputDefinition'
-        required:
-        - dataType
-      description: 'Structured output definition to send when creating an evaluator.
-
-
-        Agent guidance:
-
-        - `dataType` is required.
-
-        - Do not send `version`; that is an internal storage detail and is not part of the public request contract.
-
-        - For `NUMERIC` and `BOOLEAN`, provide `reasoning.description` and `score.description`.
-
-        - For `CATEGORICAL`, also provide `score.categories` and `score.shouldAllowMultipleMatches`.'
-    unstablePublicApiErrorCode:
-      title: unstablePublicApiErrorCode
-      type: string
-      enum:
-      - authentication_failed
-      - access_denied
-      - invalid_request
-      - invalid_query
-      - invalid_body
-      - invalid_filter_value
-      - invalid_json_path
-      - invalid_variable_mapping
-      - missing_variable_mapping
-      - duplicate_variable_mapping
-      - resource_not_found
-      - name_conflict
-      - evaluator_preflight_failed
-      - conflict
-      - unprocessable_content
-      - rate_limited
-      - method_not_allowed
-      - internal_error
-      description: 'Machine-readable error code returned by the unstable evaluators API.
-
-
-        SDKs, CLIs, and agents should branch on `code` rather than parsing the human-readable `message`.
-
-        The HTTP status still indicates the broad error class, while `code` gives the specific failure reason.'
-    unstableEvaluators:
-      title: unstableEvaluators
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/unstableEvaluator'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
   securitySchemes:
     BasicAuth:
       type: http

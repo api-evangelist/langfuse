@@ -202,6 +202,14 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    CommentObjectType:
+      title: CommentObjectType
+      type: string
+      enum:
+      - TRACE
+      - OBSERVATION
+      - SESSION
+      - PROMPT
     Comment:
       title: Comment
       type: object
@@ -235,6 +243,15 @@ components:
       - objectType
       - objectId
       - content
+    CreateCommentResponse:
+      title: CreateCommentResponse
+      type: object
+      properties:
+        id:
+          type: string
+          description: The id of the created object in Langfuse
+      required:
+      - id
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -282,23 +299,6 @@ components:
       - objectType
       - objectId
       - content
-    CreateCommentResponse:
-      title: CreateCommentResponse
-      type: object
-      properties:
-        id:
-          type: string
-          description: The id of the created object in Langfuse
-      required:
-      - id
-    CommentObjectType:
-      title: CommentObjectType
-      type: string
-      enum:
-      - TRACE
-      - OBSERVATION
-      - SESSION
-      - PROMPT
     GetCommentsResponse:
       title: GetCommentsResponse
       type: object

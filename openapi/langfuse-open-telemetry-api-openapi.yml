@@ -158,6 +158,31 @@ components:
           items:
             $ref: '#/components/schemas/OtelAttribute'
           description: Additional scope attributes
+    OtelResource:
+      title: OtelResource
+      type: object
+      description: Resource attributes identifying the source of telemetry
+      properties:
+        attributes:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OtelAttribute'
+          description: Resource attributes like service.name, service.version, etc.
+    OtelAttribute:
+      title: OtelAttribute
+      type: object
+      description: Key-value attribute pair for resources, scopes, or spans
+      properties:
+        key:
+          type:
+          - string
+          - 'null'
+          description: Attribute key (e.g., "service.name", "langfuse.observation.type")
+        value:
+          $ref: '#/components/schemas/OtelAttributeValue'
+          description: Attribute value
     OtelAttributeValue:
       title: OtelAttributeValue
       type: object
@@ -218,51 +243,6 @@ components:
           description: Span attributes including Langfuse-specific attributes (langfuse.observation.*)
         status:
           description: Span status object
-    OtelTraceResponse:
-      title: OtelTraceResponse
-      type: object
-      description: Response from trace export request. Empty object indicates success.
-      properties: {}
-    OtelScopeSpan:
-      title: OtelScopeSpan
-      type: object
-      description: Collection of spans from a single instrumentation scope
-      properties:
-        scope:
-          $ref: '#/components/schemas/OtelScope'
-          description: Instrumentation scope information
-        spans:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/OtelSpan'
-          description: Array of spans
-    OtelAttribute:
-      title: OtelAttribute
-      type: object
-      description: Key-value attribute pair for resources, scopes, or spans
-      properties:
-        key:
-          type:
-          - string
-          - 'null'
-          description: Attribute key (e.g., "service.name", "langfuse.observation.type")
-        value:
-          $ref: '#/components/schemas/OtelAttributeValue'
-          description: Attribute value
-    OtelResource:
-      title: OtelResource
-      type: object
-      description: Resource attributes identifying the source of telemetry
-      properties:
-        attributes:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/OtelAttribute'
-          description: Resource attributes like service.name, service.version, etc.
     OtelResourceSpan:
       title: OtelResourceSpan
       type: object
@@ -278,6 +258,26 @@ components:
           items:
             $ref: '#/components/schemas/OtelScopeSpan'
           description: Array of scope spans
+    OtelScopeSpan:
+      title: OtelScopeSpan
+      type: object
+      description: Collection of spans from a single instrumentation scope
+      properties:
+        scope:
+          $ref: '#/components/schemas/OtelScope'
+          description: Instrumentation scope information
+        spans:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OtelSpan'
+          description: Array of spans
+    OtelTraceResponse:
+      title: OtelTraceResponse
+      type: object
+      description: Response from trace export request. Empty object indicates success.
+      properties: {}
   securitySchemes:
     BasicAuth:
       type: http

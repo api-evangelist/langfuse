@@ -421,6 +421,49 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ApiKeyList:
+      title: ApiKeyList
+      type: object
+      description: List of API keys for a project
+      properties:
+        apiKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiKeySummary'
+      required:
+      - apiKeys
+    ApiKeyDeletionResponse:
+      title: ApiKeyDeletionResponse
+      type: object
+      description: Response for API key deletion
+      properties:
+        success:
+          type: boolean
+      required:
+      - success
+    Projects:
+      title: Projects
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+      required:
+      - data
+    Organization:
+      title: Organization
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the organization
+        name:
+          type: string
+          description: The name of the organization
+      required:
+      - id
+      - name
     ApiKeySummary:
       title: ApiKeySummary
       type: object
@@ -454,26 +497,31 @@ components:
       - createdAt
       - publicKey
       - displaySecretKey
-    ApiKeyDeletionResponse:
-      title: ApiKeyDeletionResponse
+    Project:
+      title: Project
       type: object
-      description: Response for API key deletion
       properties:
-        success:
-          type: boolean
+        id:
+          type: string
+        name:
+          type: string
+        organization:
+          $ref: '#/components/schemas/Organization'
+          description: The organization this project belongs to
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Metadata for the project
+        retentionDays:
+          type:
+          - integer
+          - 'null'
+          description: Number of days to retain data. Null or 0 means no retention. Omitted if no retention is configured.
       required:
-      - success
-    ApiKeyList:
-      title: ApiKeyList
-      type: object
-      description: List of API keys for a project
-      properties:
-        apiKeys:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApiKeySummary'
-      required:
-      - apiKeys
+      - id
+      - name
+      - organization
+      - metadata
     ApiKeyResponse:
       title: ApiKeyResponse
       type: object
@@ -500,54 +548,6 @@ components:
       - publicKey
       - secretKey
       - displaySecretKey
-    Projects:
-      title: Projects
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Project'
-      required:
-      - data
-    Organization:
-      title: Organization
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier of the organization
-        name:
-          type: string
-          description: The name of the organization
-      required:
-      - id
-      - name
-    Project:
-      title: Project
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        organization:
-          $ref: '#/components/schemas/Organization'
-          description: The organization this project belongs to
-        metadata:
-          type: object
-          additionalProperties: true
-          description: Metadata for the project
-        retentionDays:
-          type:
-          - integer
-          - 'null'
-          description: Number of days to retain data. Null or 0 means no retention. Omitted if no retention is configured.
-      required:
-      - id
-      - name
-      - organization
-      - metadata
     ProjectDeletionResponse:
       title: ProjectDeletionResponse
       type: object

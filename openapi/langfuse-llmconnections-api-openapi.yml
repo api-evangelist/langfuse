@@ -177,6 +177,14 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    DeleteLlmConnectionResponse:
+      title: DeleteLlmConnectionResponse
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
     LlmAdapter:
       title: LlmAdapter
       type: string
@@ -243,35 +251,6 @@ components:
       - extraHeaderKeys
       - createdAt
       - updatedAt
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    DeleteLlmConnectionResponse:
-      title: DeleteLlmConnectionResponse
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
     UpsertLlmConnectionRequest:
       title: UpsertLlmConnectionRequest
       type: object
@@ -320,6 +299,27 @@ components:
       - provider
       - adapter
       - secretKey
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
     PaginatedLlmConnections:
       title: PaginatedLlmConnections
       type: object

@@ -220,6 +220,15 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ModelPrice:
+      title: ModelPrice
+      type: object
+      properties:
+        price:
+          type: number
+          format: double
+      required:
+      - price
     PricingTierInput:
       title: PricingTierInput
       type: object
@@ -301,27 +310,6 @@ components:
       - priority
       - conditions
       - prices
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
     PricingTierCondition:
       title: PricingTierCondition
       type: object
@@ -390,110 +378,17 @@ components:
       - operator
       - value
       - caseSensitive
-    Model:
-      title: Model
-      type: object
-      description: 'Model definition used for transforming usage into USD cost and/or tokenization.
-
-
-        Models can have either simple flat pricing or tiered pricing:
-
-        - Flat pricing: Single price per usage type (legacy, but still supported)
-
-        - Tiered pricing: Multiple pricing tiers with conditional matching based on usage patterns
-
-
-        The pricing tiers approach is recommended for models with usage-based pricing variations.
-
-        When using tiered pricing, the flat price fields (inputPrice, outputPrice, prices) are populated
-
-        from the default tier for backward compatibility.'
-      properties:
-        id:
-          type: string
-        modelName:
-          type: string
-          description: 'Name of the model definition. If multiple with the same name exist, they are applied in the following order: (1) custom over built-in, (2) newest according to startTime where model.startTime<observation.startTime'
-        matchPattern:
-          type: string
-          description: Regex pattern which matches this model definition to generation.model. Useful in case of fine-tuned models. If you want to exact match, use `(?i)^modelname$`
-        startDate:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: Apply only to generations which are newer than this ISO date.
-        unit:
-          $ref: '#/components/schemas/ModelUsageUnit'
-          description: Unit used by this model.
-        inputPrice:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: Deprecated. See 'prices' instead. Price (USD) per input unit
-        outputPrice:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: Deprecated. See 'prices' instead. Price (USD) per output unit
-        totalPrice:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: Deprecated. See 'prices' instead. Price (USD) per total unit. Cannot be set if input or output price is set.
-        tokenizerId:
-          type:
-          - string
-          - 'null'
-          description: Optional. Tokenizer to be applied to observations which match to this model. See docs for more details.
-        tokenizerConfig:
-          description: Optional. Configuration for the selected tokenizer. Needs to be JSON. See docs for more details.
-        isLangfuseManaged:
-          type: boolean
-        createdAt:
-          type: string
-          format: date-time
-          description: Timestamp when the model was created
-        prices:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/ModelPrice'
-          description: 'Deprecated. Use ''pricingTiers'' instead for models with usage-based pricing variations.
-
-
-            This field shows prices by usage type from the default pricing tier. Maintained for backward compatibility.
-
-            If the model uses tiered pricing, this field will be populated from the default tier''s prices.'
-        pricingTiers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PricingTier'
-          description: 'Array of pricing tiers with conditional pricing based on usage thresholds.
-
-
-            Pricing tiers enable accurate cost tracking for models that charge different rates based on usage patterns
-
-            (e.g., different rates for high-volume usage, large context windows, or cached tokens).
-
-
-            Each model must have exactly one default tier (isDefault=true, priority=0) that serves as a fallback.
-
-            Additional conditional tiers can be defined with specific matching criteria.
-
-
-            If this array is empty, the model uses legacy flat pricing from the inputPrice/outputPrice/totalPrice fields.'
-      required:
-      - id
-      - modelName
-      - matchPattern
-      - tokenizerConfig
-      - isLangfuseManaged
-      - createdAt
-      - prices
-      - pricingTiers
+    ModelUsageUnit:
+      title: ModelUsageUnit
+      type: string
+      enum:
+      - CHARACTERS
+      - TOKENS
+      - MILLISECONDS
+      - SECONDS
+      - IMAGES
+      - REQUESTS
+      description: Unit of usage in Langfuse
     CreateModelRequest:
       title: CreateModelRequest
       type: object
@@ -548,15 +443,40 @@ components:
       required:
       - modelName
       - matchPattern
-    ModelPrice:
-      title: ModelPrice
+    PaginatedModels:
+      title: PaginatedModels
       type: object
       properties:
-        price:
-          type: number
-          format: double
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Model'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
       required:
-      - price
+      - data
+      - meta
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
     PricingTier:
       title: PricingTier
       type: object
@@ -670,30 +590,110 @@ components:
       - eq
       - neq
       description: Comparison operators for pricing tier conditions
-    PaginatedModels:
-      title: PaginatedModels
+    Model:
+      title: Model
       type: object
+      description: 'Model definition used for transforming usage into USD cost and/or tokenization.
+
+
+        Models can have either simple flat pricing or tiered pricing:
+
+        - Flat pricing: Single price per usage type (legacy, but still supported)
+
+        - Tiered pricing: Multiple pricing tiers with conditional matching based on usage patterns
+
+
+        The pricing tiers approach is recommended for models with usage-based pricing variations.
+
+        When using tiered pricing, the flat price fields (inputPrice, outputPrice, prices) are populated
+
+        from the default tier for backward compatibility.'
       properties:
-        data:
+        id:
+          type: string
+        modelName:
+          type: string
+          description: 'Name of the model definition. If multiple with the same name exist, they are applied in the following order: (1) custom over built-in, (2) newest according to startTime where model.startTime<observation.startTime'
+        matchPattern:
+          type: string
+          description: Regex pattern which matches this model definition to generation.model. Useful in case of fine-tuned models. If you want to exact match, use `(?i)^modelname$`
+        startDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Apply only to generations which are newer than this ISO date.
+        unit:
+          $ref: '#/components/schemas/ModelUsageUnit'
+          description: Unit used by this model.
+        inputPrice:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Deprecated. See 'prices' instead. Price (USD) per input unit
+        outputPrice:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Deprecated. See 'prices' instead. Price (USD) per output unit
+        totalPrice:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: Deprecated. See 'prices' instead. Price (USD) per total unit. Cannot be set if input or output price is set.
+        tokenizerId:
+          type:
+          - string
+          - 'null'
+          description: Optional. Tokenizer to be applied to observations which match to this model. See docs for more details.
+        tokenizerConfig:
+          description: Optional. Configuration for the selected tokenizer. Needs to be JSON. See docs for more details.
+        isLangfuseManaged:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the model was created
+        prices:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ModelPrice'
+          description: 'Deprecated. Use ''pricingTiers'' instead for models with usage-based pricing variations.
+
+
+            This field shows prices by usage type from the default pricing tier. Maintained for backward compatibility.
+
+            If the model uses tiered pricing, this field will be populated from the default tier''s prices.'
+        pricingTiers:
           type: array
           items:
-            $ref: '#/components/schemas/Model'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
+            $ref: '#/components/schemas/PricingTier'
+          description: 'Array of pricing tiers with conditional pricing based on usage thresholds.
+
+
+            Pricing tiers enable accurate cost tracking for models that charge different rates based on usage patterns
+
+            (e.g., different rates for high-volume usage, large context windows, or cached tokens).
+
+
+            Each model must have exactly one default tier (isDefault=true, priority=0) that serves as a fallback.
+
+            Additional conditional tiers can be defined with specific matching criteria.
+
+
+            If this array is empty, the model uses legacy flat pricing from the inputPrice/outputPrice/totalPrice fields.'
       required:
-      - data
-      - meta
-    ModelUsageUnit:
-      title: ModelUsageUnit
-      type: string
-      enum:
-      - CHARACTERS
-      - TOKENS
-      - MILLISECONDS
-      - SECONDS
-      - IMAGES
-      - REQUESTS
-      description: Unit of usage in Langfuse
+      - id
+      - modelName
+      - matchPattern
+      - tokenizerConfig
+      - isLangfuseManaged
+      - createdAt
+      - prices
+      - pricingTiers
   securitySchemes:
     BasicAuth:
       type: http

@@ -367,6 +367,49 @@ components:
       - limit
       - totalItems
       - totalPages
+    PaginatedDatasetRuns:
+      title: PaginatedDatasetRuns
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetRun'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    CreateDatasetRequest:
+      title: CreateDatasetRequest
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        metadata: {}
+        inputSchema:
+          description: JSON Schema for validating dataset item inputs. When set, all new and existing dataset items will be validated against this schema.
+        expectedOutputSchema:
+          description: JSON Schema for validating dataset item expected outputs. When set, all new and existing dataset items will be validated against this schema.
+      required:
+      - name
+    PaginatedDatasets:
+      title: PaginatedDatasets
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dataset'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
     Dataset:
       title: Dataset
       type: object
@@ -401,48 +444,39 @@ components:
       - projectId
       - createdAt
       - updatedAt
-    CreateDatasetRequest:
-      title: CreateDatasetRequest
+    DatasetRunItem:
+      title: DatasetRunItem
       type: object
       properties:
-        name:
+        id:
           type: string
-        description:
+        datasetRunId:
+          type: string
+        datasetRunName:
+          type: string
+        datasetItemId:
+          type: string
+        traceId:
+          type: string
+        observationId:
           type:
           - string
           - 'null'
-        metadata: {}
-        inputSchema:
-          description: JSON Schema for validating dataset item inputs. When set, all new and existing dataset items will be validated against this schema.
-        expectedOutputSchema:
-          description: JSON Schema for validating dataset item expected outputs. When set, all new and existing dataset items will be validated against this schema.
+          description: The observation ID associated with this run item
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
       required:
-      - name
-    PaginatedDatasetRuns:
-      title: PaginatedDatasetRuns
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DatasetRun'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    DatasetRunWithItems:
-      title: DatasetRunWithItems
-      type: object
-      properties:
-        datasetRunItems:
-          type: array
-          items:
-            $ref: '#/components/schemas/DatasetRunItem'
-      required:
-      - datasetRunItems
-      allOf:
-      - $ref: '#/components/schemas/DatasetRun'
+      - id
+      - datasetRunId
+      - datasetRunName
+      - datasetItemId
+      - traceId
+      - createdAt
+      - updatedAt
     DatasetRun:
       title: DatasetRun
       type: object
@@ -482,39 +516,6 @@ components:
       - datasetName
       - createdAt
       - updatedAt
-    DatasetRunItem:
-      title: DatasetRunItem
-      type: object
-      properties:
-        id:
-          type: string
-        datasetRunId:
-          type: string
-        datasetRunName:
-          type: string
-        datasetItemId:
-          type: string
-        traceId:
-          type: string
-        observationId:
-          type:
-          - string
-          - 'null'
-          description: The observation ID associated with this run item
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - datasetRunId
-      - datasetRunName
-      - datasetItemId
-      - traceId
-      - createdAt
-      - updatedAt
     DeleteDatasetRunResponse:
       title: DeleteDatasetRunResponse
       type: object
@@ -523,19 +524,18 @@ components:
           type: string
       required:
       - message
-    PaginatedDatasets:
-      title: PaginatedDatasets
+    DatasetRunWithItems:
+      title: DatasetRunWithItems
       type: object
       properties:
-        data:
+        datasetRunItems:
           type: array
           items:
-            $ref: '#/components/schemas/Dataset'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
+            $ref: '#/components/schemas/DatasetRunItem'
       required:
-      - data
-      - meta
+      - datasetRunItems
+      allOf:
+      - $ref: '#/components/schemas/DatasetRun'
   securitySchemes:
     BasicAuth:
       type: http

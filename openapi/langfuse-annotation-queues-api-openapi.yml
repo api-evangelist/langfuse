@@ -581,17 +581,74 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    DeleteAnnotationQueueItemResponse:
-      title: DeleteAnnotationQueueItemResponse
+    AnnotationQueueObjectType:
+      title: AnnotationQueueObjectType
+      type: string
+      enum:
+      - TRACE
+      - OBSERVATION
+      - SESSION
+    CreateAnnotationQueueItemRequest:
+      title: CreateAnnotationQueueItemRequest
       type: object
       properties:
-        success:
-          type: boolean
-        message:
+        objectId:
+          type: string
+        objectType:
+          $ref: '#/components/schemas/AnnotationQueueObjectType'
+        status:
+          $ref: '#/components/schemas/AnnotationQueueStatus'
+          description: Defaults to PENDING for new queue items
+      required:
+      - objectId
+      - objectType
+    AnnotationQueueStatus:
+      title: AnnotationQueueStatus
+      type: string
+      enum:
+      - PENDING
+      - COMPLETED
+    AnnotationQueueAssignmentRequest:
+      title: AnnotationQueueAssignmentRequest
+      type: object
+      properties:
+        userId:
           type: string
       required:
-      - success
-      - message
+      - userId
+    AnnotationQueueItem:
+      title: AnnotationQueueItem
+      type: object
+      properties:
+        id:
+          type: string
+        queueId:
+          type: string
+        objectId:
+          type: string
+        objectType:
+          $ref: '#/components/schemas/AnnotationQueueObjectType'
+        status:
+          $ref: '#/components/schemas/AnnotationQueueStatus'
+        completedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - queueId
+      - objectId
+      - objectType
+      - status
+      - createdAt
+      - updatedAt
     CreateAnnotationQueueRequest:
       title: CreateAnnotationQueueRequest
       type: object
@@ -630,59 +687,6 @@ components:
       - limit
       - totalItems
       - totalPages
-    CreateAnnotationQueueItemRequest:
-      title: CreateAnnotationQueueItemRequest
-      type: object
-      properties:
-        objectId:
-          type: string
-        objectType:
-          $ref: '#/components/schemas/AnnotationQueueObjectType'
-        status:
-          $ref: '#/components/schemas/AnnotationQueueStatus'
-          description: Defaults to PENDING for new queue items
-      required:
-      - objectId
-      - objectType
-    AnnotationQueueStatus:
-      title: AnnotationQueueStatus
-      type: string
-      enum:
-      - PENDING
-      - COMPLETED
-    AnnotationQueueItem:
-      title: AnnotationQueueItem
-      type: object
-      properties:
-        id:
-          type: string
-        queueId:
-          type: string
-        objectId:
-          type: string
-        objectType:
-          $ref: '#/components/schemas/AnnotationQueueObjectType'
-        status:
-          $ref: '#/components/schemas/AnnotationQueueStatus'
-        completedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - queueId
-      - objectId
-      - objectType
-      - status
-      - createdAt
-      - updatedAt
     UpdateAnnotationQueueItemRequest:
       title: UpdateAnnotationQueueItemRequest
       type: object
@@ -697,20 +701,17 @@ components:
           type: boolean
       required:
       - success
-    CreateAnnotationQueueAssignmentResponse:
-      title: CreateAnnotationQueueAssignmentResponse
+    DeleteAnnotationQueueItemResponse:
+      title: DeleteAnnotationQueueItemResponse
       type: object
       properties:
-        userId:
-          type: string
-        queueId:
-          type: string
-        projectId:
+        success:
+          type: boolean
+        message:
           type: string
       required:
-      - userId
-      - queueId
-      - projectId
+      - success
+      - message
     AnnotationQueue:
       title: AnnotationQueue
       type: object
@@ -739,34 +740,6 @@ components:
       - scoreConfigIds
       - createdAt
       - updatedAt
-    PaginatedAnnotationQueues:
-      title: PaginatedAnnotationQueues
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnnotationQueue'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    AnnotationQueueObjectType:
-      title: AnnotationQueueObjectType
-      type: string
-      enum:
-      - TRACE
-      - OBSERVATION
-      - SESSION
-    AnnotationQueueAssignmentRequest:
-      title: AnnotationQueueAssignmentRequest
-      type: object
-      properties:
-        userId:
-          type: string
-      required:
-      - userId
     PaginatedAnnotationQueueItems:
       title: PaginatedAnnotationQueueItems
       type: object
@@ -775,6 +748,33 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AnnotationQueueItem'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    CreateAnnotationQueueAssignmentResponse:
+      title: CreateAnnotationQueueAssignmentResponse
+      type: object
+      properties:
+        userId:
+          type: string
+        queueId:
+          type: string
+        projectId:
+          type: string
+      required:
+      - userId
+      - queueId
+      - projectId
+    PaginatedAnnotationQueues:
+      title: PaginatedAnnotationQueues
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnnotationQueue'
         meta:
           $ref: '#/components/schemas/utilsMetaResponse'
       required:

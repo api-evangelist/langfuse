@@ -160,19 +160,6 @@ components:
       - limit
       - totalItems
       - totalPages
-    PaginatedDatasetRunItems:
-      title: PaginatedDatasetRunItems
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DatasetRunItem'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
     DatasetRunItem:
       title: DatasetRunItem
       type: object
@@ -206,6 +193,19 @@ components:
       - traceId
       - createdAt
       - updatedAt
+    PaginatedDatasetRunItems:
+      title: PaginatedDatasetRunItems
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetRunItem'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
     CreateDatasetRunItemRequest:
       title: CreateDatasetRunItemRequest
       type: object
