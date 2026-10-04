@@ -38,6 +38,9 @@ accessModel:
   generated: '2026-09-03'
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/langfuse.png
+x-docs-platform: scalar
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-10-03
 tags:
   - Artificial Intelligence
   - LLM
@@ -825,6 +828,8 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
+  - OpenTelemetry
+  tags_raw:
   - Open Telemetry
   properties:
   - type: OpenAPI
