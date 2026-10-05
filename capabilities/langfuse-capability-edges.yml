@@ -1,0 +1,24 @@
+slug: langfuse
+provider: Langfuse
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Prompts
+  spec_file: langfuse-prompts-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.7
+  evidence: POST /api/public/v2/prompts prompts_create; schemas CreateChatPromptRequest, PromptMeta, ChatMessageWithPlaceholders
+  reason: Prompt creation, versioned retrieval and deletion — prompt management is a core artefact of
+    the LLM/AI model lifecycle, mapped to Artificial Intelligence Management.
