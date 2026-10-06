@@ -55,7 +55,7 @@ tags_raw:
   - Evaluations
   - Open-Source
 created: '2026-05-08'
-modified: '2026-05-19'
+modified: '2026-10-06'
 specificationVersion: '0.23'
 apis:
 - aid: langfuse:langfuse-blobstorageintegrations-api
@@ -851,6 +851,8 @@ apis:
   - type: Documentation
     url: https://langfuse.com/self-hosting
 common:
+  - url: https://langfuse.com/blog
+    type: Blog
   - type: CapabilityMap
     url: capabilities/langfuse-capability-edges.yml
     name: Langfuse Business Capability Map
