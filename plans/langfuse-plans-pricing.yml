@@ -226,3 +226,67 @@ notes: 'Volume pricing on overage units: $8/100k decreases to $7, $6.50, and $6 
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - seat
+  units:
+  - credit
+  - feature
+  - object
+  - period
+  - seat
+  plans:
+  - name: Self-Hosted (Open Source)
+    access: free
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Hobby (Cloud)
+    access: free
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    - period
+    - seat
+    periods:
+    - month
+    - per-use
+  - name: Core (Cloud)
+    access: paid
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    - object
+    - period
+    periods:
+    - month
+    - per-use
+  - name: Pro (Cloud)
+    access: paid
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    - feature
+    - object
+    - period
+    periods:
+    - month
+    - per-use
+  - name: Enterprise (Cloud)
+    access: enterprise
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    - object
+    periods:
+    - month
