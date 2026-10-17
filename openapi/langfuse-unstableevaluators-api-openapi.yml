@@ -343,6 +343,15 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    unstableEvaluatorType:
+      title: unstableEvaluatorType
+      type: string
+      enum:
+      - llm_as_judge
+      description: 'The evaluator engine type.
+
+
+        The unstable public API currently supports only LLM-as-a-judge evaluators.'
     unstableEvaluatorScope:
       title: unstableEvaluatorScope
       type: string
@@ -355,63 +364,6 @@ components:
         - `project`: created in your project
 
         - `managed`: provided by Langfuse'
-    unstablePublicCategoricalEvaluatorOutputScoreDefinition:
-      title: unstablePublicCategoricalEvaluatorOutputScoreDefinition
-      type: object
-      properties:
-        description:
-          type: string
-        categories:
-          type: array
-          items:
-            type: string
-        shouldAllowMultipleMatches:
-          type: boolean
-      required:
-      - description
-      - categories
-      - shouldAllowMultipleMatches
-    unstablePublicCategoricalEvaluatorOutputDefinition:
-      title: unstablePublicCategoricalEvaluatorOutputDefinition
-      type: object
-      properties:
-        dataType:
-          $ref: '#/components/schemas/unstableEvaluatorOutputDataType'
-          description: Always `CATEGORICAL`.
-        reasoning:
-          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
-        score:
-          $ref: '#/components/schemas/unstablePublicCategoricalEvaluatorOutputScoreDefinition'
-      required:
-      - dataType
-      - reasoning
-      - score
-    unstableEvaluatorOutputDataType:
-      title: unstableEvaluatorOutputDataType
-      type: string
-      enum:
-      - NUMERIC
-      - BOOLEAN
-      - CATEGORICAL
-      description: 'Structured score type returned by an evaluator.
-
-
-        This controls the type of score value Langfuse stores for evaluation results:
-
-        - `NUMERIC`: a numeric score such as `0.82`
-
-        - `BOOLEAN`: a boolean score such as `true`
-
-        - `CATEGORICAL`: one or more category labels from a fixed list'
-    unstableEvaluatorType:
-      title: unstableEvaluatorType
-      type: string
-      enum:
-      - llm_as_judge
-      description: 'The evaluator engine type.
-
-
-        The unstable public API currently supports only LLM-as-a-judge evaluators.'
     unstablePublicBooleanEvaluatorOutputDefinition:
       title: unstablePublicBooleanEvaluatorOutputDefinition
       type: object
@@ -427,148 +379,6 @@ components:
       - dataType
       - reasoning
       - score
-    unstablePublicApiErrorCode:
-      title: unstablePublicApiErrorCode
-      type: string
-      enum:
-      - authentication_failed
-      - access_denied
-      - invalid_request
-      - invalid_query
-      - invalid_body
-      - invalid_filter_value
-      - invalid_json_path
-      - invalid_variable_mapping
-      - missing_variable_mapping
-      - duplicate_variable_mapping
-      - resource_not_found
-      - name_conflict
-      - evaluator_preflight_failed
-      - conflict
-      - unprocessable_content
-      - rate_limited
-      - method_not_allowed
-      - internal_error
-      description: 'Machine-readable error code returned by the unstable evaluators API.
-
-
-        SDKs, CLIs, and agents should branch on `code` rather than parsing the human-readable `message`.
-
-        The HTTP status still indicates the broad error class, while `code` gives the specific failure reason.'
-    unstablePublicNumericEvaluatorOutputDefinition:
-      title: unstablePublicNumericEvaluatorOutputDefinition
-      type: object
-      properties:
-        dataType:
-          $ref: '#/components/schemas/unstableEvaluatorOutputDataType'
-          description: Always `NUMERIC`.
-        reasoning:
-          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
-        score:
-          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
-      required:
-      - dataType
-      - reasoning
-      - score
-    unstableEvaluatorOutputDefinition:
-      title: unstableEvaluatorOutputDefinition
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - NUMERIC
-        - $ref: '#/components/schemas/unstablePublicNumericEvaluatorOutputDefinition'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - BOOLEAN
-        - $ref: '#/components/schemas/unstablePublicBooleanEvaluatorOutputDefinition'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - CATEGORICAL
-        - $ref: '#/components/schemas/unstablePublicCategoricalEvaluatorOutputDefinition'
-        required:
-        - dataType
-      description: 'Structured output definition to send when creating an evaluator.
-
-
-        Agent guidance:
-
-        - `dataType` is required.
-
-        - Do not send `version`; that is an internal storage detail and is not part of the public request contract.
-
-        - For `NUMERIC` and `BOOLEAN`, provide `reasoning.description` and `score.description`.
-
-        - For `CATEGORICAL`, also provide `score.categories` and `score.shouldAllowMultipleMatches`.'
-    unstablePublicEvaluatorOutputDefinition:
-      title: unstablePublicEvaluatorOutputDefinition
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - NUMERIC
-        - $ref: '#/components/schemas/unstablePublicNumericEvaluatorOutputDefinition'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - BOOLEAN
-        - $ref: '#/components/schemas/unstablePublicBooleanEvaluatorOutputDefinition'
-        required:
-        - dataType
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            dataType:
-              type: string
-              enum:
-              - CATEGORICAL
-        - $ref: '#/components/schemas/unstablePublicCategoricalEvaluatorOutputDefinition'
-        required:
-        - dataType
-      description: 'Evaluator output definition returned by the public API.
-
-
-        This response always includes `dataType` and never includes an internal output-definition `version`.
-
-        Legacy stored evaluator definitions are normalized into this shape before they are returned.
-
-
-        Use this response shape when deciding how to interpret future evaluation scores:
-
-        - `NUMERIC`: expect numeric score values
-
-        - `BOOLEAN`: expect `true` / `false`
-
-        - `CATEGORICAL`: expect one or more values from `score.categories`'
     unstableEvaluator:
       title: unstableEvaluator
       type: object
@@ -794,6 +604,200 @@ components:
           - string
           - 'null'
           description: ISO-8601 timestamp when the current rate-limit window resets.
+    unstablePublicApiErrorCode:
+      title: unstablePublicApiErrorCode
+      type: string
+      enum:
+      - authentication_failed
+      - access_denied
+      - invalid_request
+      - invalid_query
+      - invalid_body
+      - invalid_filter_value
+      - invalid_json_path
+      - invalid_variable_mapping
+      - missing_variable_mapping
+      - duplicate_variable_mapping
+      - resource_not_found
+      - name_conflict
+      - evaluator_preflight_failed
+      - conflict
+      - unprocessable_content
+      - rate_limited
+      - method_not_allowed
+      - internal_error
+      description: 'Machine-readable error code returned by the unstable evaluators API.
+
+
+        SDKs, CLIs, and agents should branch on `code` rather than parsing the human-readable `message`.
+
+        The HTTP status still indicates the broad error class, while `code` gives the specific failure reason.'
+    unstablePublicCategoricalEvaluatorOutputScoreDefinition:
+      title: unstablePublicCategoricalEvaluatorOutputScoreDefinition
+      type: object
+      properties:
+        description:
+          type: string
+        categories:
+          type: array
+          items:
+            type: string
+        shouldAllowMultipleMatches:
+          type: boolean
+      required:
+      - description
+      - categories
+      - shouldAllowMultipleMatches
+    unstablePublicApiError:
+      title: unstablePublicApiError
+      type: object
+      description: 'Standard error envelope for the unstable evaluators API.
+
+
+        Response handling guidance:
+
+        - Use the HTTP status code for the broad class of failure.
+
+        - Use `code` for precise branching in SDKs, CLIs, or agents.
+
+        - Inspect `details` for field-level validation context such as invalid filter values, malformed JSONPath expressions, or missing variable mappings.
+
+        - Retry only after fixing the specific issue described by `code` and `details`.'
+      properties:
+        message:
+          type: string
+          description: Human-readable description of the failure.
+          example: 'Filter column "type" contains unsupported value(s): INVALID'
+        code:
+          $ref: '#/components/schemas/unstablePublicApiErrorCode'
+          description: Stable machine-readable error code.
+        details:
+          $ref: '#/components/schemas/unstablePublicApiErrorDetails'
+          description: Optional structured error context. Inspect the populated fields based on `code`.
+      required:
+      - message
+      - code
+    unstablePublicNumericEvaluatorOutputDefinition:
+      title: unstablePublicNumericEvaluatorOutputDefinition
+      type: object
+      properties:
+        dataType:
+          $ref: '#/components/schemas/unstableEvaluatorOutputDataType'
+          description: Always `NUMERIC`.
+        reasoning:
+          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
+        score:
+          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
+      required:
+      - dataType
+      - reasoning
+      - score
+    unstablePublicApiValidationIssue:
+      title: unstablePublicApiValidationIssue
+      type: object
+      description: 'One validation issue returned for malformed request bodies or query parameters.
+
+
+        This mirrors the most important parts of a Zod issue: a machine-readable `code`,
+
+        a human-readable `message`, and a structured `path`.'
+      properties:
+        code:
+          type: string
+          description: Machine-readable validation issue code emitted by the server validator.
+        message:
+          type: string
+          description: Human-readable explanation of the validation failure.
+        path:
+          type: array
+          items: {}
+          description: Path to the invalid field, for example `["mapping", 0, "jsonPath"]`.
+      required:
+      - code
+      - message
+      - path
+    unstableEvaluators:
+      title: unstableEvaluators
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/unstableEvaluator'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    unstableEvaluatorOutputDefinition:
+      title: unstableEvaluatorOutputDefinition
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/unstablePublicNumericEvaluatorOutputDefinition'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/unstablePublicBooleanEvaluatorOutputDefinition'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/unstablePublicCategoricalEvaluatorOutputDefinition'
+        required:
+        - dataType
+      description: 'Structured output definition to send when creating an evaluator.
+
+
+        Agent guidance:
+
+        - `dataType` is required.
+
+        - Do not send `version`; that is an internal storage detail and is not part of the public request contract.
+
+        - For `NUMERIC` and `BOOLEAN`, provide `reasoning.description` and `score.description`.
+
+        - For `CATEGORICAL`, also provide `score.categories` and `score.shouldAllowMultipleMatches`.'
     unstableCreateEvaluatorRequest:
       title: unstableCreateEvaluatorRequest
       type: object
@@ -842,28 +846,23 @@ components:
       - name
       - prompt
       - outputDefinition
-    unstableEvaluatorOutputFieldDefinition:
-      title: unstableEvaluatorOutputFieldDefinition
-      type: object
-      properties:
-        description:
-          type: string
-          description: Human-readable instructions for what the evaluator should return in this field.
-      required:
-      - description
-    unstableEvaluators:
-      title: unstableEvaluators
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/unstableEvaluator'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
+    unstableEvaluatorOutputDataType:
+      title: unstableEvaluatorOutputDataType
+      type: string
+      enum:
+      - NUMERIC
+      - BOOLEAN
+      - CATEGORICAL
+      description: 'Structured score type returned by an evaluator.
+
+
+        This controls the type of score value Langfuse stores for evaluation results:
+
+        - `NUMERIC`: a numeric score such as `0.82`
+
+        - `BOOLEAN`: a boolean score such as `true`
+
+        - `CATEGORICAL`: one or more category labels from a fixed list'
     unstableEvaluatorModelConfig:
       title: unstableEvaluatorModelConfig
       type: object
@@ -898,80 +897,81 @@ components:
       required:
       - provider
       - model
-    utilsMetaResponse:
-      title: utilsMetaResponse
+    unstablePublicEvaluatorOutputDefinition:
+      title: unstablePublicEvaluatorOutputDefinition
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/unstablePublicNumericEvaluatorOutputDefinition'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/unstablePublicBooleanEvaluatorOutputDefinition'
+        required:
+        - dataType
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/unstablePublicCategoricalEvaluatorOutputDefinition'
+        required:
+        - dataType
+      description: 'Evaluator output definition returned by the public API.
+
+
+        This response always includes `dataType` and never includes an internal output-definition `version`.
+
+        Legacy stored evaluator definitions are normalized into this shape before they are returned.
+
+
+        Use this response shape when deciding how to interpret future evaluation scores:
+
+        - `NUMERIC`: expect numeric score values
+
+        - `BOOLEAN`: expect `true` / `false`
+
+        - `CATEGORICAL`: expect one or more values from `score.categories`'
+    unstableEvaluatorOutputFieldDefinition:
+      title: unstableEvaluatorOutputFieldDefinition
       type: object
       properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
+        description:
+          type: string
+          description: Human-readable instructions for what the evaluator should return in this field.
       required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    unstablePublicApiError:
-      title: unstablePublicApiError
+      - description
+    unstablePublicCategoricalEvaluatorOutputDefinition:
+      title: unstablePublicCategoricalEvaluatorOutputDefinition
       type: object
-      description: 'Standard error envelope for the unstable evaluators API.
-
-
-        Response handling guidance:
-
-        - Use the HTTP status code for the broad class of failure.
-
-        - Use `code` for precise branching in SDKs, CLIs, or agents.
-
-        - Inspect `details` for field-level validation context such as invalid filter values, malformed JSONPath expressions, or missing variable mappings.
-
-        - Retry only after fixing the specific issue described by `code` and `details`.'
       properties:
-        message:
-          type: string
-          description: Human-readable description of the failure.
-          example: 'Filter column "type" contains unsupported value(s): INVALID'
-        code:
-          $ref: '#/components/schemas/unstablePublicApiErrorCode'
-          description: Stable machine-readable error code.
-        details:
-          $ref: '#/components/schemas/unstablePublicApiErrorDetails'
-          description: Optional structured error context. Inspect the populated fields based on `code`.
+        dataType:
+          $ref: '#/components/schemas/unstableEvaluatorOutputDataType'
+          description: Always `CATEGORICAL`.
+        reasoning:
+          $ref: '#/components/schemas/unstableEvaluatorOutputFieldDefinition'
+        score:
+          $ref: '#/components/schemas/unstablePublicCategoricalEvaluatorOutputScoreDefinition'
       required:
-      - message
-      - code
-    unstablePublicApiValidationIssue:
-      title: unstablePublicApiValidationIssue
-      type: object
-      description: 'One validation issue returned for malformed request bodies or query parameters.
-
-
-        This mirrors the most important parts of a Zod issue: a machine-readable `code`,
-
-        a human-readable `message`, and a structured `path`.'
-      properties:
-        code:
-          type: string
-          description: Machine-readable validation issue code emitted by the server validator.
-        message:
-          type: string
-          description: Human-readable explanation of the validation failure.
-        path:
-          type: array
-          items: {}
-          description: Path to the invalid field, for example `["mapping", 0, "jsonPath"]`.
-      required:
-      - code
-      - message
-      - path
+      - dataType
+      - reasoning
+      - score
   securitySchemes:
     BasicAuth:
       type: http

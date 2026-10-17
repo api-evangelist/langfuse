@@ -388,78 +388,51 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    ScimEmail:
-      title: ScimEmail
+    SchemaExtension:
+      title: SchemaExtension
       type: object
       properties:
-        primary:
+        schema:
+          type: string
+        required:
           type: boolean
-        value:
-          type: string
-        type:
-          type: string
       required:
-      - primary
-      - value
-      - type
-    UserMeta:
-      title: UserMeta
-      type: object
-      properties:
-        resourceType:
-          type: string
-        created:
-          type:
-          - string
-          - 'null'
-        lastModified:
-          type:
-          - string
-          - 'null'
-      required:
-      - resourceType
-    ScimUsersListResponse:
-      title: ScimUsersListResponse
+      - schema
+      - required
+    ResourceType:
+      title: ResourceType
       type: object
       properties:
         schemas:
-          type: array
+          type:
+          - array
+          - 'null'
           items:
             type: string
-        totalResults:
-          type: integer
-        startIndex:
-          type: integer
-        itemsPerPage:
-          type: integer
-        Resources:
+        id:
+          type: string
+        name:
+          type: string
+        endpoint:
+          type: string
+        description:
+          type: string
+        schema:
+          type: string
+        schemaExtensions:
           type: array
           items:
-            $ref: '#/components/schemas/ScimUser'
+            $ref: '#/components/schemas/SchemaExtension'
+        meta:
+          $ref: '#/components/schemas/ResourceMeta'
       required:
-      - schemas
-      - totalResults
-      - startIndex
-      - itemsPerPage
-      - Resources
-    SchemasResponse:
-      title: SchemasResponse
-      type: object
-      properties:
-        schemas:
-          type: array
-          items:
-            type: string
-        totalResults:
-          type: integer
-        Resources:
-          type: array
-          items:
-            $ref: '#/components/schemas/SchemaResource'
-      required:
-      - schemas
-      - totalResults
-      - Resources
+      - id
+      - name
+      - endpoint
+      - description
+      - schema
+      - schemaExtensions
+      - meta
     SchemaResource:
       title: SchemaResource
       type: object
@@ -481,81 +454,6 @@ components:
       - description
       - attributes
       - meta
-    ScimName:
-      title: ScimName
-      type: object
-      properties:
-        formatted:
-          type:
-          - string
-          - 'null'
-    BulkConfig:
-      title: BulkConfig
-      type: object
-      properties:
-        supported:
-          type: boolean
-        maxOperations:
-          type: integer
-        maxPayloadSize:
-          type: integer
-      required:
-      - supported
-      - maxOperations
-      - maxPayloadSize
-    ScimFeatureSupport:
-      title: ScimFeatureSupport
-      type: object
-      properties:
-        supported:
-          type: boolean
-      required:
-      - supported
-    ScimUser:
-      title: ScimUser
-      type: object
-      properties:
-        schemas:
-          type: array
-          items:
-            type: string
-        id:
-          type: string
-        userName:
-          type: string
-        name:
-          $ref: '#/components/schemas/ScimName'
-        emails:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScimEmail'
-        meta:
-          $ref: '#/components/schemas/UserMeta'
-      required:
-      - schemas
-      - id
-      - userName
-      - name
-      - emails
-      - meta
-    ResourceTypesResponse:
-      title: ResourceTypesResponse
-      type: object
-      properties:
-        schemas:
-          type: array
-          items:
-            type: string
-        totalResults:
-          type: integer
-        Resources:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceType'
-      required:
-      - schemas
-      - totalResults
-      - Resources
     ServiceProviderConfig:
       title: ServiceProviderConfig
       type: object
@@ -615,62 +513,81 @@ components:
       - specUri
       - type
       - primary
-    ResourceType:
-      title: ResourceType
+    EmptyResponse:
+      title: EmptyResponse
+      type: object
+      description: Empty response for 204 No Content responses
+      properties: {}
+    ScimName:
+      title: ScimName
       type: object
       properties:
-        schemas:
+        formatted:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            type: string
-        id:
-          type: string
-        name:
-          type: string
-        endpoint:
-          type: string
-        description:
-          type: string
-        schema:
-          type: string
-        schemaExtensions:
-          type: array
-          items:
-            $ref: '#/components/schemas/SchemaExtension'
-        meta:
-          $ref: '#/components/schemas/ResourceMeta'
-      required:
-      - id
-      - name
-      - endpoint
-      - description
-      - schema
-      - schemaExtensions
-      - meta
-    SchemaExtension:
-      title: SchemaExtension
-      type: object
-      properties:
-        schema:
-          type: string
-        required:
-          type: boolean
-      required:
-      - schema
-      - required
-    ResourceMeta:
-      title: ResourceMeta
+    UserMeta:
+      title: UserMeta
       type: object
       properties:
         resourceType:
           type: string
-        location:
-          type: string
+        created:
+          type:
+          - string
+          - 'null'
+        lastModified:
+          type:
+          - string
+          - 'null'
       required:
       - resourceType
-      - location
+    ScimUsersListResponse:
+      title: ScimUsersListResponse
+      type: object
+      properties:
+        schemas:
+          type: array
+          items:
+            type: string
+        totalResults:
+          type: integer
+        startIndex:
+          type: integer
+        itemsPerPage:
+          type: integer
+        Resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScimUser'
+      required:
+      - schemas
+      - totalResults
+      - startIndex
+      - itemsPerPage
+      - Resources
+    ScimFeatureSupport:
+      title: ScimFeatureSupport
+      type: object
+      properties:
+        supported:
+          type: boolean
+      required:
+      - supported
+    BulkConfig:
+      title: BulkConfig
+      type: object
+      properties:
+        supported:
+          type: boolean
+        maxOperations:
+          type: integer
+        maxPayloadSize:
+          type: integer
+      required:
+      - supported
+      - maxOperations
+      - maxPayloadSize
     FilterConfig:
       title: FilterConfig
       type: object
@@ -682,11 +599,94 @@ components:
       required:
       - supported
       - maxResults
-    EmptyResponse:
-      title: EmptyResponse
+    ScimEmail:
+      title: ScimEmail
       type: object
-      description: Empty response for 204 No Content responses
-      properties: {}
+      properties:
+        primary:
+          type: boolean
+        value:
+          type: string
+        type:
+          type: string
+      required:
+      - primary
+      - value
+      - type
+    SchemasResponse:
+      title: SchemasResponse
+      type: object
+      properties:
+        schemas:
+          type: array
+          items:
+            type: string
+        totalResults:
+          type: integer
+        Resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/SchemaResource'
+      required:
+      - schemas
+      - totalResults
+      - Resources
+    ScimUser:
+      title: ScimUser
+      type: object
+      properties:
+        schemas:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        userName:
+          type: string
+        name:
+          $ref: '#/components/schemas/ScimName'
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScimEmail'
+        meta:
+          $ref: '#/components/schemas/UserMeta'
+      required:
+      - schemas
+      - id
+      - userName
+      - name
+      - emails
+      - meta
+    ResourceMeta:
+      title: ResourceMeta
+      type: object
+      properties:
+        resourceType:
+          type: string
+        location:
+          type: string
+      required:
+      - resourceType
+      - location
+    ResourceTypesResponse:
+      title: ResourceTypesResponse
+      type: object
+      properties:
+        schemas:
+          type: array
+          items:
+            type: string
+        totalResults:
+          type: integer
+        Resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceType'
+      required:
+      - schemas
+      - totalResults
+      - Resources
   securitySchemes:
     BasicAuth:
       type: http

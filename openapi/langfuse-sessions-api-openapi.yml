@@ -158,38 +158,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    PaginatedSessions:
-      title: PaginatedSessions
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Session'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
-    Session:
-      title: Session
-      type: object
-      properties:
-        id:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        projectId:
-          type: string
-        environment:
-          type: string
-          description: The environment from which this session originated.
-      required:
-      - id
-      - createdAt
-      - projectId
-      - environment
     SessionWithTraces:
       title: SessionWithTraces
       type: object
@@ -202,27 +170,6 @@ components:
       - traces
       allOf:
       - $ref: '#/components/schemas/Session'
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
     Trace:
       title: Trace
       type: object
@@ -281,6 +228,59 @@ components:
       - timestamp
       - tags
       - public
+      - environment
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    PaginatedSessions:
+      title: PaginatedSessions
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    Session:
+      title: Session
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        projectId:
+          type: string
+        environment:
+          type: string
+          description: The environment from which this session originated.
+      required:
+      - id
+      - createdAt
+      - projectId
       - environment
   securitySchemes:
     BasicAuth:

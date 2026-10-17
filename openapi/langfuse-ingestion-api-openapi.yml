@@ -171,47 +171,37 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    IngestionResponse:
-      title: IngestionResponse
-      type: object
-      properties:
-        successes:
-          type: array
-          items:
-            $ref: '#/components/schemas/IngestionSuccess'
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/IngestionError'
-      required:
-      - successes
-      - errors
-    UpdateGenerationEvent:
-      title: UpdateGenerationEvent
+    CreateGenerationEvent:
+      title: CreateGenerationEvent
       type: object
       properties:
         body:
-          $ref: '#/components/schemas/UpdateGenerationBody'
+          $ref: '#/components/schemas/CreateGenerationBody'
       required:
       - body
       allOf:
       - $ref: '#/components/schemas/BaseEvent'
-    CreateEventBody:
-      title: CreateEventBody
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-      allOf:
-      - $ref: '#/components/schemas/OptionalObservationBody'
-    UpdateSpanEvent:
-      title: UpdateSpanEvent
+    IngestionUsage:
+      title: IngestionUsage
+      oneOf:
+      - $ref: '#/components/schemas/Usage'
+      - $ref: '#/components/schemas/OpenAIUsage'
+    CreateObservationEvent:
+      title: CreateObservationEvent
       type: object
       properties:
         body:
-          $ref: '#/components/schemas/UpdateSpanBody'
+          $ref: '#/components/schemas/ObservationBody'
+      required:
+      - body
+      allOf:
+      - $ref: '#/components/schemas/BaseEvent'
+    CreateSpanEvent:
+      title: CreateSpanEvent
+      type: object
+      properties:
+        body:
+          $ref: '#/components/schemas/CreateSpanBody'
       required:
       - body
       allOf:
@@ -224,180 +214,6 @@ components:
           type: integer
       - $ref: '#/components/schemas/OpenAICompletionUsageSchema'
       - $ref: '#/components/schemas/OpenAIResponseUsageSchema'
-    CreateSpanEvent:
-      title: CreateSpanEvent
-      type: object
-      properties:
-        body:
-          $ref: '#/components/schemas/CreateSpanBody'
-      required:
-      - body
-      allOf:
-      - $ref: '#/components/schemas/BaseEvent'
-    MapValue:
-      title: MapValue
-      oneOf:
-      - type:
-        - string
-        - 'null'
-      - type:
-        - integer
-        - 'null'
-      - type:
-        - integer
-        - 'null'
-        format: float
-      - type:
-        - boolean
-        - 'null'
-      - type:
-        - array
-        - 'null'
-        items:
-          type: string
-    UpdateSpanBody:
-      title: UpdateSpanBody
-      type: object
-      properties:
-        endTime:
-          type:
-          - string
-          - 'null'
-          format: date-time
-      allOf:
-      - $ref: '#/components/schemas/UpdateEventBody'
-    IngestionSuccess:
-      title: IngestionSuccess
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: integer
-      required:
-      - id
-      - status
-    UpdateGenerationBody:
-      title: UpdateGenerationBody
-      type: object
-      properties:
-        completionStartTime:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        model:
-          type:
-          - string
-          - 'null'
-        modelParameters:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/MapValue'
-        usage:
-          $ref: '#/components/schemas/IngestionUsage'
-        promptName:
-          type:
-          - string
-          - 'null'
-        usageDetails:
-          $ref: '#/components/schemas/UsageDetails'
-        costDetails:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: number
-            format: double
-        promptVersion:
-          type:
-          - integer
-          - 'null'
-      allOf:
-      - $ref: '#/components/schemas/UpdateSpanBody'
-    CreateEventEvent:
-      title: CreateEventEvent
-      type: object
-      properties:
-        body:
-          $ref: '#/components/schemas/CreateEventBody'
-      required:
-      - body
-      allOf:
-      - $ref: '#/components/schemas/BaseEvent'
-    UpdateEventBody:
-      title: UpdateEventBody
-      type: object
-      properties:
-        id:
-          type: string
-      required:
-      - id
-      allOf:
-      - $ref: '#/components/schemas/OptionalObservationBody'
-    ObservationType:
-      title: ObservationType
-      type: string
-      enum:
-      - SPAN
-      - GENERATION
-      - EVENT
-      - AGENT
-      - TOOL
-      - CHAIN
-      - RETRIEVER
-      - EVALUATOR
-      - EMBEDDING
-      - GUARDRAIL
-    CreateScoreValue:
-      title: CreateScoreValue
-      oneOf:
-      - type: number
-        format: double
-      - type: string
-      description: The value of the score. Must be passed as string for categorical and text scores, and numeric for boolean and numeric scores
-    CreateGenerationBody:
-      title: CreateGenerationBody
-      type: object
-      properties:
-        completionStartTime:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        model:
-          type:
-          - string
-          - 'null'
-        modelParameters:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/MapValue'
-        usage:
-          $ref: '#/components/schemas/IngestionUsage'
-        usageDetails:
-          $ref: '#/components/schemas/UsageDetails'
-        costDetails:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type: number
-            format: double
-        promptName:
-          type:
-          - string
-          - 'null'
-        promptVersion:
-          type:
-          - integer
-          - 'null'
-      allOf:
-      - $ref: '#/components/schemas/CreateSpanBody'
     SDKLogEvent:
       title: SDKLogEvent
       type: object
@@ -476,29 +292,103 @@ components:
           - 'null'
       required:
       - type
-    OpenAIUsage:
-      title: OpenAIUsage
+    ScoreEvent:
+      title: ScoreEvent
       type: object
-      description: Usage interface of OpenAI for improved compatibility.
       properties:
-        promptTokens:
+        body:
+          $ref: '#/components/schemas/ScoreBody'
+      required:
+      - body
+      allOf:
+      - $ref: '#/components/schemas/BaseEvent'
+    OpenAICompletionUsageSchema:
+      title: OpenAICompletionUsageSchema
+      type: object
+      description: OpenAI Usage schema from (Chat-)Completion APIs
+      properties:
+        prompt_tokens:
+          type: integer
+        completion_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+        prompt_tokens_details:
           type:
-          - integer
+          - object
           - 'null'
-        completionTokens:
+          additionalProperties:
+            type:
+            - integer
+            - 'null'
+        completion_tokens_details:
           type:
-          - integer
+          - object
           - 'null'
-        totalTokens:
-          type:
-          - integer
-          - 'null'
+          additionalProperties:
+            type:
+            - integer
+            - 'null'
+      required:
+      - prompt_tokens
+      - completion_tokens
+      - total_tokens
     TraceEvent:
       title: TraceEvent
       type: object
       properties:
         body:
           $ref: '#/components/schemas/TraceBody'
+      required:
+      - body
+      allOf:
+      - $ref: '#/components/schemas/BaseEvent'
+    CreateGenerationBody:
+      title: CreateGenerationBody
+      type: object
+      properties:
+        completionStartTime:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        model:
+          type:
+          - string
+          - 'null'
+        modelParameters:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/MapValue'
+        usage:
+          $ref: '#/components/schemas/IngestionUsage'
+        usageDetails:
+          $ref: '#/components/schemas/UsageDetails'
+        costDetails:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: number
+            format: double
+        promptName:
+          type:
+          - string
+          - 'null'
+        promptVersion:
+          type:
+          - integer
+          - 'null'
+      allOf:
+      - $ref: '#/components/schemas/CreateSpanBody'
+    UpdateObservationEvent:
+      title: UpdateObservationEvent
+      type: object
+      properties:
+        body:
+          $ref: '#/components/schemas/ObservationBody'
       required:
       - body
       allOf:
@@ -518,16 +408,24 @@ components:
       required:
       - id
       - timestamp
-    ScoreEvent:
-      title: ScoreEvent
+    UpdateSpanBody:
+      title: UpdateSpanBody
       type: object
       properties:
-        body:
-          $ref: '#/components/schemas/ScoreBody'
-      required:
-      - body
+        endTime:
+          type:
+          - string
+          - 'null'
+          format: date-time
       allOf:
-      - $ref: '#/components/schemas/BaseEvent'
+      - $ref: '#/components/schemas/UpdateEventBody'
+    CreateScoreValue:
+      title: CreateScoreValue
+      oneOf:
+      - type: number
+        format: double
+      - type: string
+      description: The value of the score. Must be passed as string for categorical and text scores, and numeric for boolean and numeric scores
     Usage:
       title: Usage
       type: object
@@ -569,144 +467,101 @@ components:
       - input
       - output
       - total
-    ScoreDataType:
-      title: ScoreDataType
-      type: string
-      enum:
-      - NUMERIC
-      - BOOLEAN
-      - CATEGORICAL
-      - CORRECTION
-      - TEXT
-    CreateSpanBody:
-      title: CreateSpanBody
+    OpenAIUsage:
+      title: OpenAIUsage
+      type: object
+      description: Usage interface of OpenAI for improved compatibility.
+      properties:
+        promptTokens:
+          type:
+          - integer
+          - 'null'
+        completionTokens:
+          type:
+          - integer
+          - 'null'
+        totalTokens:
+          type:
+          - integer
+          - 'null'
+    OptionalObservationBody:
+      title: OptionalObservationBody
       type: object
       properties:
-        endTime:
-          type:
-          - string
-          - 'null'
-          format: date-time
-      allOf:
-      - $ref: '#/components/schemas/CreateEventBody'
-    IngestionError:
-      title: IngestionError
-      type: object
-      properties:
-        id:
-          type: string
-        status:
-          type: integer
-        message:
-          type:
-          - string
-          - 'null'
-        error: {}
-      required:
-      - id
-      - status
-    CreateObservationEvent:
-      title: CreateObservationEvent
-      type: object
-      properties:
-        body:
-          $ref: '#/components/schemas/ObservationBody'
-      required:
-      - body
-      allOf:
-      - $ref: '#/components/schemas/BaseEvent'
-    IngestionUsage:
-      title: IngestionUsage
-      oneOf:
-      - $ref: '#/components/schemas/Usage'
-      - $ref: '#/components/schemas/OpenAIUsage'
-    OpenAICompletionUsageSchema:
-      title: OpenAICompletionUsageSchema
-      type: object
-      description: OpenAI Usage schema from (Chat-)Completion APIs
-      properties:
-        prompt_tokens:
-          type: integer
-        completion_tokens:
-          type: integer
-        total_tokens:
-          type: integer
-        prompt_tokens_details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type:
-            - integer
-            - 'null'
-        completion_tokens_details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type:
-            - integer
-            - 'null'
-      required:
-      - prompt_tokens
-      - completion_tokens
-      - total_tokens
-    ScoreBody:
-      title: ScoreBody
-      type: object
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
         traceId:
           type:
           - string
           - 'null'
-        sessionId:
-          type:
-          - string
-          - 'null'
-        observationId:
-          type:
-          - string
-          - 'null'
-        datasetRunId:
-          type:
-          - string
-          - 'null'
         name:
-          type: string
-          description: The name of the score. Always overrides "output" for correction scores.
-          example: novelty
+          type:
+          - string
+          - 'null'
+        startTime:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        metadata: {}
+        input: {}
+        output: {}
+        level:
+          $ref: '#/components/schemas/ObservationLevel'
+        statusMessage:
+          type:
+          - string
+          - 'null'
+        parentObservationId:
+          type:
+          - string
+          - 'null'
+        version:
+          type:
+          - string
+          - 'null'
         environment:
           type:
           - string
           - 'null'
-        queueId:
+    UpdateGenerationBody:
+      title: UpdateGenerationBody
+      type: object
+      properties:
+        completionStartTime:
           type:
           - string
           - 'null'
-          description: The annotation queue referenced by the score. Indicates if score was initially created while processing annotation queue.
-        value:
-          $ref: '#/components/schemas/CreateScoreValue'
-          description: The value of the score. Must be passed as string for categorical and text scores, and numeric for boolean and numeric scores. Boolean score values must equal either 1 or 0 (true or false). Text score values must be between 1 and 500 characters.
-        comment:
+          format: date-time
+        model:
           type:
           - string
           - 'null'
-        metadata: {}
-        dataType:
-          $ref: '#/components/schemas/ScoreDataType'
-          description: When set, must match the score value's type. If not set, will be inferred from the score value or config
-        configId:
+        modelParameters:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/MapValue'
+        usage:
+          $ref: '#/components/schemas/IngestionUsage'
+        promptName:
           type:
           - string
           - 'null'
-          description: Reference a score config on a score. When set, the score name must equal the config name and scores must comply with the config's range and data type. For categorical scores, the value must map to a config category. Numeric scores might be constrained by the score config's max and min values
-      required:
-      - name
-      - value
+        usageDetails:
+          $ref: '#/components/schemas/UsageDetails'
+        costDetails:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: number
+            format: double
+        promptVersion:
+          type:
+          - integer
+          - 'null'
+      allOf:
+      - $ref: '#/components/schemas/UpdateSpanBody'
     TraceBody:
       title: TraceBody
       type: object
@@ -758,110 +613,6 @@ components:
           - boolean
           - 'null'
           description: Make trace publicly accessible via url
-    UpdateObservationEvent:
-      title: UpdateObservationEvent
-      type: object
-      properties:
-        body:
-          $ref: '#/components/schemas/ObservationBody'
-      required:
-      - body
-      allOf:
-      - $ref: '#/components/schemas/BaseEvent'
-    OpenAIResponseUsageSchema:
-      title: OpenAIResponseUsageSchema
-      type: object
-      description: OpenAI Usage schema from Response API
-      properties:
-        input_tokens:
-          type: integer
-        output_tokens:
-          type: integer
-        total_tokens:
-          type: integer
-        input_tokens_details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type:
-            - integer
-            - 'null'
-        output_tokens_details:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            type:
-            - integer
-            - 'null'
-      required:
-      - input_tokens
-      - output_tokens
-      - total_tokens
-    ObservationLevel:
-      title: ObservationLevel
-      type: string
-      enum:
-      - DEBUG
-      - DEFAULT
-      - WARNING
-      - ERROR
-    OptionalObservationBody:
-      title: OptionalObservationBody
-      type: object
-      properties:
-        traceId:
-          type:
-          - string
-          - 'null'
-        name:
-          type:
-          - string
-          - 'null'
-        startTime:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        metadata: {}
-        input: {}
-        output: {}
-        level:
-          $ref: '#/components/schemas/ObservationLevel'
-        statusMessage:
-          type:
-          - string
-          - 'null'
-        parentObservationId:
-          type:
-          - string
-          - 'null'
-        version:
-          type:
-          - string
-          - 'null'
-        environment:
-          type:
-          - string
-          - 'null'
-    SDKLogBody:
-      title: SDKLogBody
-      type: object
-      properties:
-        log: {}
-      required:
-      - log
-    CreateGenerationEvent:
-      title: CreateGenerationEvent
-      type: object
-      properties:
-        body:
-          $ref: '#/components/schemas/CreateGenerationBody'
-      required:
-      - body
-      allOf:
-      - $ref: '#/components/schemas/BaseEvent'
     IngestionEvent:
       title: IngestionEvent
       oneOf:
@@ -975,6 +726,255 @@ components:
         - $ref: '#/components/schemas/UpdateObservationEvent'
         required:
         - type
+    ScoreDataType:
+      title: ScoreDataType
+      type: string
+      enum:
+      - NUMERIC
+      - BOOLEAN
+      - CATEGORICAL
+      - CORRECTION
+      - TEXT
+    IngestionSuccess:
+      title: IngestionSuccess
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: integer
+      required:
+      - id
+      - status
+    CreateEventBody:
+      title: CreateEventBody
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+      allOf:
+      - $ref: '#/components/schemas/OptionalObservationBody'
+    UpdateEventBody:
+      title: UpdateEventBody
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      allOf:
+      - $ref: '#/components/schemas/OptionalObservationBody'
+    IngestionError:
+      title: IngestionError
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: integer
+        message:
+          type:
+          - string
+          - 'null'
+        error: {}
+      required:
+      - id
+      - status
+    CreateSpanBody:
+      title: CreateSpanBody
+      type: object
+      properties:
+        endTime:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      allOf:
+      - $ref: '#/components/schemas/CreateEventBody'
+    ScoreBody:
+      title: ScoreBody
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        traceId:
+          type:
+          - string
+          - 'null'
+        sessionId:
+          type:
+          - string
+          - 'null'
+        observationId:
+          type:
+          - string
+          - 'null'
+        datasetRunId:
+          type:
+          - string
+          - 'null'
+        name:
+          type: string
+          description: The name of the score. Always overrides "output" for correction scores.
+          example: novelty
+        environment:
+          type:
+          - string
+          - 'null'
+        queueId:
+          type:
+          - string
+          - 'null'
+          description: The annotation queue referenced by the score. Indicates if score was initially created while processing annotation queue.
+        value:
+          $ref: '#/components/schemas/CreateScoreValue'
+          description: The value of the score. Must be passed as string for categorical and text scores, and numeric for boolean and numeric scores. Boolean score values must equal either 1 or 0 (true or false). Text score values must be between 1 and 500 characters.
+        comment:
+          type:
+          - string
+          - 'null'
+        metadata: {}
+        dataType:
+          $ref: '#/components/schemas/ScoreDataType'
+          description: When set, must match the score value's type. If not set, will be inferred from the score value or config
+        configId:
+          type:
+          - string
+          - 'null'
+          description: Reference a score config on a score. When set, the score name must equal the config name and scores must comply with the config's range and data type. For categorical scores, the value must map to a config category. Numeric scores might be constrained by the score config's max and min values
+      required:
+      - name
+      - value
+    MapValue:
+      title: MapValue
+      oneOf:
+      - type:
+        - string
+        - 'null'
+      - type:
+        - integer
+        - 'null'
+      - type:
+        - integer
+        - 'null'
+        format: float
+      - type:
+        - boolean
+        - 'null'
+      - type:
+        - array
+        - 'null'
+        items:
+          type: string
+    CreateEventEvent:
+      title: CreateEventEvent
+      type: object
+      properties:
+        body:
+          $ref: '#/components/schemas/CreateEventBody'
+      required:
+      - body
+      allOf:
+      - $ref: '#/components/schemas/BaseEvent'
+    UpdateSpanEvent:
+      title: UpdateSpanEvent
+      type: object
+      properties:
+        body:
+          $ref: '#/components/schemas/UpdateSpanBody'
+      required:
+      - body
+      allOf:
+      - $ref: '#/components/schemas/BaseEvent'
+    UpdateGenerationEvent:
+      title: UpdateGenerationEvent
+      type: object
+      properties:
+        body:
+          $ref: '#/components/schemas/UpdateGenerationBody'
+      required:
+      - body
+      allOf:
+      - $ref: '#/components/schemas/BaseEvent'
+    SDKLogBody:
+      title: SDKLogBody
+      type: object
+      properties:
+        log: {}
+      required:
+      - log
+    ObservationLevel:
+      title: ObservationLevel
+      type: string
+      enum:
+      - DEBUG
+      - DEFAULT
+      - WARNING
+      - ERROR
+    IngestionResponse:
+      title: IngestionResponse
+      type: object
+      properties:
+        successes:
+          type: array
+          items:
+            $ref: '#/components/schemas/IngestionSuccess'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/IngestionError'
+      required:
+      - successes
+      - errors
+    OpenAIResponseUsageSchema:
+      title: OpenAIResponseUsageSchema
+      type: object
+      description: OpenAI Usage schema from Response API
+      properties:
+        input_tokens:
+          type: integer
+        output_tokens:
+          type: integer
+        total_tokens:
+          type: integer
+        input_tokens_details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type:
+            - integer
+            - 'null'
+        output_tokens_details:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type:
+            - integer
+            - 'null'
+      required:
+      - input_tokens
+      - output_tokens
+      - total_tokens
+    ObservationType:
+      title: ObservationType
+      type: string
+      enum:
+      - SPAN
+      - GENERATION
+      - EVENT
+      - AGENT
+      - TOOL
+      - CHAIN
+      - RETRIEVER
+      - EVALUATOR
+      - EMBEDDING
+      - GUARDRAIL
   securitySchemes:
     BasicAuth:
       type: http

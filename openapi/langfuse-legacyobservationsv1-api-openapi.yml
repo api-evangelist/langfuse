@@ -218,6 +218,47 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    Usage:
+      title: Usage
+      type: object
+      description: (Deprecated. Use usageDetails and costDetails instead.) Standard interface for usage and cost
+      properties:
+        input:
+          type: integer
+          description: Number of input units (e.g. tokens)
+        output:
+          type: integer
+          description: Number of output units (e.g. tokens)
+        total:
+          type: integer
+          description: Defaults to input+output if not set
+        unit:
+          type:
+          - string
+          - 'null'
+          description: Unit of measurement
+        inputCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: USD input cost
+        outputCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: USD output cost
+        totalCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: USD total cost, defaults to input+output
+      required:
+      - input
+      - output
+      - total
     legacyObservationsViews:
       title: legacyObservationsViews
       type: object
@@ -231,6 +272,104 @@ components:
       required:
       - data
       - meta
+    ObservationsView:
+      title: ObservationsView
+      type: object
+      properties:
+        promptName:
+          type:
+          - string
+          - 'null'
+          description: The name of the prompt associated with the observation
+        promptVersion:
+          type:
+          - integer
+          - 'null'
+          description: The version of the prompt associated with the observation
+        modelId:
+          type:
+          - string
+          - 'null'
+          description: The unique identifier of the model
+        inputPrice:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The price of the input in USD
+        outputPrice:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The price of the output in USD.
+        totalPrice:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The total price in USD.
+        calculatedInputCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated cost of the input in USD
+        calculatedOutputCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated cost of the output in USD
+        calculatedTotalCost:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated total cost in USD
+        latency:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The latency in seconds.
+        timeToFirstToken:
+          type:
+          - number
+          - 'null'
+          format: double
+          description: The time to the first token in seconds
+      allOf:
+      - $ref: '#/components/schemas/Observation'
+    ObservationLevel:
+      title: ObservationLevel
+      type: string
+      enum:
+      - DEBUG
+      - DEFAULT
+      - WARNING
+      - ERROR
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
     Observation:
       title: Observation
       type: object
@@ -333,145 +472,6 @@ components:
       - usageDetails
       - costDetails
       - environment
-    Usage:
-      title: Usage
-      type: object
-      description: (Deprecated. Use usageDetails and costDetails instead.) Standard interface for usage and cost
-      properties:
-        input:
-          type: integer
-          description: Number of input units (e.g. tokens)
-        output:
-          type: integer
-          description: Number of output units (e.g. tokens)
-        total:
-          type: integer
-          description: Defaults to input+output if not set
-        unit:
-          type:
-          - string
-          - 'null'
-          description: Unit of measurement
-        inputCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: USD input cost
-        outputCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: USD output cost
-        totalCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: USD total cost, defaults to input+output
-      required:
-      - input
-      - output
-      - total
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    ObservationLevel:
-      title: ObservationLevel
-      type: string
-      enum:
-      - DEBUG
-      - DEFAULT
-      - WARNING
-      - ERROR
-    ObservationsView:
-      title: ObservationsView
-      type: object
-      properties:
-        promptName:
-          type:
-          - string
-          - 'null'
-          description: The name of the prompt associated with the observation
-        promptVersion:
-          type:
-          - integer
-          - 'null'
-          description: The version of the prompt associated with the observation
-        modelId:
-          type:
-          - string
-          - 'null'
-          description: The unique identifier of the model
-        inputPrice:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The price of the input in USD
-        outputPrice:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The price of the output in USD.
-        totalPrice:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The total price in USD.
-        calculatedInputCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated cost of the input in USD
-        calculatedOutputCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated cost of the output in USD
-        calculatedTotalCost:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: (Deprecated. Use usageDetails and costDetails instead.) The calculated total cost in USD
-        latency:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The latency in seconds.
-        timeToFirstToken:
-          type:
-          - number
-          - 'null'
-          format: double
-          description: The time to the first token in seconds
-      allOf:
-      - $ref: '#/components/schemas/Observation'
   securitySchemes:
     BasicAuth:
       type: http

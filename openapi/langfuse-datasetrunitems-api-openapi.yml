@@ -160,52 +160,6 @@ components:
       - limit
       - totalItems
       - totalPages
-    DatasetRunItem:
-      title: DatasetRunItem
-      type: object
-      properties:
-        id:
-          type: string
-        datasetRunId:
-          type: string
-        datasetRunName:
-          type: string
-        datasetItemId:
-          type: string
-        traceId:
-          type: string
-        observationId:
-          type:
-          - string
-          - 'null'
-          description: The observation ID associated with this run item
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - datasetRunId
-      - datasetRunName
-      - datasetItemId
-      - traceId
-      - createdAt
-      - updatedAt
-    PaginatedDatasetRunItems:
-      title: PaginatedDatasetRunItems
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DatasetRunItem'
-        meta:
-          $ref: '#/components/schemas/utilsMetaResponse'
-      required:
-      - data
-      - meta
     CreateDatasetRunItemRequest:
       title: CreateDatasetRunItemRequest
       type: object
@@ -245,6 +199,52 @@ components:
       required:
       - runName
       - datasetItemId
+    PaginatedDatasetRunItems:
+      title: PaginatedDatasetRunItems
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetRunItem'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    DatasetRunItem:
+      title: DatasetRunItem
+      type: object
+      properties:
+        id:
+          type: string
+        datasetRunId:
+          type: string
+        datasetRunName:
+          type: string
+        datasetItemId:
+          type: string
+        traceId:
+          type: string
+        observationId:
+          type:
+          - string
+          - 'null'
+          description: The observation ID associated with this run item
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - datasetRunId
+      - datasetRunName
+      - datasetItemId
+      - traceId
+      - createdAt
+      - updatedAt
   securitySchemes:
     BasicAuth:
       type: http
