@@ -143,34 +143,6 @@ apis:
     url: https://langfuse.com/docs/scores
   - type: Documentation
     url: https://langfuse.com/self-hosting
-- aid: langfuse:langfuse-datasetrunitems-api
-  name: Langfuse DatasetRunItems API
-  description: The DatasetRunItems API from Langfuse — 1 operation(s) for datasetrunitems.
-  humanURL: https://langfuse.com/docs/tracing
-  baseURL: https://cloud.langfuse.com/api/public
-  tags:
-  - DatasetRunItems
-  properties:
-  - type: OpenAPI
-    url: openapi/langfuse-datasetrunitems-api-openapi.yml
-  - type: Documentation
-    url: https://langfuse.com/docs/tracing
-  - type: APIReference
-    url: https://api.reference.langfuse.com/
-  - type: Documentation
-    url: https://langfuse.com/docs/api
-  - type: Documentation
-    url: https://langfuse.com/docs/analytics
-  - type: Documentation
-    url: https://langfuse.com/docs/prompts
-  - type: Documentation
-    url: https://langfuse.com/docs/datasets
-  - type: Documentation
-    url: https://langfuse.com/docs/evaluation
-  - type: Documentation
-    url: https://langfuse.com/docs/scores
-  - type: Documentation
-    url: https://langfuse.com/self-hosting
 - aid: langfuse:langfuse-datasets-api
   name: Langfuse Datasets API
   description: The Datasets API from Langfuse — 4 operation(s) for datasets.
@@ -209,118 +181,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/langfuse-health-api-openapi.yml
-  - type: Documentation
-    url: https://langfuse.com/docs/tracing
-  - type: APIReference
-    url: https://api.reference.langfuse.com/
-  - type: Documentation
-    url: https://langfuse.com/docs/api
-  - type: Documentation
-    url: https://langfuse.com/docs/analytics
-  - type: Documentation
-    url: https://langfuse.com/docs/prompts
-  - type: Documentation
-    url: https://langfuse.com/docs/datasets
-  - type: Documentation
-    url: https://langfuse.com/docs/evaluation
-  - type: Documentation
-    url: https://langfuse.com/docs/scores
-  - type: Documentation
-    url: https://langfuse.com/self-hosting
-- aid: langfuse:langfuse-ingestion-api
-  name: Langfuse Ingestion API
-  description: The Ingestion API from Langfuse — 1 operation(s) for ingestion.
-  humanURL: https://langfuse.com/docs/tracing
-  baseURL: https://cloud.langfuse.com/api/public
-  tags:
-  - Ingestion
-  properties:
-  - type: OpenAPI
-    url: openapi/langfuse-ingestion-api-openapi.yml
-  - type: Documentation
-    url: https://langfuse.com/docs/tracing
-  - type: APIReference
-    url: https://api.reference.langfuse.com/
-  - type: Documentation
-    url: https://langfuse.com/docs/api
-  - type: Documentation
-    url: https://langfuse.com/docs/analytics
-  - type: Documentation
-    url: https://langfuse.com/docs/prompts
-  - type: Documentation
-    url: https://langfuse.com/docs/datasets
-  - type: Documentation
-    url: https://langfuse.com/docs/evaluation
-  - type: Documentation
-    url: https://langfuse.com/docs/scores
-  - type: Documentation
-    url: https://langfuse.com/self-hosting
-- aid: langfuse:langfuse-legacymetricsv1-api
-  name: Langfuse LegacyMetricsV1 API
-  description: The LegacyMetricsV1 API from Langfuse — 1 operation(s) for legacymetricsv1.
-  humanURL: https://langfuse.com/docs/tracing
-  baseURL: https://cloud.langfuse.com/api/public
-  tags:
-  - LegacyMetricsV1
-  properties:
-  - type: OpenAPI
-    url: openapi/langfuse-legacymetricsv1-api-openapi.yml
-  - type: Documentation
-    url: https://langfuse.com/docs/tracing
-  - type: APIReference
-    url: https://api.reference.langfuse.com/
-  - type: Documentation
-    url: https://langfuse.com/docs/api
-  - type: Documentation
-    url: https://langfuse.com/docs/analytics
-  - type: Documentation
-    url: https://langfuse.com/docs/prompts
-  - type: Documentation
-    url: https://langfuse.com/docs/datasets
-  - type: Documentation
-    url: https://langfuse.com/docs/evaluation
-  - type: Documentation
-    url: https://langfuse.com/docs/scores
-  - type: Documentation
-    url: https://langfuse.com/self-hosting
-- aid: langfuse:langfuse-legacyobservationsv1-api
-  name: Langfuse LegacyObservationsV1 API
-  description: The LegacyObservationsV1 API from Langfuse — 2 operation(s) for legacyobservationsv1.
-  humanURL: https://langfuse.com/docs/tracing
-  baseURL: https://cloud.langfuse.com/api/public
-  tags:
-  - LegacyObservationsV1
-  properties:
-  - type: OpenAPI
-    url: openapi/langfuse-legacyobservationsv1-api-openapi.yml
-  - type: Documentation
-    url: https://langfuse.com/docs/tracing
-  - type: APIReference
-    url: https://api.reference.langfuse.com/
-  - type: Documentation
-    url: https://langfuse.com/docs/api
-  - type: Documentation
-    url: https://langfuse.com/docs/analytics
-  - type: Documentation
-    url: https://langfuse.com/docs/prompts
-  - type: Documentation
-    url: https://langfuse.com/docs/datasets
-  - type: Documentation
-    url: https://langfuse.com/docs/evaluation
-  - type: Documentation
-    url: https://langfuse.com/docs/scores
-  - type: Documentation
-    url: https://langfuse.com/self-hosting
-- aid: langfuse:langfuse-legacyscorev1-api
-  name: Langfuse LegacyScoreV1 API
-  description: The LegacyScoreV1 API from Langfuse — 2 operation(s) for legacyscorev1.
-  humanURL: https://langfuse.com/docs/tracing
-  baseURL: https://cloud.langfuse.com/api/public
-  tags:
-  - LegacyScoreV1
-  properties:
-  - type: OpenAPI
-    url: openapi/langfuse-legacyscorev1-api-openapi.yml
   - type: Documentation
     url: https://langfuse.com/docs/tracing
   - type: APIReference
@@ -681,34 +541,6 @@ apis:
     url: https://langfuse.com/docs/scores
   - type: Documentation
     url: https://langfuse.com/self-hosting
-- aid: langfuse:langfuse-sessions-api
-  name: Langfuse Sessions API
-  description: The Sessions API from Langfuse — 2 operation(s) for sessions.
-  humanURL: https://langfuse.com/docs/tracing
-  baseURL: https://cloud.langfuse.com/api/public
-  tags:
-  - Sessions
-  properties:
-  - type: OpenAPI
-    url: openapi/langfuse-sessions-api-openapi.yml
-  - type: Documentation
-    url: https://langfuse.com/docs/tracing
-  - type: APIReference
-    url: https://api.reference.langfuse.com/
-  - type: Documentation
-    url: https://langfuse.com/docs/api
-  - type: Documentation
-    url: https://langfuse.com/docs/analytics
-  - type: Documentation
-    url: https://langfuse.com/docs/prompts
-  - type: Documentation
-    url: https://langfuse.com/docs/datasets
-  - type: Documentation
-    url: https://langfuse.com/docs/evaluation
-  - type: Documentation
-    url: https://langfuse.com/docs/scores
-  - type: Documentation
-    url: https://langfuse.com/self-hosting
 - aid: langfuse:langfuse-trace-api
   name: Langfuse Trace API
   description: The Trace API from Langfuse — 2 operation(s) for trace.
@@ -737,17 +569,16 @@ apis:
     url: https://langfuse.com/docs/scores
   - type: Documentation
     url: https://langfuse.com/self-hosting
-- aid: langfuse:langfuse-unstableevaluationrules-api
-  name: Langfuse UnstableEvaluationRules API
-  description: >-
-    The UnstableEvaluationRules API from Langfuse — 2 operation(s) for unstableevaluationrules.
+- aid: langfuse:langfuse-evaluationrules-api
+  name: Langfuse Evaluation Rules API
+  description: The EvaluationRules API from Langfuse — 2 operation(s) for evaluationrules.
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
-  - UnstableEvaluationRules
+  - EvaluationRules
   properties:
   - type: OpenAPI
-    url: openapi/langfuse-unstableevaluationrules-api-openapi.yml
+    url: openapi/langfuse-evaluationrules-api-openapi.yml
   - type: Documentation
     url: https://langfuse.com/docs/tracing
   - type: APIReference
@@ -766,16 +597,157 @@ apis:
     url: https://langfuse.com/docs/scores
   - type: Documentation
     url: https://langfuse.com/self-hosting
-- aid: langfuse:langfuse-unstableevaluators-api
-  name: Langfuse UnstableEvaluators API
-  description: The UnstableEvaluators API from Langfuse — 2 operation(s) for unstableevaluators.
+- aid: langfuse:langfuse-evaluators-api
+  name: Langfuse Evaluators API
+  description: The Evaluators API from Langfuse — 3 operation(s) for evaluators.
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
-  - UnstableEvaluators
+  - Evaluators
   properties:
   - type: OpenAPI
-    url: openapi/langfuse-unstableevaluators-api-openapi.yml
+    url: openapi/langfuse-evaluators-api-openapi.yml
+  - type: Documentation
+    url: https://langfuse.com/docs/tracing
+  - type: APIReference
+    url: https://api.reference.langfuse.com/
+  - type: Documentation
+    url: https://langfuse.com/docs/api
+  - type: Documentation
+    url: https://langfuse.com/docs/analytics
+  - type: Documentation
+    url: https://langfuse.com/docs/prompts
+  - type: Documentation
+    url: https://langfuse.com/docs/datasets
+  - type: Documentation
+    url: https://langfuse.com/docs/evaluation
+  - type: Documentation
+    url: https://langfuse.com/docs/scores
+  - type: Documentation
+    url: https://langfuse.com/self-hosting
+- aid: langfuse:langfuse-experiments-api
+  name: Langfuse Experiments API
+  description: The Experiments API from Langfuse — 2 operation(s) for experiments.
+  humanURL: https://langfuse.com/docs/tracing
+  baseURL: https://cloud.langfuse.com/api/public
+  tags:
+  - Experiments
+  properties:
+  - type: OpenAPI
+    url: openapi/langfuse-experiments-api-openapi.yml
+  - type: Documentation
+    url: https://langfuse.com/docs/tracing
+  - type: APIReference
+    url: https://api.reference.langfuse.com/
+  - type: Documentation
+    url: https://langfuse.com/docs/api
+  - type: Documentation
+    url: https://langfuse.com/docs/analytics
+  - type: Documentation
+    url: https://langfuse.com/docs/prompts
+  - type: Documentation
+    url: https://langfuse.com/docs/datasets
+  - type: Documentation
+    url: https://langfuse.com/docs/evaluation
+  - type: Documentation
+    url: https://langfuse.com/docs/scores
+  - type: Documentation
+    url: https://langfuse.com/self-hosting
+- aid: langfuse:langfuse-feedback-api
+  name: Langfuse Feedback API
+  description: The Feedback API from Langfuse — 1 operation(s) for feedback.
+  humanURL: https://langfuse.com/docs/tracing
+  baseURL: https://cloud.langfuse.com/api/public
+  tags:
+  - Feedback
+  properties:
+  - type: OpenAPI
+    url: openapi/langfuse-feedback-api-openapi.yml
+  - type: Documentation
+    url: https://langfuse.com/docs/tracing
+  - type: APIReference
+    url: https://api.reference.langfuse.com/
+  - type: Documentation
+    url: https://langfuse.com/docs/api
+  - type: Documentation
+    url: https://langfuse.com/docs/analytics
+  - type: Documentation
+    url: https://langfuse.com/docs/prompts
+  - type: Documentation
+    url: https://langfuse.com/docs/datasets
+  - type: Documentation
+    url: https://langfuse.com/docs/evaluation
+  - type: Documentation
+    url: https://langfuse.com/docs/scores
+  - type: Documentation
+    url: https://langfuse.com/self-hosting
+- aid: langfuse:langfuse-unstabledashboards-api
+  name: Langfuse Unstable Dashboards API
+  description: The UnstableDashboards API from Langfuse — 4 operation(s) for unstabledashboards.
+  humanURL: https://langfuse.com/docs/tracing
+  baseURL: https://cloud.langfuse.com/api/public
+  tags:
+  - UnstableDashboards
+  properties:
+  - type: OpenAPI
+    url: openapi/langfuse-unstabledashboards-api-openapi.yml
+  - type: Documentation
+    url: https://langfuse.com/docs/tracing
+  - type: APIReference
+    url: https://api.reference.langfuse.com/
+  - type: Documentation
+    url: https://langfuse.com/docs/api
+  - type: Documentation
+    url: https://langfuse.com/docs/analytics
+  - type: Documentation
+    url: https://langfuse.com/docs/prompts
+  - type: Documentation
+    url: https://langfuse.com/docs/datasets
+  - type: Documentation
+    url: https://langfuse.com/docs/evaluation
+  - type: Documentation
+    url: https://langfuse.com/docs/scores
+  - type: Documentation
+    url: https://langfuse.com/self-hosting
+- aid: langfuse:langfuse-unstabledashboardwidgets-api
+  name: Langfuse Unstable Dashboard Widgets API
+  description: >-
+    The UnstableDashboardWidgets API from Langfuse — 2 operation(s) for unstabledashboardwidgets.
+  humanURL: https://langfuse.com/docs/tracing
+  baseURL: https://cloud.langfuse.com/api/public
+  tags:
+  - UnstableDashboardWidgets
+  properties:
+  - type: OpenAPI
+    url: openapi/langfuse-unstabledashboardwidgets-api-openapi.yml
+  - type: Documentation
+    url: https://langfuse.com/docs/tracing
+  - type: APIReference
+    url: https://api.reference.langfuse.com/
+  - type: Documentation
+    url: https://langfuse.com/docs/api
+  - type: Documentation
+    url: https://langfuse.com/docs/analytics
+  - type: Documentation
+    url: https://langfuse.com/docs/prompts
+  - type: Documentation
+    url: https://langfuse.com/docs/datasets
+  - type: Documentation
+    url: https://langfuse.com/docs/evaluation
+  - type: Documentation
+    url: https://langfuse.com/docs/scores
+  - type: Documentation
+    url: https://langfuse.com/self-hosting
+- aid: langfuse:langfuse-unstableskills-api
+  name: Langfuse Unstable Skills API
+  description: The UnstableSkills API from Langfuse — 4 operation(s) for unstableskills.
+  humanURL: https://langfuse.com/docs/tracing
+  baseURL: https://cloud.langfuse.com/api/public
+  tags:
+  - UnstableSkills
+  properties:
+  - type: OpenAPI
+    url: openapi/langfuse-unstableskills-api-openapi.yml
   - type: Documentation
     url: https://langfuse.com/docs/tracing
   - type: APIReference
@@ -828,8 +800,6 @@ apis:
   humanURL: https://langfuse.com/docs/tracing
   baseURL: https://cloud.langfuse.com/api/public
   tags:
-  - OpenTelemetry
-  tags_raw:
   - Open Telemetry
   properties:
   - type: OpenAPI

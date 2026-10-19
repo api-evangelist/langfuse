@@ -1,0 +1,136 @@
+openapi: 3.2.0
+info:
+  title: server Feedback API
+  version: ''
+  description: '## Real-time data
+
+
+    The only real-time path to get tracing data is to ingest via OpenTelemetry (`POST /api/public/otel/v1/traces`) and retrieve via Observations API v2 (`GET /api/public/v2/observations`) and Metrics API v2 (`GET /api/public/v2/metrics`). Other public API write and read endpoints can delay data by about 10 minutes. Direct OpenTelemetry exporters must send the `x-langfuse-ingestion-version: 4` header; current Python and JS SDKs already do. See the Public API docs and real-time ingestion.
+
+
+    ## Authentication
+
+
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml
+
+    - Self-hosted deployments: interactive API reference at `/api/docs` and OpenAPI spec at `/api/openapi.yaml`'
+tags:
+- name: Feedback
+paths:
+  /api/public/feedback:
+    post:
+      description: 'Submit explicit user-approved feedback about Langfuse skills, MCP tools, CLI, docs, or public API. Do not include secrets, credentials, customer data, trace payloads, or unrelated use-case details.
+
+
+        Not available in the HIPAA cloud region.'
+      operationId: feedback_submit
+      tags:
+      - Feedback
+      parameters: []
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubmitFeedbackResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: ''
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitFeedbackRequest'
+      summary: Feedback submit
+      x-summary-source: derived
+components:
+  schemas:
+    FeedbackTargetType:
+      title: FeedbackTargetType
+      type: string
+      enum:
+      - skill
+      - mcp-tool
+      - cli
+      - docs
+      - public-api
+      - other
+    SubmitFeedbackRequest:
+      title: SubmitFeedbackRequest
+      type: object
+      properties:
+        targetType:
+          $ref: '#/components/schemas/FeedbackTargetType'
+          description: Category of the thing the feedback is about.
+        target:
+          type: string
+          description: 'The specific instance within targetType: the skill name, MCP tool name, CLI command, API endpoint path, or docs page path (e.g. ''queryMetrics'', ''/docs/mcp''). An identifier, not a sentence. Must be between 1 and 200 characters.'
+        feedback:
+          type: string
+          description: Concise feedback text approved by the user. Must be between 1 and 3000 characters.
+        goal:
+          type:
+          - string
+          - 'null'
+          description: Optional user-approved goal or use case they were trying to achieve. Must be between 1 and 1500 characters when provided. Do not include secrets, customer data, trace payloads, or broad unrelated context.
+        referenceUrl:
+          type:
+          - string
+          - 'null'
+          description: Optional HTTP(S) reference URL. Langfuse stores it as text for triage and does not fetch it.
+      required:
+      - targetType
+      - target
+      - feedback
+    SubmitFeedbackResponse:
+      title: SubmitFeedbackResponse
+      type: object
+      properties:
+        id:
+          type: string
+          description: Correlation ID for the submitted feedback.
+      required:
+      - id
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

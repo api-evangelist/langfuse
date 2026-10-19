@@ -1,8 +1,14 @@
 openapi: 3.2.0
 info:
-  title: langfuse Models API
+  title: server Models API
   version: ''
-  description: '## Authentication
+  description: '## Real-time data
+
+
+    The only real-time path to get tracing data is to ingest via OpenTelemetry (`POST /api/public/otel/v1/traces`) and retrieve via Observations API v2 (`GET /api/public/v2/observations`) and Metrics API v2 (`GET /api/public/v2/metrics`). Other public API write and read endpoints can delay data by about 10 minutes. Direct OpenTelemetry exporters must send the `x-langfuse-ingestion-version: 4` header; current Python and JS SDKs already do. See the Public API docs and real-time ingestion.
+
+
+    ## Authentication
 
 
     Authenticate with the API using Basic Auth, get API keys in the project settings:
@@ -16,7 +22,9 @@ info:
     ## Exports
 
 
-    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml
+
+    - Self-hosted deployments: interactive API reference at `/api/docs` and OpenAPI spec at `/api/openapi.yaml`'
 tags:
 - name: Models
 paths:
@@ -128,6 +136,59 @@ paths:
       summary: Models list
       x-summary-source: derived
   /api/public/models/{id}:
+    put:
+      description: Create or replace a project-owned model using its id. Built-in models cannot be modified.
+      operationId: models_upsert
+      tags:
+      - Models
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Model'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateModelRequest'
+      summary: Models upsert
+      x-summary-source: derived
     get:
       description: Get a model
       operationId: models_get
@@ -220,15 +281,22 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ModelTokenizerId:
+      title: ModelTokenizerId
+      type: string
+      enum:
+      - openai
+      - claude
+      description: Tokenizer supported by Langfuse for model usage inference.
     PricingTier:
       title: PricingTier
       type: object
-      description: 'Pricing tier definition with conditional pricing based on usage thresholds.
+      description: 'Pricing tier definition with conditional pricing based on usage thresholds or observation attributes.
 
 
-        Pricing tiers enable accurate cost tracking for LLM providers that charge different rates based on usage patterns.
+        Pricing tiers enable accurate cost tracking for LLM providers that charge different rates based on usage patterns or request attributes.
 
-        For example, some providers charge higher rates when context size exceeds certain thresholds.
+        For example, some providers charge higher rates when context size exceeds certain thresholds or when an accelerated service tier is selected.
 
 
         How tier matching works:
@@ -322,87 +390,6 @@ components:
       - priority
       - conditions
       - prices
-    PricingTierInput:
-      title: PricingTierInput
-      type: object
-      description: 'Input schema for creating a pricing tier. The tier ID will be automatically generated server-side.
-
-
-        When creating a model with pricing tiers:
-
-        - Exactly one tier must have isDefault=true (the fallback tier)
-
-        - The default tier must have priority=0 and conditions=[]
-
-        - All tier names and priorities must be unique within the model
-
-        - Each tier must define at least one price
-
-
-        See PricingTier for detailed information about how tiers work and why they''re useful.'
-      properties:
-        name:
-          type: string
-          description: 'Name of the pricing tier for display and identification purposes.
-
-
-            Must be unique within the model. Common patterns: "Standard", "High Volume Tier", "Extended Context"'
-        isDefault:
-          type: boolean
-          description: 'Whether this is the default tier. Exactly one tier per model must be marked as default.
-
-
-            Requirements for default tier:
-
-            - Must have isDefault=true
-
-            - Must have priority=0
-
-            - Must have empty conditions array (conditions=[])
-
-
-            The default tier acts as a fallback when no conditional tiers match.'
-        priority:
-          type: integer
-          description: 'Priority for tier matching evaluation. Lower numbers = higher priority (evaluated first).
-
-
-            Must be unique within the model. The default tier must have priority=0.
-
-            Conditional tiers should use priority 1, 2, 3, etc. based on their specificity.'
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PricingTierCondition'
-          description: 'Array of conditions that must ALL be met for this tier to match (AND logic).
-
-
-            The default tier must have an empty array (conditions=[]).
-
-            Conditional tiers should define one or more conditions that specify when this tier''s pricing applies.
-
-
-            Each condition specifies a regex pattern, operator, and threshold value for matching against usage details.'
-        prices:
-          type: object
-          additionalProperties:
-            type: number
-            format: double
-          description: 'Prices (USD) by usage type for this tier. At least one price must be defined.
-
-
-            Common usage types: "input", "output", "total", "request", "image"
-
-            Prices are in USD per unit (e.g., per token).
-
-
-            Example: {"input": 0.000003, "output": 0.000015} represents $3 per million input tokens and $15 per million output tokens.'
-      required:
-      - name
-      - isDefault
-      - priority
-      - conditions
-      - prices
     CreateModelRequest:
       title: CreateModelRequest
       type: object
@@ -448,15 +435,122 @@ components:
             $ref: '#/components/schemas/PricingTierInput'
           description: "Optional. Array of pricing tiers for this model.\n\nUse pricing tiers for all models - both those with threshold-based pricing variations and those with simple flat pricing:\n\n- For models with standard flat pricing: Create a single default tier with your prices\n  (e.g., one tier with isDefault=true, priority=0, conditions=[], and your standard prices)\n\n- For models with threshold-based pricing: Create a default tier plus additional conditional tiers\n  (e.g., default tier for standard usage + high-volume tier for usage above certain thresholds)\n\nRequirements:\n- Cannot be provided with flat prices (inputPrice/outputPrice/totalPrice) - use one approach or the other\n- Must include exactly one default tier with isDefault=true, priority=0, and conditions=[]\n- All tier names and priorities must be unique within the model\n- Each tier must define at least one price\n\nIf omitted, you must provide flat prices instead (inputPrice/outputPrice/totalPrice),\nwhich will automatically create a single default tier named \"Standard\"."
         tokenizerId:
-          type:
-          - string
-          - 'null'
+          $ref: '#/components/schemas/ModelTokenizerId'
           description: Optional. Tokenizer to be applied to observations which match to this model. See docs for more details.
         tokenizerConfig:
           description: Optional. Configuration for the selected tokenizer. Needs to be JSON. See docs for more details.
       required:
       - modelName
       - matchPattern
+      - unit
+    PricingTierAttributeSource:
+      title: PricingTierAttributeSource
+      type: string
+      enum:
+      - model_parameters
+      - metadata
+    PricingTierUsageConditionInput:
+      title: PricingTierUsageConditionInput
+      type: object
+      description: Input condition that sums usage details whose keys match a regex.
+      properties:
+        usageDetailPattern:
+          type: string
+          description: Regex pattern matched against usage detail keys.
+        operator:
+          $ref: '#/components/schemas/PricingTierOperator'
+        value:
+          type: number
+          format: double
+          description: Numeric threshold for the summed matching usage values.
+        caseSensitive:
+          type:
+          - boolean
+          - 'null'
+          description: Whether the usage-detail regex is case-sensitive. Defaults to false.
+      required:
+      - usageDetailPattern
+      - operator
+      - value
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    PricingTierUsageCondition:
+      title: PricingTierUsageCondition
+      type: object
+      description: Condition that sums usage details whose keys match a regex.
+      properties:
+        usageDetailPattern:
+          type: string
+          description: Regex pattern matched against usage detail keys.
+        operator:
+          $ref: '#/components/schemas/PricingTierOperator'
+        value:
+          type: number
+          format: double
+          description: Numeric threshold for the summed matching usage values.
+        caseSensitive:
+          type: boolean
+          description: Whether the usage-detail regex is case-sensitive.
+      required:
+      - usageDetailPattern
+      - operator
+      - value
+      - caseSensitive
+    PricingTierAttributeCondition:
+      title: PricingTierAttributeCondition
+      type: object
+      description: Condition that matches any configured value for a top-level observation attribute.
+      properties:
+        source:
+          $ref: '#/components/schemas/PricingTierAttributeSource'
+          description: Observation attribute object evaluated by this condition.
+        key:
+          type: string
+          description: Exact top-level attribute key.
+        operator:
+          type: string
+          const: in
+          description: Membership operator.
+        values:
+          type: array
+          items:
+            type: string
+          description: Accepted string attribute values. At least one value is required.
+      required:
+      - source
+      - key
+      - operator
+      - values
+    PricingTierOperator:
+      title: PricingTierOperator
+      type: string
+      enum:
+      - gt
+      - gte
+      - lt
+      - lte
+      - eq
+      - neq
+      description: Comparison operators for pricing tier conditions
     Model:
       title: Model
       type: object
@@ -467,7 +561,7 @@ components:
 
         - Flat pricing: Single price per usage type (legacy, but still supported)
 
-        - Tiered pricing: Multiple pricing tiers with conditional matching based on usage patterns
+        - Tiered pricing: Multiple pricing tiers with conditional matching based on usage patterns or observation attributes
 
 
         The pricing tiers approach is recommended for models with usage-based pricing variations.
@@ -538,12 +632,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PricingTier'
-          description: 'Array of pricing tiers with conditional pricing based on usage thresholds.
+          description: 'Array of pricing tiers with conditional pricing based on usage thresholds or observation attributes.
 
 
             Pricing tiers enable accurate cost tracking for models that charge different rates based on usage patterns
 
-            (e.g., different rates for high-volume usage, large context windows, or cached tokens).
+            or request attributes (e.g., high-volume usage, large context windows, cached tokens, or service tiers).
 
 
             Each model must have exactly one default tier (isDefault=true, priority=0) that serves as a fallback.
@@ -556,11 +650,124 @@ components:
       - id
       - modelName
       - matchPattern
+      - startDate
+      - inputPrice
+      - outputPrice
+      - totalPrice
+      - tokenizerId
       - tokenizerConfig
       - isLangfuseManaged
       - createdAt
       - prices
       - pricingTiers
+    ModelPrice:
+      title: ModelPrice
+      type: object
+      properties:
+        price:
+          type: number
+          format: double
+      required:
+      - price
+    PricingTierInput:
+      title: PricingTierInput
+      type: object
+      description: 'Input schema for creating a pricing tier. The tier ID will be automatically generated server-side.
+
+
+        When creating a model with pricing tiers:
+
+        - Exactly one tier must have isDefault=true (the fallback tier)
+
+        - The default tier must have priority=0 and conditions=[]
+
+        - All tier names and priorities must be unique within the model
+
+        - Each tier must define at least one price
+
+
+        See PricingTier for detailed information about how tiers work and why they''re useful.'
+      properties:
+        name:
+          type: string
+          description: 'Name of the pricing tier for display and identification purposes.
+
+
+            Must be unique within the model. Common patterns: "Standard", "High Volume Tier", "Extended Context"'
+        isDefault:
+          type:
+          - boolean
+          - 'null'
+          description: 'Whether this is the default tier. Exactly one tier per model must be marked as default.
+
+
+            Requirements for default tier:
+
+            - Must have isDefault=true
+
+            - Must have priority=0
+
+            - Must have empty conditions array (conditions=[])
+
+
+            The default tier acts as a fallback when no conditional tiers match. Defaults to false when omitted.'
+        priority:
+          type: integer
+          description: 'Priority for tier matching evaluation. Lower numbers = higher priority (evaluated first).
+
+
+            Must be unique within the model. The default tier must have priority=0.
+
+            Conditional tiers should use priority 1, 2, 3, etc. based on their specificity.'
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingTierConditionInput'
+          description: 'Array of conditions that must ALL be met for this tier to match (AND logic).
+
+
+            The default tier must have an empty array (conditions=[]).
+
+            Conditional tiers should define one or more conditions that specify when this tier''s pricing applies.
+
+
+            Conditions can compare summed matching usage details to a numeric threshold, or exactly match a top-level model parameter or metadata value.'
+        prices:
+          type: object
+          additionalProperties:
+            type: number
+            format: double
+          description: 'Prices (USD) by usage type for this tier. At least one price must be defined.
+
+
+            Common usage types: "input", "output", "total", "request", "image"
+
+            Prices are in USD per unit (e.g., per token).
+
+
+            Example: {"input": 0.000003, "output": 0.000015} represents $3 per million input tokens and $15 per million output tokens.'
+      required:
+      - name
+      - priority
+      - conditions
+      - prices
+    ModelUsageUnit:
+      title: ModelUsageUnit
+      type: string
+      enum:
+      - CHARACTERS
+      - TOKENS
+      - MILLISECONDS
+      - SECONDS
+      - IMAGES
+      - REQUESTS
+      description: Unit of usage in Langfuse
+    PricingTierConditionInput:
+      title: PricingTierConditionInput
+      oneOf:
+      - $ref: '#/components/schemas/PricingTierUsageConditionInput'
+      - $ref: '#/components/schemas/PricingTierAttributeCondition'
+      description: Condition input for matching a pricing tier.
     PaginatedModels:
       title: PaginatedModels
       type: object
@@ -574,126 +781,15 @@ components:
       required:
       - data
       - meta
-    ModelPrice:
-      title: ModelPrice
-      type: object
-      properties:
-        price:
-          type: number
-          format: double
-      required:
-      - price
     PricingTierCondition:
       title: PricingTierCondition
-      type: object
-      description: 'Condition for matching a pricing tier based on usage details. Used to implement tiered pricing models where costs vary based on usage thresholds.
+      oneOf:
+      - $ref: '#/components/schemas/PricingTierUsageCondition'
+      - $ref: '#/components/schemas/PricingTierAttributeCondition'
+      description: 'Condition for matching a pricing tier against usage details or observation attributes.
 
 
-        How it works:
-
-        1. The regex pattern matches against usage detail keys (e.g., "input_tokens", "input_cached")
-
-        2. Values of all matching keys are summed together
-
-        3. The sum is compared against the threshold value using the specified operator
-
-        4. All conditions in a tier must be met (AND logic) for the tier to match
-
-
-        Common use cases:
-
-        - Threshold-based pricing: Match when accumulated usage exceeds a certain amount
-
-        - Usage-type-specific pricing: Different rates for cached vs non-cached tokens, or input vs output
-
-        - Volume-based pricing: Different rates based on total request or token count'
-      properties:
-        usageDetailPattern:
-          type: string
-          description: 'Regex pattern to match against usage detail keys. All matching keys'' values are summed for threshold comparison.
-
-
-            Examples:
-
-            - "^input" matches "input", "input_tokens", "input_cached", etc.
-
-            - "^(input|prompt)" matches both "input_tokens" and "prompt_tokens"
-
-            - "_cache$" matches "input_cache", "output_cache", etc.
-
-
-            The pattern is case-insensitive by default. If no keys match, the sum is treated as zero.'
-        operator:
-          $ref: '#/components/schemas/PricingTierOperator'
-          description: 'Comparison operator to apply between the summed value and the threshold.
-
-
-            - gt: greater than (sum > threshold)
-
-            - gte: greater than or equal (sum >= threshold)
-
-            - lt: less than (sum < threshold)
-
-            - lte: less than or equal (sum <= threshold)
-
-            - eq: equal (sum == threshold)
-
-            - neq: not equal (sum != threshold)'
-        value:
-          type: number
-          format: double
-          description: Threshold value for comparison. For token-based pricing, this is typically the token count threshold (e.g., 200000 for a 200K token threshold).
-        caseSensitive:
-          type: boolean
-          description: Whether the regex pattern matching is case-sensitive. Default is false (case-insensitive matching).
-      required:
-      - usageDetailPattern
-      - operator
-      - value
-      - caseSensitive
-    PricingTierOperator:
-      title: PricingTierOperator
-      type: string
-      enum:
-      - gt
-      - gte
-      - lt
-      - lte
-      - eq
-      - neq
-      description: Comparison operators for pricing tier conditions
-    utilsMetaResponse:
-      title: utilsMetaResponse
-      type: object
-      properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
-      required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
-    ModelUsageUnit:
-      title: ModelUsageUnit
-      type: string
-      enum:
-      - CHARACTERS
-      - TOKENS
-      - MILLISECONDS
-      - SECONDS
-      - IMAGES
-      - REQUESTS
-      description: Unit of usage in Langfuse
+        Usage-detail conditions treat usageDetailPattern as a regex, sum all matching usage values, and compare the sum to the numeric value. Model-parameter and metadata conditions match an exact top-level key against one or more string values.'
   securitySchemes:
     BasicAuth:
       type: http

@@ -1,8 +1,14 @@
 openapi: 3.2.0
 info:
-  title: langfuse Prompt Version API
+  title: server Prompt Version API
   version: ''
-  description: '## Authentication
+  description: '## Real-time data
+
+
+    The only real-time path to get tracing data is to ingest via OpenTelemetry (`POST /api/public/otel/v1/traces`) and retrieve via Observations API v2 (`GET /api/public/v2/observations`) and Metrics API v2 (`GET /api/public/v2/metrics`). Other public API write and read endpoints can delay data by about 10 minutes. Direct OpenTelemetry exporters must send the `x-langfuse-ingestion-version: 4` header; current Python and JS SDKs already do. See the Public API docs and real-time ingestion.
+
+
+    ## Authentication
 
 
     Authenticate with the API using Basic Auth, get API keys in the project settings:
@@ -16,7 +22,9 @@ info:
     ## Exports
 
 
-    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml
+
+    - Self-hosted deployments: interactive API reference at `/api/docs` and OpenAPI spec at `/api/openapi.yaml`'
 tags:
 - name: PromptVersion
 paths:
@@ -91,6 +99,73 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    ChatPrompt:
+      title: ChatPrompt
+      type: object
+      properties:
+        prompt:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
+      required:
+      - prompt
+      allOf:
+      - $ref: '#/components/schemas/BasePrompt'
+    Prompt:
+      title: Prompt
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - chat
+        - $ref: '#/components/schemas/ChatPrompt'
+        required:
+        - type
+        title: ChatPrompt
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - text
+        - $ref: '#/components/schemas/TextPrompt'
+        required:
+        - type
+        title: TextPrompt
+    ChatMessageType:
+      title: ChatMessageType
+      type: string
+      enum:
+      - chatmessage
+    PlaceholderMessage:
+      title: PlaceholderMessage
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/PlaceholderMessageType'
+      required:
+      - name
+    ChatMessage:
+      title: ChatMessage
+      type: object
+      properties:
+        role:
+          type: string
+        content:
+          type: string
+        type:
+          $ref: '#/components/schemas/ChatMessageType'
+      required:
+      - role
+      - content
     BasePrompt:
       title: BasePrompt
       type: object
@@ -127,87 +202,22 @@ components:
       - config
       - labels
       - tags
+    PlaceholderMessageType:
+      title: PlaceholderMessageType
+      type: string
+      enum:
+      - placeholder
     ChatMessageWithPlaceholders:
       title: ChatMessageWithPlaceholders
       oneOf:
       - $ref: '#/components/schemas/ChatMessage'
       - $ref: '#/components/schemas/PlaceholderMessage'
-    Prompt:
-      title: Prompt
-      oneOf:
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - chat
-        - $ref: '#/components/schemas/ChatPrompt'
-        required:
-        - type
-      - type: object
-        allOf:
-        - type: object
-          properties:
-            type:
-              type: string
-              enum:
-              - text
-        - $ref: '#/components/schemas/TextPrompt'
-        required:
-        - type
-    ChatMessage:
-      title: ChatMessage
-      type: object
-      properties:
-        role:
-          type: string
-        content:
-          type: string
-        type:
-          $ref: '#/components/schemas/ChatMessageType'
-      required:
-      - role
-      - content
     TextPrompt:
       title: TextPrompt
       type: object
       properties:
         prompt:
           type: string
-      required:
-      - prompt
-      allOf:
-      - $ref: '#/components/schemas/BasePrompt'
-    PlaceholderMessageType:
-      title: PlaceholderMessageType
-      type: string
-      enum:
-      - placeholder
-    ChatMessageType:
-      title: ChatMessageType
-      type: string
-      enum:
-      - chatmessage
-    PlaceholderMessage:
-      title: PlaceholderMessage
-      type: object
-      properties:
-        name:
-          type: string
-        type:
-          $ref: '#/components/schemas/PlaceholderMessageType'
-      required:
-      - name
-    ChatPrompt:
-      title: ChatPrompt
-      type: object
-      properties:
-        prompt:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
       required:
       - prompt
       allOf:

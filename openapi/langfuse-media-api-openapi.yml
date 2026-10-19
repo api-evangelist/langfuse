@@ -1,8 +1,14 @@
 openapi: 3.2.0
 info:
-  title: langfuse Media API
+  title: server Media API
   version: ''
-  description: '## Authentication
+  description: '## Real-time data
+
+
+    The only real-time path to get tracing data is to ingest via OpenTelemetry (`POST /api/public/otel/v1/traces`) and retrieve via Observations API v2 (`GET /api/public/v2/observations`) and Metrics API v2 (`GET /api/public/v2/metrics`). Other public API write and read endpoints can delay data by about 10 minutes. Direct OpenTelemetry exporters must send the `x-langfuse-ingestion-version: 4` header; current Python and JS SDKs already do. See the Public API docs and real-time ingestion.
+
+
+    ## Authentication
 
 
     Authenticate with the API using Basic Auth, get API keys in the project settings:
@@ -16,7 +22,9 @@ info:
     ## Exports
 
 
-    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml
+
+    - Self-hosted deployments: interactive API reference at `/api/docs` and OpenAPI spec at `/api/openapi.yaml`'
 tags:
 - name: Media
 paths:
@@ -170,6 +178,115 @@ paths:
       x-summary-source: derived
 components:
   schemas:
+    PatchMediaBody:
+      title: PatchMediaBody
+      type: object
+      properties:
+        uploadedAt:
+          type: string
+          format: date-time
+          description: The date and time when the media record was uploaded
+        uploadHttpStatus:
+          type: integer
+          description: The HTTP status code of the upload
+        uploadHttpError:
+          type:
+          - string
+          - 'null'
+          description: The HTTP error message of the upload
+        uploadTimeMs:
+          type:
+          - integer
+          - 'null'
+          description: The time in milliseconds it took to upload the media record
+      required:
+      - uploadedAt
+      - uploadHttpStatus
+    GetMediaUploadUrlResponse:
+      title: GetMediaUploadUrlResponse
+      type: object
+      properties:
+        uploadUrl:
+          type:
+          - string
+          - 'null'
+          description: The presigned upload URL. If the asset is already uploaded, this will be null
+        mediaId:
+          type: string
+          description: The unique langfuse identifier of a media record
+      required:
+      - mediaId
+    GetMediaUploadUrlRequest:
+      title: GetMediaUploadUrlRequest
+      type: object
+      description: 'Request a presigned media upload URL. Provide exactly one context: a trace (traceId, optionally observationId) or a dataset item (datasetId + datasetItemId). field is required and must match the chosen context.'
+      properties:
+        traceId:
+          type:
+          - string
+          - 'null'
+          description: The trace the media is associated with. Null for dataset item media uploads.
+        observationId:
+          type:
+          - string
+          - 'null'
+          description: The observation ID associated with the media record. If the media record is associated directly with a trace, this will be null.
+        datasetId:
+          type:
+          - string
+          - 'null'
+          description: The dataset the media belongs to. Null for trace/observation media uploads.
+        datasetItemId:
+          type:
+          - string
+          - 'null'
+          description: The dataset item the media is associated with (need not exist yet). Null for trace/observation media uploads.
+        contentType:
+          $ref: '#/components/schemas/MediaContentType'
+        contentLength:
+          type: integer
+          description: The size of the media record in bytes
+        sha256Hash:
+          type: string
+          description: The SHA-256 hash of the media record
+        field:
+          type: string
+          description: 'The item field the media is in: `input`/`output`/`metadata` (trace) or `input`/`expectedOutput`/`metadata` (dataset item).'
+      required:
+      - contentType
+      - contentLength
+      - sha256Hash
+      - field
+    GetMediaResponse:
+      title: GetMediaResponse
+      type: object
+      properties:
+        mediaId:
+          type: string
+          description: The unique langfuse identifier of a media record
+        contentType:
+          type: string
+          description: The MIME type of the media record
+        contentLength:
+          type: integer
+          description: The size of the media record in bytes
+        uploadedAt:
+          type: string
+          format: date-time
+          description: The date and time when the media record was uploaded
+        url:
+          type: string
+          description: The download URL of the media record
+        urlExpiry:
+          type: string
+          description: The expiry date and time of the media record download URL
+      required:
+      - mediaId
+      - contentType
+      - contentLength
+      - uploadedAt
+      - url
+      - urlExpiry
     MediaContentType:
       title: MediaContentType
       type: string
@@ -227,103 +344,6 @@ components:
       - application/x-tar
       - application/x-7z-compressed
       description: The MIME type of the media record
-    PatchMediaBody:
-      title: PatchMediaBody
-      type: object
-      properties:
-        uploadedAt:
-          type: string
-          format: date-time
-          description: The date and time when the media record was uploaded
-        uploadHttpStatus:
-          type: integer
-          description: The HTTP status code of the upload
-        uploadHttpError:
-          type:
-          - string
-          - 'null'
-          description: The HTTP error message of the upload
-        uploadTimeMs:
-          type:
-          - integer
-          - 'null'
-          description: The time in milliseconds it took to upload the media record
-      required:
-      - uploadedAt
-      - uploadHttpStatus
-    GetMediaUploadUrlResponse:
-      title: GetMediaUploadUrlResponse
-      type: object
-      properties:
-        uploadUrl:
-          type:
-          - string
-          - 'null'
-          description: The presigned upload URL. If the asset is already uploaded, this will be null
-        mediaId:
-          type: string
-          description: The unique langfuse identifier of a media record
-      required:
-      - mediaId
-    GetMediaResponse:
-      title: GetMediaResponse
-      type: object
-      properties:
-        mediaId:
-          type: string
-          description: The unique langfuse identifier of a media record
-        contentType:
-          type: string
-          description: The MIME type of the media record
-        contentLength:
-          type: integer
-          description: The size of the media record in bytes
-        uploadedAt:
-          type: string
-          format: date-time
-          description: The date and time when the media record was uploaded
-        url:
-          type: string
-          description: The download URL of the media record
-        urlExpiry:
-          type: string
-          description: The expiry date and time of the media record download URL
-      required:
-      - mediaId
-      - contentType
-      - contentLength
-      - uploadedAt
-      - url
-      - urlExpiry
-    GetMediaUploadUrlRequest:
-      title: GetMediaUploadUrlRequest
-      type: object
-      properties:
-        traceId:
-          type: string
-          description: The trace ID associated with the media record
-        observationId:
-          type:
-          - string
-          - 'null'
-          description: The observation ID associated with the media record. If the media record is associated directly with a trace, this will be null.
-        contentType:
-          $ref: '#/components/schemas/MediaContentType'
-        contentLength:
-          type: integer
-          description: The size of the media record in bytes
-        sha256Hash:
-          type: string
-          description: The SHA-256 hash of the media record
-        field:
-          type: string
-          description: The trace / observation field the media record is associated with. This can be one of `input`, `output`, `metadata`
-      required:
-      - traceId
-      - contentType
-      - contentLength
-      - sha256Hash
-      - field
   securitySchemes:
     BasicAuth:
       type: http

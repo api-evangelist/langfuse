@@ -1,8 +1,14 @@
 openapi: 3.2.0
 info:
-  title: langfuse Opentelemetry API
+  title: server Opentelemetry API
   version: ''
-  description: '## Authentication
+  description: '## Real-time data
+
+
+    The only real-time path to get tracing data is to ingest via OpenTelemetry (`POST /api/public/otel/v1/traces`) and retrieve via Observations API v2 (`GET /api/public/v2/observations`) and Metrics API v2 (`GET /api/public/v2/metrics`). Other public API write and read endpoints can delay data by about 10 minutes. Direct OpenTelemetry exporters must send the `x-langfuse-ingestion-version: 4` header; current Python and JS SDKs already do. See the Public API docs and real-time ingestion.
+
+
+    ## Authentication
 
 
     Authenticate with the API using Basic Auth, get API keys in the project settings:
@@ -16,7 +22,9 @@ info:
     ## Exports
 
 
-    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml
+
+    - Self-hosted deployments: interactive API reference at `/api/docs` and OpenAPI spec at `/api/openapi.yaml`'
 tags:
 - name: Open Telemetry
 paths:
@@ -26,6 +34,9 @@ paths:
 
 
         This endpoint implements the OTLP/HTTP specification for trace ingestion, providing native OpenTelemetry integration for Langfuse Observability.
+
+
+        Together with Observations API v2 and Metrics API v2, this is the only real-time write path. Other public API endpoints can delay data by about 10 minutes. Direct exporters must send `x-langfuse-ingestion-version: 4`; current Python and JS SDKs already do.
 
 
         **Supported Formats:**
@@ -60,9 +71,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OtelTraceResponse'
-              examples:
-                BasicTraceExport:
-                  value: {}
         '400':
           description: ''
           content:
@@ -104,43 +112,10 @@ paths:
                   description: Array of resource spans containing trace data as defined in the OTLP specification
               required:
               - resourceSpans
-            examples:
-              BasicTraceExport:
-                value:
-                  resourceSpans:
-                  - resource:
-                      attributes:
-                      - key: service.name
-                        value:
-                          stringValue: my-service
-                      - key: service.version
-                        value:
-                          stringValue: 1.0.0
-                    scopeSpans:
-                    - scope:
-                        name: langfuse-sdk
-                        version: 2.60.3
-                      spans:
-                      - traceId: 0123456789abcdef0123456789abcdef
-                        spanId: 0123456789abcdef
-                        name: my-operation
-                        kind: 1
-                        startTimeUnixNano: '1747872000000000000'
-                        endTimeUnixNano: '1747872001000000000'
-                        attributes:
-                        - key: langfuse.observation.type
-                          value:
-                            stringValue: generation
-                        status: {}
       summary: Opentelemetry export traces
       x-summary-source: derived
 components:
   schemas:
-    OtelTraceResponse:
-      title: OtelTraceResponse
-      type: object
-      description: Response from trace export request. Empty object indicates success.
-      properties: {}
     OtelAttributeValue:
       title: OtelAttributeValue
       type: object
@@ -167,6 +142,21 @@ components:
           - boolean
           - 'null'
           description: Boolean value
+    OtelScopeSpan:
+      title: OtelScopeSpan
+      type: object
+      description: Collection of spans from a single instrumentation scope
+      properties:
+        scope:
+          $ref: '#/components/schemas/OtelScope'
+          description: Instrumentation scope information
+        spans:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OtelSpan'
+          description: Array of spans
     OtelSpan:
       title: OtelSpan
       type: object
@@ -201,19 +191,33 @@ components:
           description: Span attributes including Langfuse-specific attributes (langfuse.observation.*)
         status:
           description: Span status object
-    OtelAttribute:
-      title: OtelAttribute
+    OtelResource:
+      title: OtelResource
       type: object
-      description: Key-value attribute pair for resources, scopes, or spans
+      description: Resource attributes identifying the source of telemetry
       properties:
-        key:
+        attributes:
           type:
-          - string
+          - array
           - 'null'
-          description: Attribute key (e.g., "service.name", "langfuse.observation.type")
-        value:
-          $ref: '#/components/schemas/OtelAttributeValue'
-          description: Attribute value
+          items:
+            $ref: '#/components/schemas/OtelAttribute'
+          description: Resource attributes like service.name, service.version, etc.
+    OtelResourceSpan:
+      title: OtelResourceSpan
+      type: object
+      description: Represents a collection of spans from a single resource as per OTLP specification
+      properties:
+        resource:
+          $ref: '#/components/schemas/OtelResource'
+          description: Resource information
+        scopeSpans:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/OtelScopeSpan'
+          description: Array of scope spans
     OtelScope:
       title: OtelScope
       type: object
@@ -236,48 +240,24 @@ components:
           items:
             $ref: '#/components/schemas/OtelAttribute'
           description: Additional scope attributes
-    OtelResourceSpan:
-      title: OtelResourceSpan
+    OtelTraceResponse:
+      title: OtelTraceResponse
       type: object
-      description: Represents a collection of spans from a single resource as per OTLP specification
-      properties:
-        resource:
-          $ref: '#/components/schemas/OtelResource'
-          description: Resource information
-        scopeSpans:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/OtelScopeSpan'
-          description: Array of scope spans
-    OtelResource:
-      title: OtelResource
+      description: Response from trace export request. Empty object indicates success.
+      properties: {}
+    OtelAttribute:
+      title: OtelAttribute
       type: object
-      description: Resource attributes identifying the source of telemetry
+      description: Key-value attribute pair for resources, scopes, or spans
       properties:
-        attributes:
+        key:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/OtelAttribute'
-          description: Resource attributes like service.name, service.version, etc.
-    OtelScopeSpan:
-      title: OtelScopeSpan
-      type: object
-      description: Collection of spans from a single instrumentation scope
-      properties:
-        scope:
-          $ref: '#/components/schemas/OtelScope'
-          description: Instrumentation scope information
-        spans:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/OtelSpan'
-          description: Array of spans
+          description: Attribute key (e.g., "service.name", "langfuse.observation.type")
+        value:
+          $ref: '#/components/schemas/OtelAttributeValue'
+          description: Attribute value
   securitySchemes:
     BasicAuth:
       type: http

@@ -1,0 +1,542 @@
+openapi: 3.2.0
+info:
+  title: langfuse Datasets API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: Datasets
+paths:
+  /api/public/v2/datasets:
+    get:
+      description: Get all datasets
+      operationId: datasets_list
+      tags:
+      - Datasets
+      parameters:
+      - name: page
+        in: query
+        description: page number, starts at 1
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: limit
+        in: query
+        description: limit of items per page
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDatasets'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Datasets list
+      x-summary-source: derived
+    post:
+      description: Create a dataset
+      operationId: datasets_create
+      tags:
+      - Datasets
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dataset'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDatasetRequest'
+      summary: Datasets create
+      x-summary-source: derived
+  /api/public/v2/datasets/{datasetName}:
+    get:
+      description: Get a dataset
+      operationId: datasets_get
+      tags:
+      - Datasets
+      parameters:
+      - name: datasetName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dataset'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Datasets get
+      x-summary-source: derived
+  /api/public/datasets/{datasetName}/runs/{runName}:
+    get:
+      description: Get a dataset run and its items
+      operationId: datasets_getRun
+      tags:
+      - Datasets
+      parameters:
+      - name: datasetName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: runName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetRunWithItems'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Datasets get run
+      x-summary-source: derived
+    delete:
+      description: Delete a dataset run and all its run items. This action is irreversible.
+      operationId: datasets_deleteRun
+      tags:
+      - Datasets
+      parameters:
+      - name: datasetName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: runName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteDatasetRunResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Datasets delete run
+      x-summary-source: derived
+  /api/public/datasets/{datasetName}/runs:
+    get:
+      description: Get dataset runs
+      operationId: datasets_getRuns
+      tags:
+      - Datasets
+      parameters:
+      - name: datasetName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: page number, starts at 1
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: limit
+        in: query
+        description: limit of items per page
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDatasetRuns'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Datasets get runs
+      x-summary-source: derived
+components:
+  schemas:
+    DatasetRunItem:
+      title: DatasetRunItem
+      type: object
+      properties:
+        id:
+          type: string
+        datasetRunId:
+          type: string
+        datasetRunName:
+          type: string
+        datasetItemId:
+          type: string
+        traceId:
+          type: string
+        observationId:
+          type:
+          - string
+          - 'null'
+          description: The observation ID associated with this run item
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - datasetRunId
+      - datasetRunName
+      - datasetItemId
+      - traceId
+      - createdAt
+      - updatedAt
+    Dataset:
+      title: Dataset
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the dataset
+        metadata:
+          description: Metadata associated with the dataset
+        inputSchema:
+          description: JSON Schema for validating dataset item inputs
+        expectedOutputSchema:
+          description: JSON Schema for validating dataset item expected outputs
+        projectId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - metadata
+      - projectId
+      - createdAt
+      - updatedAt
+    CreateDatasetRequest:
+      title: CreateDatasetRequest
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        metadata: {}
+        inputSchema:
+          description: JSON Schema for validating dataset item inputs. When set, all new and existing dataset items will be validated against this schema.
+        expectedOutputSchema:
+          description: JSON Schema for validating dataset item expected outputs. When set, all new and existing dataset items will be validated against this schema.
+      required:
+      - name
+    PaginatedDatasetRuns:
+      title: PaginatedDatasetRuns
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetRun'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    PaginatedDatasets:
+      title: PaginatedDatasets
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dataset'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    DeleteDatasetRunResponse:
+      title: DeleteDatasetRunResponse
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    DatasetRun:
+      title: DatasetRun
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the dataset run
+        name:
+          type: string
+          description: Name of the dataset run
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the run
+        metadata:
+          description: Metadata of the dataset run
+        datasetId:
+          type: string
+          description: Id of the associated dataset
+        datasetName:
+          type: string
+          description: Name of the associated dataset
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time when the dataset run was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: The date and time when the dataset run was last updated
+      required:
+      - id
+      - name
+      - metadata
+      - datasetId
+      - datasetName
+      - createdAt
+      - updatedAt
+    DatasetRunWithItems:
+      title: DatasetRunWithItems
+      type: object
+      properties:
+        datasetRunItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetRunItem'
+      required:
+      - datasetRunItems
+      allOf:
+      - $ref: '#/components/schemas/DatasetRun'
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

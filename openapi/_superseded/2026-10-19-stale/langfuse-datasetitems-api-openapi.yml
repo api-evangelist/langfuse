@@ -1,0 +1,386 @@
+openapi: 3.2.0
+info:
+  title: langfuse Dataset Items API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: DatasetItems
+paths:
+  /api/public/dataset-items:
+    post:
+      description: Create a dataset item
+      operationId: datasetItems_create
+      tags:
+      - DatasetItems
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetItem'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDatasetItemRequest'
+      summary: Dataset items create
+      x-summary-source: derived
+    get:
+      description: 'Get dataset items. Optionally specify a version to get the items as they existed at that point in time.
+
+        Note: If version parameter is provided, datasetName must also be provided.'
+      operationId: datasetItems_list
+      tags:
+      - DatasetItems
+      parameters:
+      - name: datasetName
+        in: query
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: sourceTraceId
+        in: query
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: sourceObservationId
+        in: query
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: version
+        in: query
+        description: 'ISO 8601 timestamp (RFC 3339, Section 5.6) in UTC (e.g., "2026-01-21T14:35:42Z").
+
+          If provided, returns state of dataset at this timestamp.
+
+          If not provided, returns the latest version. Requires datasetName to be specified.'
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      - name: page
+        in: query
+        description: page number, starts at 1
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: limit
+        in: query
+        description: limit of items per page
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDatasetItems'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Dataset items list
+      x-summary-source: derived
+  /api/public/dataset-items/{id}:
+    get:
+      description: Get a dataset item
+      operationId: datasetItems_get
+      tags:
+      - DatasetItems
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetItem'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Dataset items get
+      x-summary-source: derived
+    delete:
+      description: Delete a dataset item and all its run items. This action is irreversible.
+      operationId: datasetItems_delete
+      tags:
+      - DatasetItems
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteDatasetItemResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Dataset items delete
+      x-summary-source: derived
+components:
+  schemas:
+    CreateDatasetItemRequest:
+      title: CreateDatasetItemRequest
+      type: object
+      properties:
+        datasetName:
+          type: string
+        input: {}
+        expectedOutput: {}
+        metadata: {}
+        sourceTraceId:
+          type:
+          - string
+          - 'null'
+        sourceObservationId:
+          type:
+          - string
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+          description: Dataset items are upserted on their id. Id needs to be unique (project-level) and cannot be reused across datasets.
+        status:
+          $ref: '#/components/schemas/DatasetStatus'
+          description: Defaults to ACTIVE for newly created items
+      required:
+      - datasetName
+    PaginatedDatasetItems:
+      title: PaginatedDatasetItems
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetItem'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    DatasetItem:
+      title: DatasetItem
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/DatasetStatus'
+        input:
+          description: Input data for the dataset item
+        expectedOutput:
+          description: Expected output for the dataset item
+        metadata:
+          description: Metadata associated with the dataset item
+        sourceTraceId:
+          type:
+          - string
+          - 'null'
+          description: The trace ID that sourced this dataset item
+        sourceObservationId:
+          type:
+          - string
+          - 'null'
+          description: The observation ID that sourced this dataset item
+        datasetId:
+          type: string
+        datasetName:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - status
+      - input
+      - expectedOutput
+      - metadata
+      - datasetId
+      - datasetName
+      - createdAt
+      - updatedAt
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    DeleteDatasetItemResponse:
+      title: DeleteDatasetItemResponse
+      type: object
+      properties:
+        message:
+          type: string
+          description: Success message after deletion
+      required:
+      - message
+    DatasetStatus:
+      title: DatasetStatus
+      type: string
+      enum:
+      - ACTIVE
+      - ARCHIVED
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

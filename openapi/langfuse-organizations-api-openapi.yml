@@ -1,8 +1,14 @@
 openapi: 3.2.0
 info:
-  title: langfuse Organizations API
+  title: server Organizations API
   version: ''
-  description: '## Authentication
+  description: '## Real-time data
+
+
+    The only real-time path to get tracing data is to ingest via OpenTelemetry (`POST /api/public/otel/v1/traces`) and retrieve via Observations API v2 (`GET /api/public/v2/observations`) and Metrics API v2 (`GET /api/public/v2/metrics`). Other public API write and read endpoints can delay data by about 10 minutes. Direct OpenTelemetry exporters must send the `x-langfuse-ingestion-version: 4` header; current Python and JS SDKs already do. See the Public API docs and real-time ingestion.
+
+
+    ## Authentication
 
 
     Authenticate with the API using Basic Auth, get API keys in the project settings:
@@ -16,7 +22,9 @@ info:
     ## Exports
 
 
-    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml
+
+    - Self-hosted deployments: interactive API reference at `/api/docs` and OpenAPI spec at `/api/openapi.yaml`'
 tags:
 - name: Organizations
 paths:
@@ -401,84 +409,14 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    MembershipsResponse:
-      title: MembershipsResponse
-      type: object
-      properties:
-        memberships:
-          type: array
-          items:
-            $ref: '#/components/schemas/MembershipResponse'
-      required:
-      - memberships
-    MembershipRole:
-      title: MembershipRole
-      type: string
-      enum:
-      - OWNER
-      - ADMIN
-      - MEMBER
-      - VIEWER
-    MembershipDeletionResponse:
-      title: MembershipDeletionResponse
-      type: object
-      properties:
-        message:
-          type: string
-        userId:
-          type: string
-      required:
-      - message
-      - userId
-    OrganizationApiKey:
-      title: OrganizationApiKey
-      type: object
-      properties:
-        id:
-          type: string
-        createdAt:
-          type: string
-          format: date-time
-        expiresAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        lastUsedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        note:
-          type:
-          - string
-          - 'null'
-        publicKey:
-          type: string
-        displaySecretKey:
-          type: string
-      required:
-      - id
-      - createdAt
-      - publicKey
-      - displaySecretKey
-    MembershipResponse:
-      title: MembershipResponse
+    DeleteMembershipRequest:
+      title: DeleteMembershipRequest
       type: object
       properties:
         userId:
           type: string
-        role:
-          $ref: '#/components/schemas/MembershipRole'
-        email:
-          type: string
-        name:
-          type: string
       required:
       - userId
-      - role
-      - email
-      - name
     OrganizationProject:
       title: OrganizationProject
       type: object
@@ -503,34 +441,52 @@ components:
       - name
       - createdAt
       - updatedAt
-    OrganizationApiKeysResponse:
-      title: OrganizationApiKeysResponse
+    MembershipsResponse:
+      title: MembershipsResponse
       type: object
       properties:
-        apiKeys:
+        memberships:
           type: array
           items:
-            $ref: '#/components/schemas/OrganizationApiKey'
+            $ref: '#/components/schemas/MembershipResponse'
       required:
-      - apiKeys
-    DeleteMembershipRequest:
-      title: DeleteMembershipRequest
+      - memberships
+    MembershipResponse:
+      title: MembershipResponse
       type: object
       properties:
         userId:
           type: string
+        role:
+          $ref: '#/components/schemas/MembershipRole'
+        email:
+          type: string
+        name:
+          type: string
       required:
       - userId
-    OrganizationProjectsResponse:
-      title: OrganizationProjectsResponse
+      - role
+      - email
+      - name
+    MembershipRole:
+      title: MembershipRole
+      type: string
+      enum:
+      - OWNER
+      - ADMIN
+      - MEMBER
+      - VIEWER
+    MembershipDeletionResponse:
+      title: MembershipDeletionResponse
       type: object
       properties:
-        projects:
-          type: array
-          items:
-            $ref: '#/components/schemas/OrganizationProject'
+        message:
+          type: string
+        userId:
+          type: string
       required:
-      - projects
+      - message
+      - userId
     MembershipRequest:
       title: MembershipRequest
       type: object
@@ -542,6 +498,66 @@ components:
       required:
       - userId
       - role
+    OrganizationProjectsResponse:
+      title: OrganizationProjectsResponse
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationProject'
+      required:
+      - projects
+    OrganizationApiKeysResponse:
+      title: OrganizationApiKeysResponse
+      type: object
+      properties:
+        apiKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationApiKey'
+      required:
+      - apiKeys
+    OrganizationApiKey:
+      title: OrganizationApiKey
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Expiration timestamp. Null if the key does not expire.
+        lastUsedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        name:
+          type:
+          - string
+          - 'null'
+          description: Name of the API key. Contains the same value as note; null if no name was provided.
+        note:
+          type:
+          - string
+          - 'null'
+          description: Deprecated alias for name. Contains the same value as name.
+          deprecated: true
+        publicKey:
+          type: string
+        displaySecretKey:
+          type: string
+      required:
+      - id
+      - createdAt
+      - publicKey
+      - displaySecretKey
   securitySchemes:
     BasicAuth:
       type: http

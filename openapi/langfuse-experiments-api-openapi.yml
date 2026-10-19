@@ -1,0 +1,794 @@
+openapi: 3.2.0
+info:
+  title: server Experiments API
+  version: ''
+  description: '## Real-time data
+
+
+    The only real-time path to get tracing data is to ingest via OpenTelemetry (`POST /api/public/otel/v1/traces`) and retrieve via Observations API v2 (`GET /api/public/v2/observations`) and Metrics API v2 (`GET /api/public/v2/metrics`). Other public API write and read endpoints can delay data by about 10 minutes. Direct OpenTelemetry exporters must send the `x-langfuse-ingestion-version: 4` header; current Python and JS SDKs already do. See the Public API docs and real-time ingestion.
+
+
+    ## Authentication
+
+
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml
+
+    - Self-hosted deployments: interactive API reference at `/api/docs` and OpenAPI spec at `/api/openapi.yaml`'
+tags:
+- name: Experiments
+paths:
+  /api/public/experiments:
+    get:
+      description: 'List experiments with cursor-based pagination. Results are ordered by
+
+        latest experiment activity descending.'
+      operationId: experiments_list
+      tags:
+      - Experiments
+      parameters:
+      - name: fields
+        in: query
+        description: 'Comma-separated list of field groups to include. Available groups:
+
+          `core`, `metadata`, `scores`. If omitted, `core` is returned.'
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: limit
+        in: query
+        description: Number of experiments to return per page. Maximum 100, default 50.
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: scoreLimit
+        in: query
+        description: Number of scores to return per experiment when `fields=scores` is requested. Maximum 50, default 50.
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: cursor
+        in: query
+        description: Versioned base64url cursor from the previous response page.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: fromStartTime
+        in: query
+        description: 'Required. Retrieve only experiments with events on or after this
+
+          datetime. A lower bound is required so the query stays fast on
+
+          large projects; pair it with an upper bound to select a specific
+
+          window.'
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: toStartTime
+        in: query
+        description: Retrieve only experiments before this datetime.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      - name: id
+        in: query
+        description: Comma-separated list of experiment IDs.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: name
+        in: query
+        description: Comma-separated list of experiment names.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: datasetId
+        in: query
+        description: Comma-separated list of dataset IDs.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: filter
+        in: query
+        description: 'JSON string containing an array of structured filter conditions.
+
+          Supported columns are `id`, `name`, and `datasetId`.'
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExperimentsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Experiments list
+      x-summary-source: derived
+  /api/public/experiment-items:
+    get:
+      description: 'List experiment items with cursor-based pagination. Use this endpoint
+
+        to export experiment item inputs, outputs, expected outputs, metadata,
+
+        and optionally item/trace scores. Results are ordered by time
+
+        descending.'
+      operationId: experiments_listItems
+      tags:
+      - Experiments
+      parameters:
+      - name: fields
+        in: query
+        description: 'Comma-separated list of field groups to include. Available groups:
+
+          `core`, `dataset`, `io`, `metadata`, `itemMetadata`,
+
+          `experimentMetadata`, `scores`. If omitted, `core,dataset` is
+
+          returned.'
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: limit
+        in: query
+        description: Number of experiment items to return per page. Maximum 100, default 50.
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: scoreLimit
+        in: query
+        description: Number of scores to return per experiment item when `fields=scores` is requested. Maximum 50, default 50.
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: cursor
+        in: query
+        description: Versioned base64url cursor from the previous response page.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: fromStartTime
+        in: query
+        description: 'Required. Retrieve only experiment items started on or after this
+
+          datetime. A lower bound is required so the query stays fast on
+
+          large projects; pair it with an upper bound to select a specific
+
+          window.'
+        required: true
+        schema:
+          type: string
+          format: date-time
+      - name: toStartTime
+        in: query
+        description: Retrieve only experiment items started before this datetime.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      - name: experimentId
+        in: query
+        description: Comma-separated list of experiment IDs.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: experimentName
+        in: query
+        description: Comma-separated list of experiment names.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: experimentItemId
+        in: query
+        description: Comma-separated list of experiment item IDs.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: datasetId
+        in: query
+        description: Comma-separated list of dataset IDs.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: filter
+        in: query
+        description: 'JSON string containing an array of structured filter conditions.
+
+          Supported columns are `experimentId`, `experimentName`,
+
+          `experimentItemId`, and `datasetId`.'
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExperimentItemsResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Experiments list items
+      x-summary-source: derived
+components:
+  schemas:
+    ExperimentsResponseMeta:
+      title: ExperimentsResponseMeta
+      type: object
+      description: Metadata for cursor-based pagination.
+      properties: {}
+      allOf:
+      - $ref: '#/components/schemas/utilsCursorMetaResponse'
+    BaseScoreV3:
+      title: BaseScoreV3
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        name:
+          type: string
+        source:
+          $ref: '#/components/schemas/ScoreSource'
+        timestamp:
+          type: string
+          format: date-time
+        environment:
+          type: string
+          description: The environment from which this score originated.
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        comment:
+          type:
+          - string
+          - 'null'
+          description: Optional comment attached to the score. Present when "details" is included in the fields parameter.
+        configId:
+          type:
+          - string
+          - 'null'
+          description: The score config ID, if this score was created from a config. Present when "details" is included in the fields parameter.
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Arbitrary metadata attached to the score. Present when "details" is included in the fields parameter.
+        authorUserId:
+          type:
+          - string
+          - 'null'
+          description: The user who created this score, if available. Present when "annotation" is included in the fields parameter.
+        queueId:
+          type:
+          - string
+          - 'null'
+          description: The annotation queue this score belongs to, if any. Present when "annotation" is included in the fields parameter.
+        subject:
+          $ref: '#/components/schemas/ScoreSubjectV3'
+          description: The entity this score is attached to (trace, observation, session, or experiment). Present when "subject" is included in the fields parameter.
+      required:
+      - id
+      - projectId
+      - name
+      - source
+      - timestamp
+      - environment
+      - createdAt
+      - updatedAt
+    ScoreSubjectObservationV3:
+      title: ScoreSubjectObservationV3
+      type: object
+      properties:
+        id:
+          type: string
+          description: The observation ID.
+        traceId:
+          type:
+          - string
+          - 'null'
+          description: The parent trace ID, if available.
+      required:
+      - id
+    ScoreSubjectV3:
+      title: ScoreSubjectV3
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            kind:
+              type: string
+              enum:
+              - trace
+        - $ref: '#/components/schemas/ScoreSubjectTraceV3'
+        required:
+        - kind
+        title: ScoreSubjectTraceV3
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            kind:
+              type: string
+              enum:
+              - observation
+        - $ref: '#/components/schemas/ScoreSubjectObservationV3'
+        required:
+        - kind
+        title: ScoreSubjectObservationV3
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            kind:
+              type: string
+              enum:
+              - session
+        - $ref: '#/components/schemas/ScoreSubjectSessionV3'
+        required:
+        - kind
+        title: ScoreSubjectSessionV3
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            kind:
+              type: string
+              enum:
+              - experiment
+        - $ref: '#/components/schemas/ScoreSubjectExperimentV3'
+        required:
+        - kind
+        title: ScoreSubjectExperimentV3
+      description: A reference to the entity this score is attached to. Discriminated by "kind" — one of trace, observation, session, or experiment.
+    ScoreV3:
+      title: ScoreV3
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - NUMERIC
+        - $ref: '#/components/schemas/NumericScoreV3'
+        required:
+        - dataType
+        title: NumericScoreV3
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - BOOLEAN
+        - $ref: '#/components/schemas/BooleanScoreV3'
+        required:
+        - dataType
+        title: BooleanScoreV3
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CATEGORICAL
+        - $ref: '#/components/schemas/CategoricalScoreV3'
+        required:
+        - dataType
+        title: CategoricalScoreV3
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - TEXT
+        - $ref: '#/components/schemas/TextScoreV3'
+        required:
+        - dataType
+        title: TextScoreV3
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            dataType:
+              type: string
+              enum:
+              - CORRECTION
+        - $ref: '#/components/schemas/CorrectionScoreV3'
+        required:
+        - dataType
+        title: CorrectionScoreV3
+    ScoreSubjectSessionV3:
+      title: ScoreSubjectSessionV3
+      type: object
+      properties:
+        id:
+          type: string
+          description: The session ID.
+      required:
+      - id
+    BooleanScoreV3:
+      title: BooleanScoreV3
+      type: object
+      properties:
+        value:
+          type: boolean
+          description: The boolean value of the score.
+      required:
+      - value
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV3'
+    ObservationLevel:
+      title: ObservationLevel
+      type: string
+      enum:
+      - DEBUG
+      - DEFAULT
+      - WARNING
+      - ERROR
+    Experiment:
+      title: Experiment
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        startTime:
+          type: string
+          format: date-time
+          description: 'Start of the experiment, i.e. the earliest event within the
+
+            requested time range. Clipped to `fromStartTime` when the
+
+            experiment started before the requested range.'
+        endTime:
+          type: string
+          format: date-time
+          description: 'End of the experiment, i.e. the latest event end within the
+
+            requested time range.'
+        itemCount:
+          type: integer
+          description: Number of experiment items within the requested time range.
+        datasetId:
+          type:
+          - string
+          - 'null'
+          description: Null when the experiment is not associated with a dataset.
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Included only when `fields=metadata` is requested.
+        scores:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ScoreV3'
+          description: Included only when `fields=scores` is requested. Contains scores directly attached to the experiment.
+      required:
+      - id
+      - name
+      - description
+      - startTime
+      - endTime
+      - itemCount
+      - datasetId
+    TextScoreV3:
+      title: TextScoreV3
+      type: object
+      properties:
+        value:
+          type: string
+          description: The text content of the score.
+      required:
+      - value
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV3'
+    NumericScoreV3:
+      title: NumericScoreV3
+      type: object
+      properties:
+        value:
+          type: number
+          format: double
+          description: The numeric value of the score.
+      required:
+      - value
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV3'
+    ScoreSubjectExperimentV3:
+      title: ScoreSubjectExperimentV3
+      type: object
+      properties:
+        id:
+          type: string
+          description: The dataset run ID (experiment ID).
+      required:
+      - id
+    CategoricalScoreV3:
+      title: CategoricalScoreV3
+      type: object
+      properties:
+        value:
+          type: string
+          description: The string category value of the score.
+      required:
+      - value
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV3'
+    ScoreSource:
+      title: ScoreSource
+      type: string
+      enum:
+      - ANNOTATION
+      - API
+      - EVAL
+    ExperimentItem:
+      title: ExperimentItem
+      type: object
+      properties:
+        id:
+          type: string
+        traceId:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        level:
+          $ref: '#/components/schemas/ObservationLevel'
+        environment:
+          type: string
+        experimentId:
+          type: string
+        experimentName:
+          type: string
+        experimentItemId:
+          type: string
+        experimentDatasetId:
+          type:
+          - string
+          - 'null'
+          description: Included when `fields=dataset` is requested.
+        experimentItemVersion:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Included when `fields=dataset` is requested.
+        input:
+          description: Included when `fields=io` is requested.
+        output:
+          description: Included when `fields=io` is requested.
+        expectedOutput:
+          description: Included when `fields=io` is requested.
+        metadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Included when `fields=metadata` is requested.
+        experimentItemMetadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Included when `fields=itemMetadata` is requested.
+        experimentMetadata:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Included when `fields=experimentMetadata` is requested.
+        experimentDescription:
+          type:
+          - string
+          - 'null'
+          description: Included when `fields=experimentMetadata` is requested.
+        scores:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ScoreV3'
+          description: Included only when `fields=scores` is requested. Contains item and trace scores only; experiment-level scores are returned by the experiments endpoint.
+      required:
+      - id
+      - traceId
+      - startTime
+      - endTime
+      - level
+      - environment
+      - experimentId
+      - experimentName
+      - experimentItemId
+    CorrectionScoreV3:
+      title: CorrectionScoreV3
+      type: object
+      properties:
+        value:
+          type: string
+          description: The correction content of the score. Empty string if not set.
+      required:
+      - value
+      allOf:
+      - $ref: '#/components/schemas/BaseScoreV3'
+    utilsCursorMetaResponse:
+      title: utilsCursorMetaResponse
+      type: object
+      description: Metadata for cursor-based pagination.
+      properties:
+        cursor:
+          type:
+          - string
+          - 'null'
+          description: Opaque cursor for the next page. Omitted when there is no next page.
+    ExperimentsResponse:
+      title: ExperimentsResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Experiment'
+        meta:
+          $ref: '#/components/schemas/ExperimentsResponseMeta'
+      required:
+      - data
+      - meta
+    ExperimentItemsResponse:
+      title: ExperimentItemsResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExperimentItem'
+        meta:
+          $ref: '#/components/schemas/ExperimentsResponseMeta'
+      required:
+      - data
+      - meta
+    ScoreSubjectTraceV3:
+      title: ScoreSubjectTraceV3
+      type: object
+      properties:
+        id:
+          type: string
+          description: The trace ID.
+      required:
+      - id
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

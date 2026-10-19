@@ -1,0 +1,586 @@
+openapi: 3.2.0
+info:
+  title: langfuse Prompts API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: Prompts
+paths:
+  /api/public/v2/prompts/{promptName}:
+    get:
+      description: Get a prompt
+      operationId: prompts_get
+      tags:
+      - Prompts
+      parameters:
+      - name: promptName
+        in: path
+        description: "The name of the prompt. If the prompt is in a folder (e.g., \"folder/subfolder/prompt-name\"), \nthe folder path must be URL encoded."
+        required: true
+        schema:
+          type: string
+      - name: version
+        in: query
+        description: Version of the prompt to be retrieved.
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: label
+        in: query
+        description: Label of the prompt to be retrieved. Defaults to "production" if no label or version is set.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: resolve
+        in: query
+        description: Resolve prompt dependencies before returning the prompt. Defaults to `true`. Set to `false` to return the raw stored prompt with dependency tags intact. This bypasses prompt caching and is intended for debugging or one-off jobs, not production runtime fetches.
+        required: false
+        schema:
+          type:
+          - boolean
+          - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prompt'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Prompts get
+      x-summary-source: derived
+    delete:
+      description: Delete prompt versions. If neither version nor label is specified, all versions of the prompt are deleted.
+      operationId: prompts_delete
+      tags:
+      - Prompts
+      parameters:
+      - name: promptName
+        in: path
+        description: The name of the prompt
+        required: true
+        schema:
+          type: string
+      - name: label
+        in: query
+        description: Optional label to filter deletion. If specified, deletes all prompt versions that have this label.
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: version
+        in: query
+        description: Optional version to filter deletion. If specified, deletes only this specific version of the prompt.
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      responses:
+        '204':
+          description: ''
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Prompts delete
+      x-summary-source: derived
+  /api/public/v2/prompts:
+    get:
+      description: Get a list of prompt names with versions and labels
+      operationId: prompts_list
+      tags:
+      - Prompts
+      parameters:
+      - name: name
+        in: query
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: label
+        in: query
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: tag
+        in: query
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+      - name: page
+        in: query
+        description: page number, starts at 1
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: limit
+        in: query
+        description: limit of items per page
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: fromUpdatedAt
+        in: query
+        description: Optional filter to only include prompt versions created/updated on or after a certain datetime (ISO 8601)
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      - name: toUpdatedAt
+        in: query
+        description: Optional filter to only include prompt versions created/updated before a certain datetime (ISO 8601)
+        required: false
+        schema:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptMetaListResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Prompts list
+      x-summary-source: derived
+    post:
+      description: Create a new version for the prompt with the given `name`
+      operationId: prompts_create
+      tags:
+      - Prompts
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prompt'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePromptRequest'
+      summary: Prompts create
+      x-summary-source: derived
+components:
+  schemas:
+    BasePrompt:
+      title: BasePrompt
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: integer
+        config: {}
+        labels:
+          type: array
+          items:
+            type: string
+          description: List of deployment labels of this prompt version.
+        tags:
+          type: array
+          items:
+            type: string
+          description: List of tags. Used to filter via UI and API. The same across versions of a prompt.
+        commitMessage:
+          type:
+          - string
+          - 'null'
+          description: Commit message for this prompt version.
+        resolutionGraph:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: The dependency resolution graph for the current prompt. Null if the prompt has no dependencies or if `resolve=false` was used.
+      required:
+      - name
+      - version
+      - config
+      - labels
+      - tags
+    CreateTextPromptType:
+      title: CreateTextPromptType
+      type: string
+      enum:
+      - text
+    PromptMeta:
+      title: PromptMeta
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/PromptType'
+          description: Indicates whether the prompt is a text or chat prompt.
+        versions:
+          type: array
+          items:
+            type: integer
+        labels:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        lastUpdatedAt:
+          type: string
+          format: date-time
+        lastConfig:
+          description: Config object of the most recent prompt version that matches the filters (if any are provided)
+      required:
+      - name
+      - type
+      - versions
+      - labels
+      - tags
+      - lastUpdatedAt
+      - lastConfig
+    PromptType:
+      title: PromptType
+      type: string
+      enum:
+      - chat
+      - text
+    CreateChatPromptRequest:
+      title: CreateChatPromptRequest
+      type: object
+      properties:
+        name:
+          type: string
+        prompt:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
+        config: {}
+        type:
+          $ref: '#/components/schemas/CreateChatPromptType'
+        labels:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of deployment labels of this prompt version.
+        tags:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of tags to apply to all versions of this prompt.
+        commitMessage:
+          type:
+          - string
+          - 'null'
+          description: Commit message for this prompt version.
+      required:
+      - name
+      - prompt
+      - type
+    CreateChatPromptType:
+      title: CreateChatPromptType
+      type: string
+      enum:
+      - chat
+    ChatMessageWithPlaceholders:
+      title: ChatMessageWithPlaceholders
+      oneOf:
+      - $ref: '#/components/schemas/ChatMessage'
+      - $ref: '#/components/schemas/PlaceholderMessage'
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
+    Prompt:
+      title: Prompt
+      oneOf:
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - chat
+        - $ref: '#/components/schemas/ChatPrompt'
+        required:
+        - type
+      - type: object
+        allOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+              - text
+        - $ref: '#/components/schemas/TextPrompt'
+        required:
+        - type
+    CreateTextPromptRequest:
+      title: CreateTextPromptRequest
+      type: object
+      properties:
+        name:
+          type: string
+        prompt:
+          type: string
+        config: {}
+        type:
+          $ref: '#/components/schemas/CreateTextPromptType'
+        labels:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of deployment labels of this prompt version.
+        tags:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of tags to apply to all versions of this prompt.
+        commitMessage:
+          type:
+          - string
+          - 'null'
+          description: Commit message for this prompt version.
+      required:
+      - name
+      - prompt
+    ChatMessage:
+      title: ChatMessage
+      type: object
+      properties:
+        role:
+          type: string
+        content:
+          type: string
+        type:
+          $ref: '#/components/schemas/ChatMessageType'
+      required:
+      - role
+      - content
+    TextPrompt:
+      title: TextPrompt
+      type: object
+      properties:
+        prompt:
+          type: string
+      required:
+      - prompt
+      allOf:
+      - $ref: '#/components/schemas/BasePrompt'
+    PlaceholderMessageType:
+      title: PlaceholderMessageType
+      type: string
+      enum:
+      - placeholder
+    ChatMessageType:
+      title: ChatMessageType
+      type: string
+      enum:
+      - chatmessage
+    PromptMetaListResponse:
+      title: PromptMetaListResponse
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PromptMeta'
+        meta:
+          $ref: '#/components/schemas/utilsMetaResponse'
+      required:
+      - data
+      - meta
+    CreatePromptRequest:
+      title: CreatePromptRequest
+      oneOf:
+      - $ref: '#/components/schemas/CreateChatPromptRequest'
+      - $ref: '#/components/schemas/CreateTextPromptRequest'
+    PlaceholderMessage:
+      title: PlaceholderMessage
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/PlaceholderMessageType'
+      required:
+      - name
+    ChatPrompt:
+      title: ChatPrompt
+      type: object
+      properties:
+        prompt:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageWithPlaceholders'
+      required:
+      - prompt
+      allOf:
+      - $ref: '#/components/schemas/BasePrompt'
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

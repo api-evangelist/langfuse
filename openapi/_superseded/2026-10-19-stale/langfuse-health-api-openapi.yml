@@ -1,0 +1,85 @@
+openapi: 3.2.0
+info:
+  title: langfuse Health API
+  version: ''
+  description: '## Authentication
+
+
+    Authenticate with the API using Basic Auth, get API keys in the project settings:
+
+
+    - username: Langfuse Public Key
+
+    - password: Langfuse Secret Key
+
+
+    ## Exports
+
+
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+tags:
+- name: Health
+paths:
+  /api/public/health:
+    get:
+      description: Check health of API and database
+      operationId: health_health
+      tags:
+      - Health
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: ''
+      summary: Health health
+      x-summary-source: derived
+components:
+  schemas:
+    HealthResponse:
+      title: HealthResponse
+      type: object
+      properties:
+        version:
+          type: string
+          description: Langfuse server version
+          example: 1.25.0
+        status:
+          type: string
+          example: OK
+      required:
+      - version
+      - status
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

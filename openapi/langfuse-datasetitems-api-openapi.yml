@@ -1,8 +1,14 @@
 openapi: 3.2.0
 info:
-  title: langfuse Dataset Items API
+  title: server Dataset Items API
   version: ''
-  description: '## Authentication
+  description: '## Real-time data
+
+
+    The only real-time path to get tracing data is to ingest via OpenTelemetry (`POST /api/public/otel/v1/traces`) and retrieve via Observations API v2 (`GET /api/public/v2/observations`) and Metrics API v2 (`GET /api/public/v2/metrics`). Other public API write and read endpoints can delay data by about 10 minutes. Direct OpenTelemetry exporters must send the `x-langfuse-ingestion-version: 4` header; current Python and JS SDKs already do. See the Public API docs and real-time ingestion.
+
+
+    ## Authentication
 
 
     Authenticate with the API using Basic Auth, get API keys in the project settings:
@@ -16,7 +22,9 @@ info:
     ## Exports
 
 
-    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml
+
+    - Self-hosted deployments: interactive API reference at `/api/docs` and OpenAPI spec at `/api/openapi.yaml`'
 tags:
 - name: DatasetItems
 paths:
@@ -260,33 +268,6 @@ paths:
       x-summary-source: derived
 components:
   schemas:
-    CreateDatasetItemRequest:
-      title: CreateDatasetItemRequest
-      type: object
-      properties:
-        datasetName:
-          type: string
-        input: {}
-        expectedOutput: {}
-        metadata: {}
-        sourceTraceId:
-          type:
-          - string
-          - 'null'
-        sourceObservationId:
-          type:
-          - string
-          - 'null'
-        id:
-          type:
-          - string
-          - 'null'
-          description: Dataset items are upserted on their id. Id needs to be unique (project-level) and cannot be reused across datasets.
-        status:
-          $ref: '#/components/schemas/DatasetStatus'
-          description: Defaults to ACTIVE for newly created items
-      required:
-      - datasetName
     PaginatedDatasetItems:
       title: PaginatedDatasetItems
       type: object
@@ -300,6 +281,27 @@ components:
       required:
       - data
       - meta
+    utilsMetaResponse:
+      title: utilsMetaResponse
+      type: object
+      properties:
+        page:
+          type: integer
+          description: current page number
+        limit:
+          type: integer
+          description: number of items per page
+        totalItems:
+          type: integer
+          description: number of total items given the current filters/selection (if any)
+        totalPages:
+          type: integer
+          description: number of total pages given the current limit
+      required:
+      - page
+      - limit
+      - totalItems
+      - totalPages
     DatasetItem:
       title: DatasetItem
       type: object
@@ -334,37 +336,70 @@ components:
         updatedAt:
           type: string
           format: date-time
+        version:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When this version of the dataset item became current. Listing dataset items with a `version` at or after this timestamp returns this item version, until the item is changed again. Self-hosted deployments that set `LANGFUSE_DATASET_SERVICE_WRITE_TO_VERSIONED_IMPLEMENTATION=false` update items in place, so there it stays at the item's first write.
+        mediaReferences:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetItemMediaReference'
+          description: Resolved Langfuse media references found in input, expectedOutput, and metadata.
       required:
       - id
       - status
       - input
       - expectedOutput
       - metadata
+      - sourceTraceId
+      - sourceObservationId
       - datasetId
       - datasetName
       - createdAt
       - updatedAt
-    utilsMetaResponse:
-      title: utilsMetaResponse
+      - mediaReferences
+    DatasetItemMediaReferenceField:
+      title: DatasetItemMediaReferenceField
+      type: string
+      enum:
+      - input
+      - expectedOutput
+      - metadata
+    DatasetStatus:
+      title: DatasetStatus
+      type: string
+      enum:
+      - ACTIVE
+      - ARCHIVED
+    CreateDatasetItemRequest:
+      title: CreateDatasetItemRequest
       type: object
       properties:
-        page:
-          type: integer
-          description: current page number
-        limit:
-          type: integer
-          description: number of items per page
-        totalItems:
-          type: integer
-          description: number of total items given the current filters/selection (if any)
-        totalPages:
-          type: integer
-          description: number of total pages given the current limit
+        datasetName:
+          type: string
+        input: {}
+        expectedOutput: {}
+        metadata: {}
+        sourceTraceId:
+          type:
+          - string
+          - 'null'
+        sourceObservationId:
+          type:
+          - string
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+          description: Dataset items are upserted on their id. Id needs to be unique (project-level), cannot be reused across datasets, and must be at most 255 characters.
+        status:
+          $ref: '#/components/schemas/DatasetStatus'
+          description: Defaults to ACTIVE for newly created items
       required:
-      - page
-      - limit
-      - totalItems
-      - totalPages
+      - datasetName
     DeleteDatasetItemResponse:
       title: DeleteDatasetItemResponse
       type: object
@@ -374,12 +409,52 @@ components:
           description: Success message after deletion
       required:
       - message
-    DatasetStatus:
-      title: DatasetStatus
-      type: string
-      enum:
-      - ACTIVE
-      - ARCHIVED
+    DatasetItemMediaReferenceMedia:
+      title: DatasetItemMediaReferenceMedia
+      type: object
+      properties:
+        mediaId:
+          type: string
+          description: The unique langfuse identifier of the media record
+        contentType:
+          type: string
+          description: The MIME type of the media record
+        contentLength:
+          type: integer
+          description: The size of the media record in bytes
+        url:
+          type: string
+          description: The signed download URL of the media record
+        urlExpiry:
+          type: string
+          description: The expiry date and time of the download URL
+      required:
+      - mediaId
+      - contentType
+      - contentLength
+      - url
+      - urlExpiry
+    DatasetItemMediaReference:
+      title: DatasetItemMediaReference
+      type: object
+      properties:
+        field:
+          $ref: '#/components/schemas/DatasetItemMediaReferenceField'
+          description: The dataset item field containing the reference
+        referenceString:
+          type: string
+          description: The Langfuse media reference string, e.g. `@@@langfuseMedia:type=image/png|id=...|source=bytes@@@`
+        jsonPath:
+          type: string
+          description: JSONPath of the string holding the reference within the field, e.g. `$['image']`
+        media:
+          $ref: '#/components/schemas/DatasetItemMediaReferenceMedia'
+          description: The resolved media record.
+      required:
+      - field
+      - referenceString
+      - jsonPath
+      - media
   securitySchemes:
     BasicAuth:
       type: http

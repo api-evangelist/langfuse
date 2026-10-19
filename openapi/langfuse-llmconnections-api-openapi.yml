@@ -1,8 +1,14 @@
 openapi: 3.2.0
 info:
-  title: langfuse Llm Connections API
+  title: server Llm Connections API
   version: ''
-  description: '## Authentication
+  description: '## Real-time data
+
+
+    The only real-time path to get tracing data is to ingest via OpenTelemetry (`POST /api/public/otel/v1/traces`) and retrieve via Observations API v2 (`GET /api/public/v2/observations`) and Metrics API v2 (`GET /api/public/v2/metrics`). Other public API write and read endpoints can delay data by about 10 minutes. Direct OpenTelemetry exporters must send the `x-langfuse-ingestion-version: 4` header; current Python and JS SDKs already do. See the Public API docs and real-time ingestion.
+
+
+    ## Authentication
 
 
     Authenticate with the API using Basic Auth, get API keys in the project settings:
@@ -16,7 +22,9 @@ info:
     ## Exports
 
 
-    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml'
+    - OpenAPI spec: https://cloud.langfuse.com/generated/api/openapi.yml
+
+    - Self-hosted deployments: interactive API reference at `/api/docs` and OpenAPI spec at `/api/openapi.yaml`'
 tags:
 - name: LlmConnections
 paths:
@@ -175,8 +183,171 @@ paths:
       - BasicAuth: []
       summary: Llm connections delete
       x-summary-source: derived
+  /api/public/organizations/llm-connections:
+    get:
+      description: Get all organization-level LLM connections. Requires an organization-scoped API key.
+      operationId: llmConnections_listOrganization
+      tags:
+      - LlmConnections
+      parameters:
+      - name: page
+        in: query
+        description: page number, starts at 1
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      - name: limit
+        in: query
+        description: limit of items per page
+        required: false
+        schema:
+          type:
+          - integer
+          - 'null'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLlmConnections'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Llm connections list organization
+      x-summary-source: derived
+    put:
+      description: Create or update an organization-level LLM connection. The connection is upserted on provider and inherited by projects without a provider override. Requires an organization-scoped API key.
+      operationId: llmConnections_upsertOrganization
+      tags:
+      - LlmConnections
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LlmConnection'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpsertLlmConnectionRequest'
+      summary: Llm connections upsert organization
+      x-summary-source: derived
+  /api/public/organizations/llm-connections/{id}:
+    delete:
+      description: Delete an organization-level LLM connection by id. Evaluators in projects without an override for the provider are automatically paused. Requires an organization-scoped API key.
+      operationId: llmConnections_deleteOrganization
+      tags:
+      - LlmConnections
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteLlmConnectionResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+        '405':
+          description: ''
+          content:
+            application/json:
+              schema: {}
+      security:
+      - BasicAuth: []
+      summary: Llm connections delete organization
+      x-summary-source: derived
 components:
   schemas:
+    DeleteLlmConnectionResponse:
+      title: DeleteLlmConnectionResponse
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+      - message
     LlmAdapter:
       title: LlmAdapter
       type: string
@@ -187,14 +358,6 @@ components:
       - bedrock
       - google-vertex-ai
       - google-ai-studio
-    DeleteLlmConnectionResponse:
-      title: DeleteLlmConnectionResponse
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-      - message
     PaginatedLlmConnections:
       title: PaginatedLlmConnections
       type: object
@@ -208,62 +371,6 @@ components:
       required:
       - data
       - meta
-    LlmConnection:
-      title: LlmConnection
-      type: object
-      description: LLM API connection configuration (secrets excluded)
-      properties:
-        id:
-          type: string
-        provider:
-          type: string
-          description: Provider name (e.g., 'openai', 'my-gateway'). Must be unique in project, used for upserting.
-        adapter:
-          type: string
-          description: The adapter used to interface with the LLM
-        displaySecretKey:
-          type: string
-          description: Masked version of the secret key for display purposes
-        baseURL:
-          type:
-          - string
-          - 'null'
-          description: Custom base URL for the LLM API
-        customModels:
-          type: array
-          items:
-            type: string
-          description: List of custom model names available for this connection
-        withDefaultModels:
-          type: boolean
-          description: Whether to include default models for this adapter
-        extraHeaderKeys:
-          type: array
-          items:
-            type: string
-          description: Keys of extra headers sent with requests (values excluded for security)
-        config:
-          type:
-          - object
-          - 'null'
-          additionalProperties: true
-          description: Adapter-specific configuration. Required for Bedrock (`{"region":"us-east-1"}`), optional for VertexAI (`{"location":"us-central1"}`), not used by other adapters.
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-      required:
-      - id
-      - provider
-      - adapter
-      - displaySecretKey
-      - customModels
-      - withDefaultModels
-      - extraHeaderKeys
-      - createdAt
-      - updatedAt
     utilsMetaResponse:
       title: utilsMetaResponse
       type: object
@@ -328,11 +435,67 @@ components:
           - object
           - 'null'
           additionalProperties: true
-          description: 'Adapter-specific configuration. Validation rules: - **Bedrock**: Required. Must be `{"region": "<aws-region>"}` (e.g., `{"region":"us-east-1"}`) - **VertexAI**: Optional. If provided, must be `{"location": "<gcp-location>"}` (e.g., `{"location":"us-central1"}`) - **Other adapters**: Not supported. Omit this field or set to null.'
+          description: 'Adapter-specific configuration. Validation rules: - **Bedrock**: Required. Must be `{"region": "<aws-region>"}` (e.g., `{"region":"us-east-1"}`) - **OpenAI**: Optional. If provided, must be `{"useResponsesApi": <boolean>}` to control whether Langfuse routes calls through OpenAI''s Responses API. - **VertexAI**: Optional. If provided, must be `{"location": "<gcp-location>"}` (e.g., `{"location":"us-central1"}`) - **Other adapters**: Not supported. Omit this field or set to null.'
       required:
       - provider
       - adapter
       - secretKey
+    LlmConnection:
+      title: LlmConnection
+      type: object
+      description: LLM API connection configuration (secrets excluded)
+      properties:
+        id:
+          type: string
+        provider:
+          type: string
+          description: Provider name (e.g., 'openai', 'my-gateway'). Must be unique in project, used for upserting.
+        adapter:
+          type: string
+          description: The adapter used to interface with the LLM
+        displaySecretKey:
+          type: string
+          description: Masked version of the secret key for display purposes
+        baseURL:
+          type:
+          - string
+          - 'null'
+          description: Custom base URL for the LLM API
+        customModels:
+          type: array
+          items:
+            type: string
+          description: List of custom model names available for this connection
+        withDefaultModels:
+          type: boolean
+          description: Whether to include default models for this adapter
+        extraHeaderKeys:
+          type: array
+          items:
+            type: string
+          description: Keys of extra headers sent with requests (values excluded for security)
+        config:
+          type:
+          - object
+          - 'null'
+          additionalProperties: true
+          description: Adapter-specific configuration. Required for Bedrock (`{"region":"us-east-1"}`), optional for OpenAI (`{"useResponsesApi":true}`), optional for VertexAI (`{"location":"us-central1"}`), not used by other adapters.
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+      - id
+      - provider
+      - adapter
+      - displaySecretKey
+      - customModels
+      - withDefaultModels
+      - extraHeaderKeys
+      - createdAt
+      - updatedAt
   securitySchemes:
     BasicAuth:
       type: http
