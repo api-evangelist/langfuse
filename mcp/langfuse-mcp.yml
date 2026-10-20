@@ -16,21 +16,33 @@ deployment:
 tools_count: 4
 tools:
 - name: submitFeedback
-  description: Submit explicit user-approved feedback to the Langfuse team. Before calling, ask permission
-    and show the exact payload. If the user wants a reply, ask them to include their email address in
-    the feedback text; only use an address they explic
+  description: 'Submit explicit user-approved feedback to the Langfuse team.
+
+    Before calling, ask permission and show the exact payload.
+
+    If the user wants a reply, ask them to include their email address in the feedback text; only use
+    an address they explicitly provide and show it in the exact payload preview.
+
+    Do not include secrets, credentials, customer/project data, trace payloads, or unrelated context;
+    the only contact detail to include is an explicitly provided reply email.'
 - name: searchLangfuseDocs
   description: Semantic search (RAG) over the Langfuse documentation. Use this whenever the user asks
     a broader question that cannot be answered by a specific single page. Returns a concise answer synthesized
-    from relevant docs. The raw provider response
+    from relevant docs. The raw provider response is included in _meta. Prefer this before guessing. If
+    a specific page is needed call getLangfuseDocsPage first.
 - name: getLangfuseDocsPage
-  description: Fetch the raw Markdown for a single Langfuse docs page. Accepts a docs path (e.g., /docs/observability/overview)
+  description: 'Fetch the raw Markdown for a single Langfuse docs page. Accepts a docs path (e.g., /docs/observability/overview)
     or a full https://langfuse.com URL. Returns the exact Markdown (may include front matter). Use when
-    you need a specific page co
+    you need a specific page content (Integration, Features, API, etc.) or code samples. Prefer searchLangfuseDocs
+    for broader questions where there is not one specific page about it. Changelog pages (/changelog/...)
+    are historical release notes: use them only to confirm that a feature exists or when it shipped, not
+    as an implementation reference. Their code samples reflect the SDK/API at release time and may be
+    outdated, so for implementation follow the current docs and the API/SDK reference instead.'
 - name: getLangfuseOverview
   description: Get a high-level, machine-readable index by downloading https://langfuse.com/llms.txt.
     Use this at the start of a session when needed to discover key docs endpoints or to seed follow-up
-    calls to searchLangfuseDocs or getLangfuseDocsPage. Re
+    calls to searchLangfuseDocs or getLangfuseDocsPage. Returns the plain text contents of llms.txt. Avoid
+    repeated calls within the same session.
 tools_source: live tools/list via initialize handshake, 2026-09-11 (signals/audit_mcp_authorship.py --probe)
 authorship: provider
 descriptions_source: live tools/list (authorship probe or saved capture); filled by backfill-tools-from-authorship.py
