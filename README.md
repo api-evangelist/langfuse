@@ -1,4 +1,4 @@
-# Langfuse (langfuse)
+# Langfuse
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,219 +66,178 @@
 
 Langfuse is an open-source LLM engineering platform offering tracing, evaluations, prompt management, datasets, and metrics. The Langfuse API supports both self-hosted and multi-region cloud deployments (US, EU, Japan, HIPAA-compliant US) and integrates with LangChain, LlamaIndex, OpenTelemetry, and any LLM stack.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/langfuse/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/langfuse/refs/heads/main/apis.yml)
+**Areas:** Artificial Intelligence · LLM · Observability · Open Source · Evaluation
+
+## Langfuse on APIs.io
+
+Everything profiled for Langfuse is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/langfuse/](https://apis.io/providers/langfuse/)** — or go straight to one of the APIs or properties below.
+
+### APIs (28)
+
+- [Langfuse BlobStorageIntegrations API](https://apis.io/apis/langfuse/langfuse-blobstorageintegrations-api/) — The BlobStorageIntegrations API from Langfuse — 2 operation(s) for blobstorageintegrations.
+- [Langfuse Comments API](https://apis.io/apis/langfuse/langfuse-comments-api/) — The Comments API from Langfuse — 2 operation(s) for comments.
+- [Langfuse DatasetItems API](https://apis.io/apis/langfuse/langfuse-datasetitems-api/) — The DatasetItems API from Langfuse — 2 operation(s) for datasetitems.
+- [Langfuse DatasetRunItems API](https://apis.io/apis/langfuse/langfuse-datasetrunitems-api/) — The DatasetRunItems API from Langfuse — 1 operation(s) for datasetrunitems.
+- [Langfuse Datasets API](https://apis.io/apis/langfuse/langfuse-datasets-api/) — The Datasets API from Langfuse — 4 operation(s) for datasets.
+- [Langfuse Health API](https://apis.io/apis/langfuse/langfuse-health-api/) — The Health API from Langfuse — 1 operation(s) for health.
+- [Langfuse Ingestion API](https://apis.io/apis/langfuse/langfuse-ingestion-api/) — The Ingestion API from Langfuse — 1 operation(s) for ingestion.
+- [Langfuse LegacyMetricsV1 API](https://apis.io/apis/langfuse/langfuse-legacymetricsv1-api/) — The LegacyMetricsV1 API from Langfuse — 1 operation(s) for legacymetricsv1.
+- [Langfuse LegacyObservationsV1 API](https://apis.io/apis/langfuse/langfuse-legacyobservationsv1-api/) — The LegacyObservationsV1 API from Langfuse — 2 operation(s) for legacyobservationsv1.
+- [Langfuse LegacyScoreV1 API](https://apis.io/apis/langfuse/langfuse-legacyscorev1-api/) — The LegacyScoreV1 API from Langfuse — 2 operation(s) for legacyscorev1.
+- [Langfuse LlmConnections API](https://apis.io/apis/langfuse/langfuse-llmconnections-api/) — The LlmConnections API from Langfuse — 2 operation(s) for llmconnections.
+- [Langfuse Media API](https://apis.io/apis/langfuse/langfuse-media-api/) — The Media API from Langfuse — 2 operation(s) for media.
+- [Langfuse Metrics API](https://apis.io/apis/langfuse/langfuse-metrics-api/) — The Metrics API from Langfuse — 1 operation(s) for metrics.
+- [Langfuse Models API](https://apis.io/apis/langfuse/langfuse-models-api/) — The Models API from Langfuse — 2 operation(s) for models.
+- [Langfuse Observations API](https://apis.io/apis/langfuse/langfuse-observations-api/) — The Observations API from Langfuse — 1 operation(s) for observations.
+- [Langfuse Organizations API](https://apis.io/apis/langfuse/langfuse-organizations-api/) — The Organizations API from Langfuse — 4 operation(s) for organizations.
+- [Langfuse Projects API](https://apis.io/apis/langfuse/langfuse-projects-api/) — The Projects API from Langfuse — 4 operation(s) for projects.
+- [Langfuse Prompts API](https://apis.io/apis/langfuse/langfuse-prompts-api/) — The Prompts API from Langfuse — 2 operation(s) for prompts.
+- [Langfuse PromptVersion API](https://apis.io/apis/langfuse/langfuse-promptversion-api/) — The PromptVersion API from Langfuse — 1 operation(s) for promptversion.
+- [Langfuse Scim API](https://apis.io/apis/langfuse/langfuse-scim-api/) — The Scim API from Langfuse — 5 operation(s) for scim.
+- [Langfuse ScoreConfigs API](https://apis.io/apis/langfuse/langfuse-scoreconfigs-api/) — The ScoreConfigs API from Langfuse — 2 operation(s) for scoreconfigs.
+- [Langfuse Scores API](https://apis.io/apis/langfuse/langfuse-scores-api/) — The Scores API from Langfuse — 2 operation(s) for scores.
+- [Langfuse Sessions API](https://apis.io/apis/langfuse/langfuse-sessions-api/) — The Sessions API from Langfuse — 2 operation(s) for sessions.
+- [Langfuse Trace API](https://apis.io/apis/langfuse/langfuse-trace-api/) — The Trace API from Langfuse — 2 operation(s) for trace.
+- [Langfuse UnstableEvaluationRules API](https://apis.io/apis/langfuse/langfuse-unstableevaluationrules-api/) — The UnstableEvaluationRules API from Langfuse — 2 operation(s) for unstableevaluationrules.
+- [Langfuse UnstableEvaluators API](https://apis.io/apis/langfuse/langfuse-unstableevaluators-api/) — The UnstableEvaluators API from Langfuse — 2 operation(s) for unstableevaluators.
+- [Langfuse Annotation Queues API](https://apis.io/apis/langfuse/langfuse-annotation-queues-api/) — The Annotation Queues API from Langfuse — 5 operation(s) for annotation queues.
+- [Langfuse Open Telemetry API](https://apis.io/apis/langfuse/langfuse-open-telemetry-api/) — The Open Telemetry API from Langfuse — 1 operation(s) for open telemetry.
 
-## Tags
+### Published properties
 
-- AI
-- LLM
-- Observability
-- Open Source
-- Evaluations
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## Timestamps
+#### MCP servers (1)
 
-- **Created:** 2026-05-08
-- **Modified:** 2026-05-19
+Model Context Protocol servers that expose the API to agents.
 
-## APIs
+- [langfuse](https://apis.io/servers/langfuse/langfuse/)
 
-### Langfuse Tracing API
+#### Agentic access (1)
 
-Ingest traces, observations (spans, generations, events), and scores into Langfuse. Recommended path is the OpenTelemetry endpoint; legacy ingestion API is also supported. Traces are the unit of usage billing.
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- **Human URL:** [https://langfuse.com/docs/tracing](https://langfuse.com/docs/tracing)
-- **Base URL:** `https://cloud.langfuse.com/api/public`
+- [Langfuse Agentic Access](https://apis.io/agentic-access/langfuse/langfuse-agentic-access/)
 
-#### Tags
+#### Collections (29)
 
-- Tracing
-- OpenTelemetry
-- Ingestion
+Postman and Open Collection request collections.
 
-#### Properties
+- [langfuse](https://apis.io/collections/langfuse/open-langfuse/)
+- [langfuse AnnotationQueues API](https://apis.io/collections/langfuse/open-langfuse-annotationqueues-api/)
+- [langfuse AnnotationQueues BlobStorageIntegrations API](https://apis.io/collections/langfuse/open-langfuse-blobstorageintegrations-api/)
+- [langfuse AnnotationQueues Comments API](https://apis.io/collections/langfuse/open-langfuse-comments-api/)
+- [langfuse AnnotationQueues DatasetItems API](https://apis.io/collections/langfuse/open-langfuse-datasetitems-api/)
+- [langfuse AnnotationQueues DatasetRunItems API](https://apis.io/collections/langfuse/open-langfuse-datasetrunitems-api/)
+- [langfuse AnnotationQueues Datasets API](https://apis.io/collections/langfuse/open-langfuse-datasets-api/)
+- [langfuse AnnotationQueues Health API](https://apis.io/collections/langfuse/open-langfuse-health-api/)
+- [langfuse AnnotationQueues Ingestion API](https://apis.io/collections/langfuse/open-langfuse-ingestion-api/)
+- [langfuse AnnotationQueues LegacyMetricsV1 API](https://apis.io/collections/langfuse/open-langfuse-legacymetricsv1-api/)
+- [langfuse AnnotationQueues LegacyObservationsV1 API](https://apis.io/collections/langfuse/open-langfuse-legacyobservationsv1-api/)
+- [langfuse AnnotationQueues LegacyScoreV1 API](https://apis.io/collections/langfuse/open-langfuse-legacyscorev1-api/)
+- [langfuse AnnotationQueues LlmConnections API](https://apis.io/collections/langfuse/open-langfuse-llmconnections-api/)
+- [langfuse AnnotationQueues Media API](https://apis.io/collections/langfuse/open-langfuse-media-api/)
+- [langfuse AnnotationQueues Metrics API](https://apis.io/collections/langfuse/open-langfuse-metrics-api/)
+- [langfuse AnnotationQueues Models API](https://apis.io/collections/langfuse/open-langfuse-models-api/)
+- [langfuse AnnotationQueues Observations API](https://apis.io/collections/langfuse/open-langfuse-observations-api/)
+- [langfuse AnnotationQueues Opentelemetry API](https://apis.io/collections/langfuse/open-langfuse-opentelemetry-api/)
+- [langfuse AnnotationQueues Organizations API](https://apis.io/collections/langfuse/open-langfuse-organizations-api/)
+- [langfuse AnnotationQueues Projects API](https://apis.io/collections/langfuse/open-langfuse-projects-api/)
+- [langfuse AnnotationQueues Prompts API](https://apis.io/collections/langfuse/open-langfuse-prompts-api/)
+- [langfuse AnnotationQueues PromptVersion API](https://apis.io/collections/langfuse/open-langfuse-promptversion-api/)
+- [langfuse AnnotationQueues Scim API](https://apis.io/collections/langfuse/open-langfuse-scim-api/)
+- [langfuse AnnotationQueues ScoreConfigs API](https://apis.io/collections/langfuse/open-langfuse-scoreconfigs-api/)
+- [langfuse AnnotationQueues Scores API](https://apis.io/collections/langfuse/open-langfuse-scores-api/)
+- …and 4 more published on APIs.io
 
-- [Documentation](https://langfuse.com/docs/tracing)
-- [API Reference](https://api.reference.langfuse.com/)
-- [OpenAPI](openapi/langfuse-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langfuse.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langfuse.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Security (4)
 
-### Langfuse Observations API
+Authentication, trust centre, and vulnerability disclosure.
 
-Read and query observations (spans, generations, events) attached to traces. Supports filtering by trace, time range, name, and metadata.
+- [Langfuse Authentication](https://apis.io/security/langfuse/langfuse-authentication/)
+- [Langfuse Domain Security](https://apis.io/security/langfuse/langfuse-domain-security/)
+- [Langfuse Trust Center](https://apis.io/security/langfuse/langfuse-trust-center/)
+- [Langfuse Vulnerability Disclosure](https://apis.io/security/langfuse/langfuse-vulnerability-disclosure/)
 
-- **Human URL:** [https://langfuse.com/docs/api](https://langfuse.com/docs/api)
-- **Base URL:** `https://cloud.langfuse.com/api/public`
+#### Plans and pricing (1)
 
-#### Tags
+Published plans, tiers and prices.
 
-- Observations
-- Spans
-- Generations
+- [Langfuse Plans Pricing](https://apis.io/plans/langfuse/langfuse-plans-pricing/)
 
-#### Properties
+#### Rate limits (1)
 
-- [Documentation](https://langfuse.com/docs/api)
-- [OpenAPI](openapi/langfuse-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langfuse.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langfuse.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Published request limits.
 
-### Langfuse Metrics API
+- [Langfuse Rate Limits](https://apis.io/rate-limits/langfuse/langfuse-rate-limits/)
 
-Aggregated metrics across traces, observations, scores, and costs. Supports custom dimensions, time series, and project-scoped queries for dashboarding.
+#### FinOps (1)
 
-- **Human URL:** [https://langfuse.com/docs/analytics](https://langfuse.com/docs/analytics)
-- **Base URL:** `https://cloud.langfuse.com/api/public`
+What the API costs to run, by operation.
 
-#### Tags
+- [Langfuse Finops](https://apis.io/finops/langfuse/langfuse-finops/)
 
-- Metrics
-- Analytics
-- Reporting
+## Where to find this API
 
-#### Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-- [Documentation](https://langfuse.com/docs/analytics)
-- [OpenAPI](openapi/langfuse-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langfuse.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langfuse.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langfuse Prompt Management API
-
-Create, version, label, and retrieve prompts with client-side caching. Supports text and chat prompt types, configuration variables, and label-based deployment (e.g. production, staging).
-
-- **Human URL:** [https://langfuse.com/docs/prompts](https://langfuse.com/docs/prompts)
-- **Base URL:** `https://cloud.langfuse.com/api/public`
-
-#### Tags
-
-- Prompts
-- Versioning
-- Prompt Management
-
-#### Properties
-
-- [Documentation](https://langfuse.com/docs/prompts)
-- [OpenAPI](openapi/langfuse-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langfuse.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langfuse.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langfuse Datasets API
-
-Manage datasets and dataset items (input/expected-output pairs) for offline evaluation runs and regression testing.
-
-- **Human URL:** [https://langfuse.com/docs/datasets](https://langfuse.com/docs/datasets)
-- **Base URL:** `https://cloud.langfuse.com/api/public`
-
-#### Tags
-
-- Datasets
-- Test Data
-- Evaluations
-
-#### Properties
-
-- [Documentation](https://langfuse.com/docs/datasets)
-- [OpenAPI](openapi/langfuse-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langfuse.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langfuse.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langfuse Evaluations API
-
-CRUD operations for evals: define evaluators (LLM-as-judge, code, human), trigger evaluations on traces or dataset runs, and read back scores and reasoning.
-
-- **Human URL:** [https://langfuse.com/docs/evaluation](https://langfuse.com/docs/evaluation)
-- **Base URL:** `https://cloud.langfuse.com/api/public`
-
-#### Tags
-
-- Evaluations
-- Scoring
-- LLM-as-Judge
-
-#### Properties
-
-- [Documentation](https://langfuse.com/docs/evaluation)
-- [OpenAPI](openapi/langfuse-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langfuse.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langfuse.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langfuse Scores API
-
-Attach numeric, categorical, or boolean scores to traces, observations, or sessions. Supports user feedback, model-graded scores, and custom-defined score schemas.
-
-- **Human URL:** [https://langfuse.com/docs/scores](https://langfuse.com/docs/scores)
-- **Base URL:** `https://cloud.langfuse.com/api/public`
-
-#### Tags
-
-- Scores
-- Feedback
-- Quality
-
-#### Properties
-
-- [Documentation](https://langfuse.com/docs/scores)
-- [OpenAPI](openapi/langfuse-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langfuse.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langfuse.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langfuse Organizations & Projects API
-
-Organization-level provisioning APIs to create projects, manage users, and configure project membership programmatically.
-
-- **Human URL:** [https://langfuse.com/docs/api](https://langfuse.com/docs/api)
-- **Base URL:** `https://cloud.langfuse.com/api/public`
-
-#### Tags
-
-- Organizations
-- Projects
-- Provisioning
-
-#### Properties
-
-- [Documentation](https://langfuse.com/docs/api)
-- [OpenAPI](openapi/langfuse-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langfuse.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langfuse.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Langfuse Instance Management API
-
-Instance-management endpoints for self-hosted Langfuse deployments. Used to administer organizations, license, and platform-wide configuration.
-
-- **Human URL:** [https://langfuse.com/self-hosting](https://langfuse.com/self-hosting)
-- **Base URL:** `https://cloud.langfuse.com/api/public`
-
-#### Tags
-
-- Self-Hosted
-- Administration
-- Instance
-
-#### Properties
-
-- [Documentation](https://langfuse.com/self-hosting)
-- [OpenAPI](openapi/langfuse-openapi.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/langfuse.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/langfuse.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [LinkedIn](https://www.linkedin.com/company/langfuse)
 - [Website](https://langfuse.com/)
 - [Documentation](https://langfuse.com/docs)
-- [API Reference](https://api.reference.langfuse.com/)
+- [API reference](https://api.reference.langfuse.com/)
 - [Pricing](https://langfuse.com/pricing)
-- [Git Hub](https://github.com/langfuse/langfuse)
-- [Plans](plans/langfuse-plans-pricing.yml)
-- [Rate Limits](rate-limits/langfuse-rate-limits.yml)
-- [Fin Ops](finops/langfuse-finops.yml)
-- [Integrations](https://langfuse.com/integrations)
-- [L L Ms Txt](https://api.reference.langfuse.com/llms.txt)
+- [Blog](https://langfuse.com/blog)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 34.4** — thin · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 45.7 |
+| Contract governance | 0.0 |
+| Operational transparency | 23.7 |
+| Developer ergonomics | 23.8 |
+| Access clarity | 26.3 |
+
+**Agent readiness 30.2** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | mostly |
+
+**Regulatory alignment 20.9** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/langfuse/](https://apis.io/providers/langfuse/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Langfuse: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/langfuse/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
